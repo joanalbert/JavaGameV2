@@ -8,10 +8,12 @@ import com.mycompany.gamev2.component.object.TransformComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.window.MyWindow;
 
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 
 
 /**
@@ -47,13 +49,28 @@ public class TestSphere extends GameObject {
 
     @Override
     public void onRender(RenderEvent event) {
-        //System.out.println("render sphere");
+        System.out.println("render sphere");
+        Graphics2D g = event.getGraphics();
         
+        Vector3 location = getObjectLocation();
+        
+        double half_radius = this.radius/2;
+        Vector3 drawing_coordinates = location.minus(new Vector3(half_radius, half_radius, half_radius));
+        
+        g.setColor(this.color);
+        g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
     }
 
     @Override
     public void onTick(TickEvent e) {
         System.out.println("tick sphere");
+        Vector3 location = getObjectLocation();
+        
+        if(location.getX() + this.radius >= MyWindow.DIMENSIONS.width || location.getX() < this.radius ) this.vel = this.vel.getScaled(-1);
+        
+        Vector3 usable_vel = this.vel.getScaled(this.speed).getScaled(e.getDeltaSeconds());
+        Vector3 newpos = location.plus(usable_vel);
+        setObjectLocation(newpos);
     }
 
 

@@ -58,7 +58,13 @@ public class GameObject implements ITickListener, IRenderListener  {
     }
     
     
+    public Vector3 getObjectLocation(){
+        return this.getComponent(TransformComponent.class).getLocation();
+    }
     
+    public void setObjectLocation(Vector3 newLocation){
+        this.getComponent(TransformComponent.class).setLocation(newLocation);
+    }
    
     
     

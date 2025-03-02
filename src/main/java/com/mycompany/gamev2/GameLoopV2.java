@@ -71,7 +71,7 @@ public class GameLoopV2 implements Runnable {
             if (elapsedTime >= TARGET_TIME * 1000000) {
                                 
                 EventManager.getInstance().postEvent(new TickEvent(deltaTime));
-                EventManager.getInstance().postEvent(new RenderEvent());
+                //EventManager.getInstance().postEvent(new RenderEvent());
                 
                 
                 //update loop vars

@@ -5,9 +5,10 @@
 package com.mycompany.gamev2.pannels;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
-import com.mycompany.gamev2.interfaces.IRenderListener;
+import com.mycompany.gamev2.interfaces.ITickListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * As an Updateable it has the corresponding tick and render methods, and it also gets 
  * tick updates t
  */
-public class MyPanel extends BasePanel implements IRenderListener   {
+public class MyPanel extends BasePanel implements ITickListener   {
 
     
     public ArrayList<TestSphere> spheres = new ArrayList<>();
@@ -29,7 +30,7 @@ public class MyPanel extends BasePanel implements IRenderListener   {
     
     public MyPanel(String name){
         super(name);
-        EventManager.getInstance().subscribeTo(this, RenderEvent.class);
+        EventManager.getInstance().subscribeTo(this, TickEvent.class);
         
         
         int radius = 45;
@@ -46,12 +47,13 @@ public class MyPanel extends BasePanel implements IRenderListener   {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); 
         Graphics2D g2d = (Graphics2D) g;
+        EventManager.getInstance().postEvent(new RenderEvent(g2d));
     }
     
    @Override
-    public void onRender(RenderEvent event) {
+    public void onTick(TickEvent event) {
         this.repaint();
-        System.out.println("world repaint");
+        //System.out.println("world repaint");
     }
 
    
