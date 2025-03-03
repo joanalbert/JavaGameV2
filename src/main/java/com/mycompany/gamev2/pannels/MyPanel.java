@@ -26,7 +26,7 @@ public class MyPanel extends BasePanel implements ITickListener   {
 
     
     public ArrayList<TestSphere> spheres = new ArrayList<>();
-    private final int total_spheres = 1; 
+    private final int total_spheres = 14; 
     
     public MyPanel(String name){
         super(name);
@@ -47,7 +47,7 @@ public class MyPanel extends BasePanel implements ITickListener   {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); 
         Graphics2D g2d = (Graphics2D) g;
-        EventManager.getInstance().postEvent(new RenderEvent(g2d));
+        //EventManager.getInstance().postEvent(new RenderEvent(g2d));
     }
     
    @Override

@@ -7,6 +7,8 @@ package com.mycompany.gamev2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.window.MyWindow;
+import java.awt.Graphics2D;
 
 
 
@@ -61,6 +63,7 @@ public class GameLoopV2 implements Runnable {
         long waitTime;
         double deltaTime = 0;
         
+                
         while(this.running){
             
             now = System.nanoTime();
@@ -70,12 +73,17 @@ public class GameLoopV2 implements Runnable {
 
             if (elapsedTime >= TARGET_TIME * 1000000) {
                                 
+                
                 EventManager.getInstance().postEvent(new TickEvent(deltaTime));
-                //EventManager.getInstance().postEvent(new RenderEvent());
+                EventManager.getInstance().postEvent(new RenderEvent(MyWindow.CNV, MyWindow.BUFFER_STRATEGY));
                 
                 
                 //update loop vars
                 lastTime = now;
+                
+                
+                MyWindow.show();
+                MyWindow.clear();
                 
                 //System.out.println("RUNNING");
             }

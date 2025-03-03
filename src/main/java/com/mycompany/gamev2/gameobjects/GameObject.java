@@ -23,6 +23,7 @@ public class GameObject implements ITickListener, IRenderListener  {
     
     protected HashMap<Class<? extends ObjectComponent>, ObjectComponent> components = new HashMap<>();
     
+    protected boolean isActive = true;
     
     public GameObject(){
         ComponentSetup();
@@ -65,12 +66,25 @@ public class GameObject implements ITickListener, IRenderListener  {
     public void setObjectLocation(Vector3 newLocation){
         this.getComponent(TransformComponent.class).setLocation(newLocation);
     }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
    
     
     
+    
     @Override
-    public void onTick(TickEvent e){}
+    public void onTick(TickEvent e){
+        if(!isActive) return;
+    }
 
     @Override
-    public void onRender(RenderEvent event){}
+    public void onRender(RenderEvent event){
+        if(!isActive) return;
+    }
 }

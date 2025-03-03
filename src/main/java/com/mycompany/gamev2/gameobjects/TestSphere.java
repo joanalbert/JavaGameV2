@@ -49,6 +49,8 @@ public class TestSphere extends GameObject {
 
     @Override
     public void onRender(RenderEvent event) {
+        super.onRender(event);
+        
         System.out.println("render sphere");
         Graphics2D g = event.getGraphics();
         
@@ -59,10 +61,15 @@ public class TestSphere extends GameObject {
         
         g.setColor(this.color);
         g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
+        
+        //g.dispose();
+        //event.getStrat().show();
     }
 
     @Override
     public void onTick(TickEvent e) {
+        super.onTick(e);
+        
         System.out.println("tick sphere");
         Vector3 location = getObjectLocation();
         
