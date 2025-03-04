@@ -12,7 +12,6 @@ import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.interfaces.IRenderListener;
 import com.mycompany.gamev2.interfaces.ITickListener;
-import java.awt.Graphics2D;
 import java.util.HashMap;
 
 /**

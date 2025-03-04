@@ -71,20 +71,20 @@ public class GameLoopV2 implements Runnable {
             waitTime = TARGET_TIME - elapsedTime / 1000000;
             deltaTime = elapsedTime / 1_000_000_000.0; // Convert nanoseconds to seconds
 
-            if (elapsedTime >= TARGET_TIME * 1000000) {
-                                
-                
+            if (elapsedTime >= TARGET_TIME * 1000000) {     
+                //update
                 EventManager.getInstance().postEvent(new TickEvent(deltaTime));
-                EventManager.getInstance().postEvent(new RenderEvent(MyWindow.CNV, MyWindow.BUFFER_STRATEGY));
                 
+                //render
+                Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
+                g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
+                EventManager.getInstance().postEvent(new RenderEvent(g));
+                g.dispose();
+                MyWindow.BUFFER_STRATEGY.show();
                 
                 //update loop vars
                 lastTime = now;
-                
-                
-                MyWindow.show();
-                MyWindow.clear();
-                
+                                
                 //System.out.println("RUNNING");
             }
             

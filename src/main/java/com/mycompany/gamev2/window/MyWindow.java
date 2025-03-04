@@ -18,8 +18,6 @@ import javax.swing.JFrame;
 public abstract class MyWindow {
     
     public static JFrame FRAME;
-    public static MyPanel PANNEL;
-    
     public static Canvas CNV;
     public static BufferStrategy BUFFER_STRATEGY;
             
@@ -33,7 +31,6 @@ public abstract class MyWindow {
         MyWindow.FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MyWindow.FRAME.setLocationRelativeTo(null);
         
-        //if(MyWindow.PANNEL != null) MyWindow.FRAME.add(MyWindow.PANNEL);
         if(CNV != null) FRAME.add(CNV);
         
         MyWindow.FRAME.pack();
@@ -41,22 +38,8 @@ public abstract class MyWindow {
     }
     
     
-    public static void clear(){
-        Graphics2D g2d = (Graphics2D) BUFFER_STRATEGY.getDrawGraphics();
-        g2d.clearRect(0, 0 ,DIMENSIONS.width, DIMENSIONS.height);
-    }
-    
-    public static void show(){
-        Graphics2D g2d = (Graphics2D) BUFFER_STRATEGY.getDrawGraphics();
-        g2d.dispose();
-        BUFFER_STRATEGY.show();
-    }
-    
-    static void MakePanel(){
-        MyWindow.PANNEL = new MyPanel("MyPannel");
-    }
-    
-    
+        
+   
     public static void Construct_BUFFER_STRATEGY(){
         //init canvas and frame
         CNV = new Canvas();
@@ -68,8 +51,5 @@ public abstract class MyWindow {
         BUFFER_STRATEGY = CNV.getBufferStrategy();
     }
     
-    public static void Construct_JPANEL(String name){
-        MyWindow.MakePanel();
-        MyWindow.MakeFrame(name);
-    }
+   
 }

@@ -4,9 +4,7 @@
  */
 package com.mycompany.gamev2.event_system.game_events;
 
-import java.awt.Canvas;
 import java.awt.Graphics2D;
-import java.awt.image.BufferStrategy;
 
 /**
  *
@@ -15,26 +13,13 @@ import java.awt.image.BufferStrategy;
 public class RenderEvent extends BaseEvent {
  
     private Graphics2D g;
-    private Canvas canvas;
-    private BufferStrategy strat;
     
-    public RenderEvent(Canvas canvas, BufferStrategy strat){
-        this.canvas = canvas;
-        this.strat = strat;
-        this.g = (Graphics2D) strat.getDrawGraphics();
+    public RenderEvent(Graphics2D g){
+        this.g = g;
     }
     
     public Graphics2D getGraphics(){
         return this.g;
     }
 
-    public Canvas getCanvas() {
-        return canvas;
-    }
-
-    public BufferStrategy getStrat() {
-        return strat;
-    }
-    
-    
 }
