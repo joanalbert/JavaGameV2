@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.interfaces;
 
+import com.mycompany.gamev2.interfaces.event_listeners.IEventListener;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 
 /**

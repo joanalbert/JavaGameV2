@@ -7,18 +7,16 @@ package com.mycompany.gamev2.gameobjects;
 import com.mycompany.gamev2.component.object.ObjectComponent;
 import com.mycompany.gamev2.component.object.TransformComponent;
 import com.mycompany.gamev2.event_system.EventManager;
-import com.mycompany.gamev2.event_system.game_events.RenderEvent;
-import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
-import com.mycompany.gamev2.interfaces.IRenderListener;
-import com.mycompany.gamev2.interfaces.ITickListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import java.util.HashMap;
 
 /**
  *
  * @author J.A
  */
-public class GameObject implements ITickListener, IRenderListener  {
+public class GameObject implements IGameUpdateListener  {
     
     protected HashMap<Class<? extends ObjectComponent>, ObjectComponent> components = new HashMap<>();
     
@@ -26,8 +24,7 @@ public class GameObject implements ITickListener, IRenderListener  {
     
     public GameObject(){
         ComponentSetup();
-        EventManager.getInstance().subscribeTo(this, RenderEvent.class);
-        EventManager.getInstance().subscribeTo(this, TickEvent.class);
+        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
     
     
@@ -76,14 +73,9 @@ public class GameObject implements ITickListener, IRenderListener  {
    
     
     
-    
     @Override
-    public void onTick(TickEvent e){
-        if(!isActive) return;
-    }
-
-    @Override
-    public void onRender(RenderEvent event){
-        if(!isActive) return;
+    public void onEventReceived(BaseEvent event) {
+        if (!isActive) return;
+        
     }
 }

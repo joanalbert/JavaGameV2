@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.gameobjects;
 
 import com.mycompany.gamev2.component.object.TransformComponent;
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
@@ -47,10 +48,22 @@ public class TestSphere extends GameObject {
         super.ComponentSetup();        
     }
 
+    
     @Override
-    public void onRender(RenderEvent event) {
-        super.onRender(event);
+    public void onEventReceived(BaseEvent event) {
+        super.onEventReceived(event);
+ 
+        if (event instanceof TickEvent){
+            tick((TickEvent) event);
+        }
+        else if (event instanceof RenderEvent){
+            render((RenderEvent) event);
+        }
         
+    }
+
+
+    private void render(RenderEvent event){
         System.out.println("render sphere");
         Graphics2D g = event.getGraphics();
         
@@ -61,26 +74,17 @@ public class TestSphere extends GameObject {
         
         g.setColor(this.color);
         g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
-        
-        //g.dispose();
-        //event.getStrat().show();
     }
-
-    @Override
-    public void onTick(TickEvent e) {
-        super.onTick(e);
-        
+    
+    private void tick(TickEvent event){
         System.out.println("tick sphere");
         Vector3 location = getObjectLocation();
         
         if(location.getX() + this.radius >= MyWindow.DIMENSIONS.width || location.getX() < this.radius ) this.vel = this.vel.getScaled(-1);
         
-        Vector3 usable_vel = this.vel.getScaled(this.speed).getScaled(e.getDeltaSeconds());
+        Vector3 usable_vel = this.vel.getScaled(this.speed).getScaled(event.getDeltaSeconds());
         Vector3 newpos = location.plus(usable_vel);
         setObjectLocation(newpos);
     }
-
-
-    
 }
 

@@ -7,6 +7,7 @@ package com.mycompany.gamev2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Graphics2D;
 
@@ -73,12 +74,12 @@ public class GameLoopV2 implements Runnable {
 
             if (elapsedTime >= TARGET_TIME * 1000000) {     
                 //update
-                EventManager.getInstance().postEvent(new TickEvent(deltaTime));
+                EventManager.getInstance().post(new TickEvent(deltaTime), IGameUpdateListener.class);
                 
                 //render
                 Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
                 g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
-                EventManager.getInstance().postEvent(new RenderEvent(g));
+                EventManager.getInstance().post(new RenderEvent(g), IGameUpdateListener.class);
                 g.dispose();
                 MyWindow.BUFFER_STRATEGY.show();
                 

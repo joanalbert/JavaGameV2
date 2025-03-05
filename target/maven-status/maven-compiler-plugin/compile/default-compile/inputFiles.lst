@@ -13,9 +13,11 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gameobjects\GameObject.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gameobjects\TestSphere.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\GameV2.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\IEventListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IEventListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IInputListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\IRenderListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\ITickListener.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\pannels\BasePanel.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\pannels\MyPanel.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\window\MyWindow.java

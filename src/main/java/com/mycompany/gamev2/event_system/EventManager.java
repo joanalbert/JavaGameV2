@@ -5,11 +5,11 @@
 package com.mycompany.gamev2.event_system;
 
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
-import com.mycompany.gamev2.event_system.game_events.RenderEvent;
-import com.mycompany.gamev2.event_system.game_events.TickEvent;
-import com.mycompany.gamev2.interfaces.IEventListener;
-import com.mycompany.gamev2.interfaces.IRenderListener;
-import com.mycompany.gamev2.interfaces.ITickListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IEventListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
+import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
 import java.util.HashMap;
 
 /**
@@ -18,13 +18,16 @@ import java.util.HashMap;
  */
 public class EventManager {
     
-    private HashMap<Class<? extends BaseEvent>, EventBus> listeners = new HashMap<>();
+    private HashMap<Class<? extends IEventListener>, EventBus<?>> EVENT_BUSSES = new HashMap<>();
     
     private static EventManager instance;
     
     private EventManager(){
-        this.listeners.put(  TickEvent.class, new EventBus<ITickListener>());
-        this.listeners.put(RenderEvent.class, new EventBus<IRenderListener>());
+       EVENT_BUSSES.put(IGameUpdateListener.class, new EventBus<IGameUpdateListener>());
+       EVENT_BUSSES.put(IGameplayListener.class, new EventBus<IGameplayListener>());
+       EVENT_BUSSES.put(IInputListener.class, new EventBus<IInputListener>());
+       EVENT_BUSSES.put(IWorldListener.class, new EventBus<IWorldListener>());
+       
     }
     
     public static EventManager getInstance(){
@@ -32,13 +35,25 @@ public class EventManager {
         return instance;
     }
     
-    public <T extends BaseEvent> void postEvent(T event){
-        EventBus bus = this.listeners.get(event.getClass());
-        if(bus != null) bus.notify(event);
+    @SuppressWarnings("unchecked")
+    public <T extends IEventListener> void post(BaseEvent event, Class<T> listenerType) {
+        EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
+        if (bus != null) bus.notify(event);
     }
     
-    public <T extends IEventListener> void subscribeTo(T listener, Class<? extends BaseEvent> event_type){
-        EventBus bus = this.listeners.get(event_type);
-        if(bus != null) bus.addListener(listener); //possible runtime failure 
+    @SuppressWarnings("unchecked")
+    public <T extends IEventListener> void subscribe(T listener, Class<T> listenerType) {
+        EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
+        if (bus == null) {
+            bus = new EventBus<>();
+            EVENT_BUSSES.put(listenerType, bus);
+        }
+        bus.addListener(listener);
+    }
+    
+     @SuppressWarnings("unchecked")
+    public <T extends IEventListener> void unsubscribe(T listener, Class<T> listenerType) {
+        EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
+        if (bus != null) bus.removeListener(listener);
     }
 }
