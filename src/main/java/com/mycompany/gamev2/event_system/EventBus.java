@@ -21,10 +21,11 @@ public class EventBus<T extends IEventListener> {
     private ArrayList<T> bus = new ArrayList<>();
     public String name;
     
+    private int e = 0;
     
-    private static final int QUEUE_LIMIT = 10;
+    private static final int QUEUE_LIMIT = 100;
     private int QUEUE_COUNT = 0;
-    private ArrayList<Runnable> EVENT_QUEUE = new ArrayList<>();
+    private ArrayList<Runnable> QUEUE = new ArrayList<>();
     private boolean isNotifying;
     
     
@@ -34,10 +35,20 @@ public class EventBus<T extends IEventListener> {
     }
     
     public void addListener(T listener){
+        if(this.isNotifying){
+            System.out.println("Adding "+listener.getClass()+" to the "+this.name+" queue.");
+            queue(()->addListener(listener));
+            return;
+        }
         this.bus.add(listener);
     }
     
     public void removeListener(T listener){
+        if(this.isNotifying){
+            System.out.println("Adding "+listener.getClass()+" to the "+this.name+" queue.");
+            queue(()->removeListener(listener));
+            return;
+        }
         this.bus.remove(listener);
     }
     
@@ -52,40 +63,56 @@ public class EventBus<T extends IEventListener> {
         this.isNotifying = true;
         
         try{
-            Iterator<T> i = bus.iterator();
-            //System.out.println(this.name);
-            
+            //we don't iterate the actual bus but a copy of it, to avoid getting concurrency issues
+            ArrayList<T> bus_copy = new ArrayList<>(bus); 
+                      
             //actually notify the bus
-            while(i.hasNext()){
-                T listener = i.next();
+            for(T listener : bus_copy){
                 listener.onEventReceived(event); // No if-else, direct call
             }
+                      
         }
-        catch(ConcurrentModificationException e){ //THE MOMENNT I ADDED THIS CATCH IN HERE IT STARTED WORKING AAAAAAARGH
-            System.out.println(e);
-        }
+        
         finally{
             this.isNotifying = false;
-            cycleQueue();
+            if(QUEUE.size() > 0) cycleQueue();
         }
         
     }
     
     private void cycleQueue(){
-        ArrayList<Runnable> copy_queue = new ArrayList<>(EVENT_QUEUE); //copy to avoid infinite loops
-        EVENT_QUEUE.clear();
+        ArrayList<Runnable> copy_queue = new ArrayList<>(QUEUE); //copy to avoid infinite loops
+        QUEUE.clear();
+        QUEUE_COUNT = 0;
+        
+        System.out.println("processing queue of size: "+copy_queue.size());
+        
+        int idx = 1;
         for (Runnable task : copy_queue) {
+            System.out.println(this.name+" cycling queue ("+idx+")...");
             task.run(); // Process each queued event
+            idx++;
+        }
+        System.out.println(this.name+" is now free");
+    }
+    
+    public void queue(Runnable task){
+        if(QUEUE_COUNT + 1 <= QUEUE_LIMIT){
+            QUEUE.add(task);
+            QUEUE_COUNT++;
+        }
+        else{
+            System.out.println("EVENT QUEUE LIMIT REACHED: " +task.toString());
         }
     }
     
     public void queue(BaseEvent event){
         if(QUEUE_COUNT + 1 <= QUEUE_LIMIT){
-            EVENT_QUEUE.add(() -> notify(event));
+            QUEUE.add(() -> notify(event));
             QUEUE_COUNT++;
         }
         else{
-            System.out.println("EVENT QUEUE LIMIT REACHED");
+            System.out.println("EVENT QUEUE LIMIT REACHED: "+event.getClass());
         }
     }
     
