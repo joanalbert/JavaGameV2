@@ -5,10 +5,8 @@
 package com.mycompany.gamev2.levels;
 
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
-import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
-import com.mycompany.gamev2.interfaces.ILevel;
 import java.awt.Color;
 
 /**
@@ -18,7 +16,7 @@ import java.awt.Color;
 public class TestLevel_02 extends BaseLevel {
 
     public TestLevel_02(){
-        super("TestLvel_02");
+        super("TestLevel_02");
     }
     
     @Override

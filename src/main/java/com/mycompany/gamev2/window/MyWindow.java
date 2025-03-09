@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.gamev2.window;
+import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
@@ -51,7 +52,7 @@ public abstract class MyWindow {
                 if(event instanceof LevelSwitchEvent){
                     LevelSwitchEvent lse = (LevelSwitchEvent) event;
                     String newWindowTitle = lse.getNewLevel().getName();
-                    MyWindow.FRAME.setName(newWindowTitle);
+                    MyWindow.FRAME.setTitle(newWindowTitle);
                 }
             }
         }, IWorldListener.class);
@@ -82,6 +83,13 @@ public abstract class MyWindow {
         CNV.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == 27){
+                    GameLoopV2.getInstance().stop();
+                    MyWindow.FRAME.remove(CNV);
+                    MyWindow.FRAME.dispose();
+                    System.out.println("EXITING...");
+                    return;
+                }
                 EventManager.getInstance().post(new KeyPressEvent(e.getKeyCode()), IInputListener.class);
             }
         });

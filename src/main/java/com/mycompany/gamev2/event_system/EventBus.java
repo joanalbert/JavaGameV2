@@ -9,20 +9,18 @@ package com.mycompany.gamev2.event_system;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.interfaces.event_listeners.IEventListener;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 
 /**
  *
  * @author J.A
+ * @param <T>
  */
 public class EventBus<T extends IEventListener> {
     
     private ArrayList<T> bus = new ArrayList<>();
     public String name;
     
-    private int e = 0;
-    
+       
     private static final int QUEUE_LIMIT = 100;
     private int QUEUE_COUNT = 0;
     private ArrayList<Runnable> QUEUE = new ArrayList<>();
@@ -75,7 +73,7 @@ public class EventBus<T extends IEventListener> {
         
         finally{
             this.isNotifying = false;
-            if(QUEUE.size() > 0) cycleQueue();
+            if(!QUEUE.isEmpty()) cycleQueue();
         }
         
     }
@@ -102,7 +100,7 @@ public class EventBus<T extends IEventListener> {
             QUEUE_COUNT++;
         }
         else{
-            System.out.println("EVENT QUEUE LIMIT REACHED: " +task.toString());
+            System.out.println("EXCEEDED QUEUE LIMIT...");
         }
     }
     
@@ -112,7 +110,7 @@ public class EventBus<T extends IEventListener> {
             QUEUE_COUNT++;
         }
         else{
-            System.out.println("EVENT QUEUE LIMIT REACHED: "+event.getClass());
+            System.out.println("EXCEEDED QUEUE LIMIT...");
         }
     }
     
