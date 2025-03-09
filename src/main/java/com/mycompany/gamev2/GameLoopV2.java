@@ -5,6 +5,8 @@
 package com.mycompany.gamev2;
 
 import com.mycompany.gamev2.event_system.EventManager;
+import com.mycompany.gamev2.event_system.game_events.GameFinishedEvent;
+import com.mycompany.gamev2.event_system.game_events.GameStartEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
@@ -64,6 +66,7 @@ public class GameLoopV2 implements Runnable {
         long waitTime;
         double deltaTime = 0;
         
+        EventManager.getInstance().post(new GameStartEvent(), IGameUpdateListener.class);
                 
         while(this.running){
             
@@ -100,6 +103,7 @@ public class GameLoopV2 implements Runnable {
         }
         
         System.out.println("STOPPING....");
+        EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
     }
     
     

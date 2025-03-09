@@ -4,10 +4,13 @@
  */
 package com.mycompany.gamev2.interfaces.event_listeners;
 
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
+
 /**
  *
  * @author J.A
  */
 public interface IInputListener extends IEventListener {
-    
+    @Override
+    void onEventReceived(BaseEvent event);
 }

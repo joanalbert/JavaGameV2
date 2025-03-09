@@ -76,6 +76,6 @@ public class GameObject implements IGameUpdateListener  {
     @Override
     public void onEventReceived(BaseEvent event) {
         if (!isActive) return;
-        
+        // Default does nothing, subclasses override if they need to listen
     }
 }

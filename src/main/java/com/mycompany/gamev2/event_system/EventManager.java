@@ -10,6 +10,7 @@ import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,13 +21,15 @@ public class EventManager {
     
     private HashMap<Class<? extends IEventListener>, EventBus<?>> EVENT_BUSSES = new HashMap<>();
     
+    
+    
     private static EventManager instance;
     
     private EventManager(){
-       EVENT_BUSSES.put(IGameUpdateListener.class, new EventBus<IGameUpdateListener>());
-       EVENT_BUSSES.put(IGameplayListener.class, new EventBus<IGameplayListener>());
-       EVENT_BUSSES.put(IInputListener.class, new EventBus<IInputListener>());
-       EVENT_BUSSES.put(IWorldListener.class, new EventBus<IWorldListener>());
+       EVENT_BUSSES.put(IGameUpdateListener.class, new EventBus<IGameUpdateListener>("GAME_BUS"));
+       EVENT_BUSSES.put(IGameplayListener.class, new EventBus<IGameplayListener>("GAMEPLAY_BUS"));
+       EVENT_BUSSES.put(IInputListener.class, new EventBus<IInputListener>("INPUT_BUS"));
+       EVENT_BUSSES.put(IWorldListener.class, new EventBus<IWorldListener>("LEVEL_BUS"));
        
     }
     
@@ -34,18 +37,21 @@ public class EventManager {
         if(instance == null) instance = new EventManager();
         return instance;
     }
-    
+        
     @SuppressWarnings("unchecked")
     public <T extends IEventListener> void post(BaseEvent event, Class<T> listenerType) {
         EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
-        if (bus != null) bus.notify(event);
+        
+        if(bus == null) {throw new IllegalArgumentException("No such evet-bus for event type");}
+     
+        bus.notify(event);        
     }
     
     @SuppressWarnings("unchecked")
     public <T extends IEventListener> void subscribe(T listener, Class<T> listenerType) {
         EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
         if (bus == null) {
-            bus = new EventBus<>();
+            bus = new EventBus<>("DYNAMIC_BUS");
             EVENT_BUSSES.put(listenerType, bus);
         }
         bus.addListener(listener);

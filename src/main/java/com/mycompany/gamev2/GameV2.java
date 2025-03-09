@@ -6,9 +6,9 @@ package com.mycompany.gamev2;
 
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
+import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Color;
-import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 /**
  *
@@ -30,19 +30,14 @@ public class GameV2 {
         
         //initialize window and canvas/buffer strategy combo
         MyWindow.Construct_BUFFER_STRATEGY();
+        
+       
+        //double radius = 45;
+        //Vector3 pos = new Vector3(50,50,0).plus(Vector3.DOWN.getScaled(1 * (radius+50)));
+        //TestSphere s = new TestSphere(Color.MAGENTA, radius, pos, Vector3.RIGHT, 100);
 
-        //add in some random gameobjects to display
-        int total_spheres = 1; 
-        ArrayList<TestSphere> spheres = new ArrayList<>();
-        int radius = 45;
-        int count = 0;
-        while(count < total_spheres){
-            Vector3 pos = new Vector3(50,50,0).plus(Vector3.DOWN.getScaled(count * (radius+50)));
-            TestSphere s = new TestSphere(Color.MAGENTA, radius, pos, Vector3.RIGHT, 100);
-            spheres.add(s);
-            count ++;
-        }
-
+        LevelManager levelManager = LevelManager.getInstance();
+        
         //run the main loop
         GameLoopV2 loop = GameLoopV2.getInstance();
         loop.start();

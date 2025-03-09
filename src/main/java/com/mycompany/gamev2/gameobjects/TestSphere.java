@@ -8,6 +8,7 @@ import com.mycompany.gamev2.component.object.TransformComponent;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.window.MyWindow;
 
@@ -59,12 +60,16 @@ public class TestSphere extends GameObject {
         else if (event instanceof RenderEvent){
             render((RenderEvent) event);
         }
-        
+        else if (event instanceof KeyPressEvent){
+            return;            
+        }
     }
 
 
     private void render(RenderEvent event){
-        System.out.println("render sphere");
+        if(!this.isActive) return;
+        
+        //System.out.println("render sphere");
         Graphics2D g = event.getGraphics();
         
         Vector3 location = getObjectLocation();
@@ -77,7 +82,7 @@ public class TestSphere extends GameObject {
     }
     
     private void tick(TickEvent event){
-        System.out.println("tick sphere");
+        //System.out.println("tick sphere");
         Vector3 location = getObjectLocation();
         
         if(location.getX() + this.radius >= MyWindow.DIMENSIONS.width || location.getX() < this.radius ) this.vel = this.vel.getScaled(-1);
