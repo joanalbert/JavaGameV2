@@ -54,6 +54,8 @@ public class TestSphere extends GameObject {
     public void onEventReceived(BaseEvent event) {
         super.onEventReceived(event);
  
+        if(!this.isActive) return;
+        
         if (event instanceof TickEvent){
             tick((TickEvent) event);
         }

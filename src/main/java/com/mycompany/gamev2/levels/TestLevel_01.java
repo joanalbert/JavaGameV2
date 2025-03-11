@@ -33,7 +33,7 @@ public class TestLevel_01 extends BaseLevel {
     @Override
     public void level_windup() {
         //add in some random gameobjects to display
-        int total_spheres = 12; 
+        int total_spheres = 3; 
         int radius = 45;
         int count = 0;
         

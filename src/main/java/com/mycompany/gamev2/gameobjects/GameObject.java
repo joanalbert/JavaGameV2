@@ -72,6 +72,11 @@ public class GameObject implements IGameUpdateListener  {
     }
    
     
+    public void destroy() {
+        EventManager.getInstance().unsubscribe(this, IGameUpdateListener.class);
+        this.isActive = false;
+        this.components.clear(); // Optional: clear components
+    }
     
     @Override
     public void onEventReceived(BaseEvent event) {

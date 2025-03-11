@@ -83,6 +83,8 @@ public abstract class MyWindow {
         CNV.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
+                
+                //HARDCODED EXIT
                 if(e.getKeyCode() == 27){
                     GameLoopV2.getInstance().stop();
                     MyWindow.FRAME.remove(CNV);
@@ -90,6 +92,9 @@ public abstract class MyWindow {
                     System.out.println("EXITING...");
                     return;
                 }
+                
+                
+                
                 EventManager.getInstance().post(new KeyPressEvent(e.getKeyCode()), IInputListener.class);
             }
         });

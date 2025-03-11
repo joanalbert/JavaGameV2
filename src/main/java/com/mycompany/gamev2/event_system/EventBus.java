@@ -34,7 +34,7 @@ public class EventBus<T extends IEventListener> {
     
     public void addListener(T listener){
         if(this.isNotifying){
-            System.out.println("Adding "+listener.getClass()+" to the "+this.name+" queue.");
+            System.out.println("Queueing addListener for " + listener.getClass().getSimpleName() + " on " + name);
             queue(()->addListener(listener));
             return;
         }
@@ -43,7 +43,7 @@ public class EventBus<T extends IEventListener> {
     
     public void removeListener(T listener){
         if(this.isNotifying){
-            System.out.println("Adding "+listener.getClass()+" to the "+this.name+" queue.");
+            System.out.println("Queueing removeListener for " + listener.getClass().getSimpleName() + " on " + name);
             queue(()->removeListener(listener));
             return;
         }

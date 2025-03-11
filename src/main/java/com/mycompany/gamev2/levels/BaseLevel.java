@@ -43,6 +43,12 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
 
     @Override
     public void level_windown(){
+        for (Map.Entry<Class<? extends GameObject>, ArrayList<GameObject>> entry : LevelObjects.entrySet()) {
+            ArrayList<GameObject> game_objects = entry.getValue();
+            for(GameObject obj : game_objects) obj.destroy();
+            game_objects.clear();
+        }
+        
         clearGameObjectsV2();
     }
 

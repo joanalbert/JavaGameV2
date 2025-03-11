@@ -1,15 +1,19 @@
 com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IEventListener.class
+com\mycompany\gamev2\input_system\BaseInputMapping.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
+com\mycompany\gamev2\input_system\InputContext.class
 com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class
 com\mycompany\gamev2\levels\LevelManager.class
 com\mycompany\gamev2\levels\TestLevel_01.class
 com\mycompany\gamev2\window\MyWindow$2.class
 com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\GameV2.class
+com\mycompany\gamev2\input_system\InputManager.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
+com\mycompany\gamev2\input_system\mappings\PlayerMapping_001.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
 com\mycompany\gamev2\interfaces\ILevel.class
 com\mycompany\gamev2\component\BaseComponent.class
@@ -18,6 +22,7 @@ com\mycompany\gamev2\GameLoopV2.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.class
 com\mycompany\gamev2\window\MyWindow.class
 com\mycompany\gamev2\levels\TestLevel_02.class
+com\mycompany\gamev2\component\object\InputComponent.class
 com\mycompany\gamev2\component\object\ObjectComponent.class
 com\mycompany\gamev2\GameMath\Vector3.class
 com\mycompany\gamev2\levels\BaseLevel.class
