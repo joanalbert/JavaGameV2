@@ -62,4 +62,11 @@ public class EventManager {
         EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);
         if (bus != null) bus.removeListener(listener);
     }
+    
+    public <T extends IEventListener> void unsubscribeAll(T listener) {
+        
+        for(EventBus bus : EVENT_BUSSES.values()){
+            bus.removeListener(listener);
+        }
+    }
 }

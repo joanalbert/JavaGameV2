@@ -3,17 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.gamev2.window;
-import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
-import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
-import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
+import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
@@ -79,25 +75,8 @@ public abstract class MyWindow {
         CNV.setFocusable(true);
         CNV.requestFocus();
         
-        //hook into our own event system
-        CNV.addKeyListener(new KeyAdapter(){
-            @Override
-            public void keyPressed(KeyEvent e) {
-                
-                //HARDCODED EXIT
-                if(e.getKeyCode() == 27){
-                    GameLoopV2.getInstance().stop();
-                    MyWindow.FRAME.remove(CNV);
-                    MyWindow.FRAME.dispose();
-                    System.out.println("EXITING...");
-                    return;
-                }
-                
-                
-                
-                EventManager.getInstance().post(new KeyPressEvent(e.getKeyCode()), IInputListener.class);
-            }
-        });
+        //hook this canvas into our own input system
+        InputManager.getInstance().CanvasHook(CNV);
         
         MyWindow.MakeFrame("TEST BUFFER STRAT");
                       

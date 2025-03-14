@@ -8,6 +8,6 @@ package com.mycompany.gamev2.input_system.mappings;
  *
  * @author J.A
  */
-public class PlayerMapping_001 extends BaseInputMapping {
+public class BaseInputMapping {
     
 }

@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.component.object;
 
-import com.mycompany.gamev2.input_system.BaseInputMapping;
+import com.mycompany.gamev2.input_system.mappings.BaseInputMapping;
 
 /**
  *
@@ -23,4 +23,4 @@ public class InputComponent extends ObjectComponent {
     }
     
     
-}
+} 

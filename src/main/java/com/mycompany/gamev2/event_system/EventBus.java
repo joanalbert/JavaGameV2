@@ -21,7 +21,7 @@ public class EventBus<T extends IEventListener> {
     public String name;
     
        
-    private static final int QUEUE_LIMIT = 100;
+    private static final int QUEUE_LIMIT = 200;
     private int QUEUE_COUNT = 0;
     private ArrayList<Runnable> QUEUE = new ArrayList<>();
     private boolean isNotifying;

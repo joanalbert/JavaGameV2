@@ -115,6 +115,14 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
         LevelObjects = new HashMap<>();
     }
     
+    public <T extends GameObject> ArrayList<T> getAllGameobjectsOfType(Class<T> type){
+        ArrayList<GameObject> objects = new ArrayList<>(LevelObjects.get(type));
+        ArrayList<T> result_objects = new ArrayList<>();
+        for(GameObject obj : objects){
+            if(obj.getClass() == type) result_objects.add((T) obj);
+        }
+        return result_objects;
+    }
 
     public boolean isActive() {
         return active;

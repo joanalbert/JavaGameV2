@@ -9,6 +9,8 @@ import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.GameStartEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
+import com.mycompany.gamev2.gameobjects.GameObject;
+import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
 import com.mycompany.gamev2.interfaces.ILevel;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
@@ -76,5 +78,18 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
             switchLevel(next);
         }
 
+    }
+    
+    
+    public <T extends GameObject> ArrayList<T> getAllGameobjectsOfType(Class<T> type){
+        if(this.current_level == null) return null;
+        return this.current_level.getAllGameobjectsOfType(type);
+    }
+    
+    public PlayerCharacter getFirstActivePlayer(){
+        if(this.current_level == null) return null;
+        ArrayList<PlayerCharacter> result = getAllGameobjectsOfType(PlayerCharacter.class);
+        if(result == null) return null;
+        return result.get(0);
     }
 }

@@ -5,9 +5,10 @@
 package com.mycompany.gamev2.levels;
 
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
-import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
+import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
+import com.mycompany.gamev2.input_system.controllers.PlayerController;
 import java.awt.Color;
 
 /**
@@ -45,6 +46,10 @@ public class TestLevel_01 extends BaseLevel {
             
             count ++;
         }
+        
+        PlayerCharacter player = new PlayerCharacter();
+        player.addController(new PlayerController());
+        addGameObject(player);
     }
 
     @Override
