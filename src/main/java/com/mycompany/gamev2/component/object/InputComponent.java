@@ -4,21 +4,21 @@
  */
 package com.mycompany.gamev2.component.object;
 
-import com.mycompany.gamev2.input_system.mappings.BaseInputMapping;
+import com.mycompany.gamev2.input_system.mappings.ActionMapping;
 
 /**
  *
  * @author J.A
  */
 public class InputComponent extends ObjectComponent {
-    private BaseInputMapping currentMapping;
+    private ActionMapping currentMapping;
 
     
-    public BaseInputMapping getMapping() {
+    public ActionMapping getMapping() {
         return currentMapping;
     }
 
-    public void setMapping(BaseInputMapping currentMapping) {
+    public void setMapping(ActionMapping currentMapping) {
         this.currentMapping = currentMapping;
     }
     

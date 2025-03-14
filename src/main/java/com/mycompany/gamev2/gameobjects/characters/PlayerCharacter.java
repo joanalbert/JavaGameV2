@@ -10,6 +10,8 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.controllers.BaseController;
+import com.mycompany.gamev2.input_system.enums.EWalkingAction;
+import com.mycompany.gamev2.input_system.mappings.ActionMapping;
 import com.mycompany.gamev2.input_system.mappings.PlayerMapping_001;
 
 import java.awt.Color;
@@ -26,6 +28,8 @@ public class PlayerCharacter extends Character {
     private double speed;
     private double radius;
     private Color color;
+
+    
     
     public PlayerCharacter(){
         TransformComponent transform = this.getComponent(TransformComponent.class);
@@ -39,10 +43,40 @@ public class PlayerCharacter extends Character {
     
     
     public void addController(BaseController c){
+        System.out.println("AAAAA");
         if(c != null){
             setController(c);
-            setInputMapping(new PlayerMapping_001());
         }
+    }
+
+    @Override
+    protected void registerActions() {
+        ActionMapping activeMapping = getController().getMapping();
+        
+        if (activeMapping instanceof PlayerMapping_001) {
+            actionFunctions.put(EWalkingAction.MOVE_LEFT, this::moveLeft);
+            actionFunctions.put(EWalkingAction.MOVE_RIGHT, this::moveRight);
+            actionFunctions.put(EWalkingAction.JUMP, this::jump);
+            actionFunctions.put(EWalkingAction.SOME_ACTION, this::someAction);
+        }
+    }
+    
+    public void someAction() {
+        this.color = Color.BLUE;
+    }
+
+    private void moveLeft() {
+        System.out.println("Player moves left!");
+        vel = Vector3.LEFT;
+    }
+
+    private void moveRight() {
+        System.out.println("Player moves right!");
+        vel = Vector3.RIGHT;
+    }
+
+    private void jump() {
+        System.out.println("Player jumps!");
     }
     
     @Override
@@ -60,10 +94,7 @@ public class PlayerCharacter extends Character {
     }
 
     
-    public void someAction(){
-        this.color = Color.BLUE;
-    }
-
+   
     private void render(RenderEvent event){
         if(!this.isActive) return;
         

@@ -7,7 +7,7 @@ package com.mycompany.gamev2.input_system.controllers;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.gameobjects.characters.Character;
-import com.mycompany.gamev2.input_system.mappings.BaseInputMapping;
+import com.mycompany.gamev2.input_system.mappings.ActionMapping;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 
 /**
@@ -17,7 +17,7 @@ import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 public abstract class BaseController implements IInputListener{
     
     protected Character controlledObject;
-    protected BaseInputMapping keyMapping;
+    protected ActionMapping<?> mapping;
     protected int id = 0;
     
     public static int count = 0;
@@ -29,9 +29,8 @@ public abstract class BaseController implements IInputListener{
     }
     
     @Override
-    public void onEventReceived(BaseEvent event) {
-        
-    }
+    public abstract void onEventReceived(BaseEvent event);
+    
 
     public void setControlledObject(Character controlledCharacter) {
         BaseController c = controlledCharacter.getController();
@@ -41,9 +40,16 @@ public abstract class BaseController implements IInputListener{
         }
     }
     
-    public void setInputMapping(BaseInputMapping km){
-        if(km != null) this.keyMapping = km;
+    public void setActionMapping(ActionMapping<?> am){
+        if(am == null) return;
+        this.mapping = am;
+        if(this.controlledObject != null)this.controlledObject.updateActionMapping(am);
     }
+
+    public ActionMapping<?> getMapping() {
+        return mapping;
+    }
+    
     
    
     public void destroy(){

@@ -71,13 +71,24 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
     @Override
     public void onEventReceived(BaseEvent event) {
         
-        if(event instanceof KeyPressEvent || event instanceof GameStartEvent){
-            System.out.println("Switching levels..");
-            BaseLevel next = (BaseLevel) nextLevel();
-            System.out.println("Switching to: "+next.getName());
-            switchLevel(next);
+        if(event instanceof KeyPressEvent){
+            KeyPressEvent kpe = (KeyPressEvent) event;
+            
+            if(kpe.getKeyCode() == 76){ //l
+                System.out.println("Switching levels..");
+                BaseLevel next = (BaseLevel) nextLevel();
+                System.out.println("Switching to: "+next.getName());
+                switchLevel(next);
+            }
         }
-
+        
+        if(event instanceof GameStartEvent){
+            GameStartEvent gse = (GameStartEvent) event;
+            System.out.println("STARTING to level..");
+                //BaseLevel next = (BaseLevel) nextLevel();
+                //System.out.println("Switching to: "+next.getName());
+                switchLevel((BaseLevel)levels.get(0));
+        }
     }
     
     

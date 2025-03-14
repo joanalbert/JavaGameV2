@@ -7,9 +7,7 @@ package com.mycompany.gamev2.input_system;
 import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
-import com.mycompany.gamev2.input_system.controllers.BaseController;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
-import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Canvas;
 import java.awt.event.KeyAdapter;
@@ -43,10 +41,10 @@ public class InputManager {
                 //BaseController controller = LevelManager.getInstance().getFirstActivePlayer().getController(); WE DON'T NEED THIS ATM
                 
                 //post a input event, with all the available keyinfo
-                if(pressedKeyCode == 72){ //h
+                //if(pressedKeyCode == 72){ //h
                     HashMap<Integer, Boolean> copy_keystates = new HashMap<>(keyStates);
                     EventManager.getInstance().post(new KeyPressEvent(pressedKeyCode, copy_keystates), IInputListener.class);
-                }
+                //}
                 
                 //HARDCODED EXIT
                 if(e.getKeyCode() == 27){

@@ -7,7 +7,9 @@ package com.mycompany.gamev2.gameobjects.characters;
 import com.mycompany.gamev2.component.object.MovementComponent;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.input_system.controllers.BaseController;
-import com.mycompany.gamev2.input_system.mappings.BaseInputMapping;
+import com.mycompany.gamev2.input_system.interfaces.IAction;
+import com.mycompany.gamev2.input_system.mappings.ActionMapping;
+import java.util.HashMap;
 
 /**
  *
@@ -15,7 +17,7 @@ import com.mycompany.gamev2.input_system.mappings.BaseInputMapping;
  */
 public abstract class Character extends GameObject{
     private BaseController controller;
-
+    protected HashMap<IAction, Runnable> actionFunctions = new HashMap<>();
     
     @Override
     public void ComponentSetup() {
@@ -34,11 +36,26 @@ public abstract class Character extends GameObject{
         this.controller.setControlledObject(this);
     }
     
-    protected void setInputMapping(BaseInputMapping mapping){
+    protected void setInputMapping(ActionMapping mapping){
         if(this.controller != null){
-            this.controller.setInputMapping(mapping);
+            this.controller.setActionMapping(mapping);
         }
     }
+    
+    public void handleAction(IAction action) {
+        if (!isActive) return;
+        Runnable function = actionFunctions.get(action);
+        if (function != null) {
+            function.run();
+        }
+    }
+    
+    public void updateActionMapping(ActionMapping<?> mapping) {
+        actionFunctions.clear();
+        registerActions();
+    }
+
+    protected abstract void registerActions();
 
     @Override
     public void destroy() {
