@@ -18,7 +18,6 @@ public class PlayerController extends BaseController {
     
     public PlayerController(){
         super();
-        setActionMapping(new PlayerMapping_001());
     }
     
 

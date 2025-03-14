@@ -9,6 +9,7 @@ import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
 import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
 import com.mycompany.gamev2.input_system.controllers.PlayerController;
+import com.mycompany.gamev2.input_system.mappings.PlayerMapping_001;
 import java.awt.Color;
 
 /**
@@ -49,12 +50,13 @@ public class TestLevel_01 extends BaseLevel {
         
         PlayerCharacter player = new PlayerCharacter();
         player.addController(new PlayerController());
+        player.getController().setActionMapping(new PlayerMapping_001()); // Set mapping after linking
         addGameObject(player);
     }
 
     @Override
     public void level_windown() {
-        super.level_windown(); //this super call ensure all gameobjects on this level are cleared
+        super.level_windown(); //this super call ensures all gameobjects on this level are cleared
         //any other windown logic
     }
 

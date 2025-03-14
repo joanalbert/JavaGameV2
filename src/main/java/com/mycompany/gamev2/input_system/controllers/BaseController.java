@@ -43,7 +43,7 @@ public abstract class BaseController implements IInputListener{
     public void setActionMapping(ActionMapping<?> am){
         if(am == null) return;
         this.mapping = am;
-        if(this.controlledObject != null)this.controlledObject.updateActionMapping(am);
+        this.controlledObject.updateActionMapping(am);
     }
 
     public ActionMapping<?> getMapping() {
