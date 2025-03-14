@@ -42,6 +42,7 @@ public class EventBus<T extends IEventListener> {
     }
     
     public void removeListener(T listener){
+        
         if(this.isNotifying){
             System.out.println("Queueing removeListener for " + listener.getClass().getSimpleName() + " on " + name);
             queue(()->removeListener(listener));

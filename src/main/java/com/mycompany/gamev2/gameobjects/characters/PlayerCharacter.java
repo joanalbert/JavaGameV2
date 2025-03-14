@@ -38,7 +38,7 @@ public class PlayerCharacter extends Character {
         this.color = Color.RED;
         this.radius = 70;
         this.vel = Vector3.ZERO;
-        this.speed = 0;
+        this.speed = 220;
     }
     
     
@@ -123,6 +123,9 @@ public class PlayerCharacter extends Character {
     }
     
     private void tick(TickEvent event){
-        
+        Vector3 location = getObjectLocation();
+        Vector3 usable_vel = vel.getScaled(speed * event.getDeltaSeconds());
+        setObjectLocation(location.plus(usable_vel));
+        vel = Vector3.ZERO; // Reset after applying
     }
 }
