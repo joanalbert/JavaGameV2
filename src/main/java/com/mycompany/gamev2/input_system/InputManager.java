@@ -7,6 +7,7 @@ package com.mycompany.gamev2.input_system;
 import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
+import com.mycompany.gamev2.event_system.input_events.KeyReleaseEvent;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Canvas;
@@ -59,7 +60,10 @@ public class InputManager {
             
              @Override
             public void keyReleased(KeyEvent e) {
-                keyStates.put(e.getKeyCode(), false);
+                int releasedKeyCode = e.getKeyCode();
+                keyStates.put(releasedKeyCode, false);
+                HashMap<Integer, Boolean> copy_keystates = new HashMap<>(keyStates);
+                EventManager.getInstance().post(new KeyReleaseEvent(releasedKeyCode, copy_keystates), IInputListener.class);
             }
         });
     }
