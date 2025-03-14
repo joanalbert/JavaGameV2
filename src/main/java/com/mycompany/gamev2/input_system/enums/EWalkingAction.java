@@ -11,5 +11,11 @@ import com.mycompany.gamev2.input_system.interfaces.IAction;
  * @author J.A
  */
 public enum EWalkingAction implements IAction {
-       MOVE_LEFT, MOVE_RIGHT, JUMP, NEXT_LEVEL, SOME_ACTION
+       MOVE_UP,
+       MOVE_LEFT,
+       MOVE_DOWN,
+       MOVE_RIGHT,
+       JUMP,
+       NEXT_LEVEL,
+       SOME_ACTION
 }

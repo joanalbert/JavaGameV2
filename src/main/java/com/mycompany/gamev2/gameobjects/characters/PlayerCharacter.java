@@ -54,7 +54,9 @@ public class PlayerCharacter extends Character {
         ActionMapping activeMapping = getController().getMapping();
         
         if (activeMapping instanceof PlayerMapping_001) {
+            actionFunctions.put(EWalkingAction.MOVE_UP, this::moveUp);
             actionFunctions.put(EWalkingAction.MOVE_LEFT, this::moveLeft);
+            actionFunctions.put(EWalkingAction.MOVE_DOWN, this::moveDown);
             actionFunctions.put(EWalkingAction.MOVE_RIGHT, this::moveRight);
             actionFunctions.put(EWalkingAction.JUMP, this::jump);
             actionFunctions.put(EWalkingAction.SOME_ACTION, this::someAction);
@@ -68,6 +70,16 @@ public class PlayerCharacter extends Character {
     private void moveLeft() {
         System.out.println("Player moves left!");
         vel = Vector3.LEFT;
+    }
+    
+    private void moveUp() {
+        System.out.println("Player moves UP!");
+        vel = Vector3.UP;
+    }
+    
+    private void moveDown() {
+        System.out.println("Player moves DOWN!");
+        vel = Vector3.DOWN;
     }
 
     private void moveRight() {

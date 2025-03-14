@@ -9,15 +9,15 @@ import java.awt.event.KeyEvent;
  * @author J.A
  */
 public enum EKey {
-    
+    W(KeyEvent.VK_W),
     A(KeyEvent.VK_A),
+    S(KeyEvent.VK_S),
     D(KeyEvent.VK_D),
     SPACE(KeyEvent.VK_SPACE),
     N(KeyEvent.VK_N),
-    S(KeyEvent.VK_S),
-    W(KeyEvent.VK_W),
-    ESCAPE(KeyEvent.VK_ESCAPE);
-
+    ESCAPE(KeyEvent.VK_ESCAPE),
+    C(KeyEvent.VK_C);
+    
     private final int keyCode;
 
     EKey(int keyCode) {

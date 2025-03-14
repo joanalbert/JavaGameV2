@@ -63,10 +63,11 @@ public class EventManager {
         if (bus != null) bus.removeListener(listener);
     }
     
+    @SuppressWarnings("unchecked")
     public <T extends IEventListener> void unsubscribeAll(T listener) {
         
         for(EventBus bus : EVENT_BUSSES.values()){
-            bus.removeListener(listener);
+            if(bus.getBus().contains(listener)) bus.removeListener(listener);
         }
     }
 }

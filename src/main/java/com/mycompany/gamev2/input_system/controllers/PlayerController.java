@@ -8,7 +8,7 @@ import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.input_system.enums.EKey;
 import com.mycompany.gamev2.input_system.interfaces.IAction;
-import com.mycompany.gamev2.input_system.mappings.PlayerMapping_001;
+
 
 /**
  *

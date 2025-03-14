@@ -11,10 +11,12 @@ import com.mycompany.gamev2.input_system.enums.EWalkingAction;
  */
 public class PlayerMapping_001 extends ActionMapping<EWalkingAction> {
     public PlayerMapping_001() {
+        keyToAction.put(EKey.W, EWalkingAction.MOVE_UP);
         keyToAction.put(EKey.A, EWalkingAction.MOVE_LEFT);
+        keyToAction.put(EKey.S, EWalkingAction.MOVE_DOWN);
         keyToAction.put(EKey.D, EWalkingAction.MOVE_RIGHT);
         keyToAction.put(EKey.SPACE, EWalkingAction.JUMP);
         keyToAction.put(EKey.N, EWalkingAction.NEXT_LEVEL);
-        keyToAction.put(EKey.S, EWalkingAction.SOME_ACTION);
+        keyToAction.put(EKey.C, EWalkingAction.SOME_ACTION);
     }
 }
