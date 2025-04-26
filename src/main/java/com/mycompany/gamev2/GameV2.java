@@ -4,11 +4,9 @@
 
 package com.mycompany.gamev2;
 
-import com.mycompany.gamev2.gamemath.Vector3;
-import com.mycompany.gamev2.gameobjects.TestSphere;
+
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.window.MyWindow;
-import java.awt.Color;
 import javax.swing.SwingUtilities;
 /**
  *

@@ -5,14 +5,15 @@
 package com.mycompany.gamev2.gameobjects.characters;
 
 import com.mycompany.gamev2.component.object.TransformComponent;
+import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
-import com.mycompany.gamev2.input_system.controllers.BaseController;
-import com.mycompany.gamev2.input_system.enums.EWalkingAction;
-import com.mycompany.gamev2.input_system.mappings.ActionMapping;
-import com.mycompany.gamev2.input_system.mappings.PlayerMapping_001;
+import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
+import com.mycompany.gamev2.input_system.InputContexts.InputContext;
+import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -22,16 +23,17 @@ import java.awt.geom.Ellipse2D;
  *
  * @author J.A
  */
-public class PlayerCharacter extends Character {
+public class PlayerCharacter extends Character implements IInputListener {
     
     private Vector3 vel;
     private double speed;
     private double radius;
     private Color color;
 
-    
+    private IA_Walk ia_walk;
     
     public PlayerCharacter(){
+        super();
         TransformComponent transform = this.getComponent(TransformComponent.class);
         if(transform != null) transform.setLocation(new Vector3(50,50,0));
         
@@ -39,56 +41,33 @@ public class PlayerCharacter extends Character {
         this.radius = 70;
         this.vel = Vector3.ZERO;
         this.speed = 220;
-    }
-    
-    
-    public void addController(BaseController c){
-        System.out.println("AAAAA");
-        if(c != null){
-            setController(c);
-        }
-    }
-
-    @Override
-    protected void registerActions() {
-        ActionMapping activeMapping = getController().getMapping();
         
-        if (activeMapping instanceof PlayerMapping_001) {
-            actionFunctions.put(EWalkingAction.MOVE_UP, this::moveUp);
-            actionFunctions.put(EWalkingAction.MOVE_LEFT, this::moveLeft);
-            actionFunctions.put(EWalkingAction.MOVE_DOWN, this::moveDown);
-            actionFunctions.put(EWalkingAction.MOVE_RIGHT, this::moveRight);
-            actionFunctions.put(EWalkingAction.JUMP, this::jump);
-            actionFunctions.put(EWalkingAction.SOME_ACTION, this::someAction);
-        }
+        input_setup();
     }
     
-    public void someAction() {
-        this.color = Color.BLUE;
-    }
-
-    private void moveLeft() {
-        System.out.println("Player moves left!");
-        vel = Vector3.LEFT;
+    @Override
+    public void move(){
+    
     }
     
-    private void moveUp() {
-        System.out.println("Player moves UP!");
-        vel = Vector3.UP;
+    @Override
+    protected boolean setInputContext(InputContext ctx){
+        super.setInputContext(ctx);
+        
+        if(ctx == null) return false;
+        return true;
+        
     }
     
-    private void moveDown() {
-        System.out.println("Player moves DOWN!");
-        vel = Vector3.DOWN;
+    @Override
+    protected void input_setup(){
+        EventManager.getInstance().subscribe(this, IInputListener.class);
+        
     }
-
-    private void moveRight() {
-        System.out.println("Player moves right!");
-        vel = Vector3.RIGHT;
-    }
-
-    private void jump() {
-        System.out.println("Player jumps!");
+    
+    @Override
+    protected void tick_input(){
+        
     }
     
     @Override
@@ -99,9 +78,13 @@ public class PlayerCharacter extends Character {
         
         if (event instanceof TickEvent){
             tick((TickEvent) event);
+            tick_input();
         }
         else if (event instanceof RenderEvent){
             render((RenderEvent) event);
+        }
+        else if (event instanceof KeyPressEvent){
+            
         }
     }
 

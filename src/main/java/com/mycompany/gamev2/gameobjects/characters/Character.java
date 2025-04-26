@@ -6,18 +6,14 @@ package com.mycompany.gamev2.gameobjects.characters;
 
 import com.mycompany.gamev2.component.object.MovementComponent;
 import com.mycompany.gamev2.gameobjects.GameObject;
-import com.mycompany.gamev2.input_system.controllers.BaseController;
-import com.mycompany.gamev2.input_system.interfaces.IAction;
-import com.mycompany.gamev2.input_system.mappings.ActionMapping;
-import java.util.HashMap;
-
+import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 /**
  *
  * @author J.A
  */
 public abstract class Character extends GameObject{
-    private BaseController controller;
-    protected HashMap<IAction, Runnable> actionFunctions = new HashMap<>();
+   
+    protected InputContext input_context;
     
     @Override
     public void ComponentSetup() {
@@ -27,44 +23,22 @@ public abstract class Character extends GameObject{
         this.addComponent(MovementComponent.class, new MovementComponent());
     }
 
-    public BaseController getController() {
-        return controller;
-    }
-
-    protected void setController(BaseController controller) {
-        this.controller = controller;
-        this.controller.setControlledObject(this);
-    }
     
-    protected void setInputMapping(ActionMapping mapping){
-        if(this.controller != null){
-            this.controller.setActionMapping(mapping);
-        }
-    }
-    
-    public void handleAction(IAction action) {
-        if (!isActive) return;
-        Runnable function = actionFunctions.get(action);
-        if (function != null) {
-            function.run();
-        }
-    }
-    
-    public void updateActionMapping(ActionMapping<?> mapping) {
-        actionFunctions.clear();
-        registerActions();
-    }
-
-    protected abstract void registerActions();
-
     @Override
     public void destroy() {
         super.destroy();
-        if(this.controller != null){
-            this.controller.destroy();
-            this.controller = null;
-        }
+        
     }
+    
+    protected boolean setInputContext(InputContext ctx){
+        if(ctx == null) return false;
+        this.input_context = ctx;
+        return true;
+    }
+    
+    protected abstract void move();
+    protected abstract void input_setup();
+    protected abstract void tick_input();
     
     
 }

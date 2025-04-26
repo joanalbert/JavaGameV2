@@ -38,14 +38,14 @@ public class InputManager {
             public void keyPressed(KeyEvent e) {
                 
                 int pressedKeyCode = e.getKeyCode();
+                System.out.println(pressedKeyCode);
                 keyStates.put(pressedKeyCode, true);
                 //BaseController controller = LevelManager.getInstance().getFirstActivePlayer().getController(); WE DON'T NEED THIS ATM
                 
                 //post a input event, with all the available keyinfo
-                //if(pressedKeyCode == 72){ //h
-                    HashMap<Integer, Boolean> copy_keystates = new HashMap<>(keyStates);
-                    EventManager.getInstance().post(new KeyPressEvent(pressedKeyCode, copy_keystates), IInputListener.class);
-                //}
+                HashMap<Integer, Boolean> copy_keystates = new HashMap<>(keyStates);
+                EventManager.getInstance().post(new KeyPressEvent(pressedKeyCode, copy_keystates), IInputListener.class);
+                
                 
                 //HARDCODED EXIT
                 if(e.getKeyCode() == 27){

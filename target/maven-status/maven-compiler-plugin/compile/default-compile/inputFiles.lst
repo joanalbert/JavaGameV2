@@ -1,7 +1,6 @@
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\BaseComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\ComponentEventListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\level\LevelComponent.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\InputComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\MovementComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\ObjectComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\TransformComponent.java
@@ -13,6 +12,7 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\game_events\RenderEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\game_events\TickEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\input_events\KeyPressEvent.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\input_events\KeyReleaseEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\level_events\LevelWindupEvent.java
@@ -23,14 +23,7 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gameobjects\GameObject.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gameobjects\TestSphere.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\GameV2.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\controllers\BaseController.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\controllers\PlayerController.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\enums\EKey.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\enums\EWalkingAction.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\InputManager.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\interfaces\IAction.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\mappings\ActionMapping.java
-C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\mappings\PlayerMapping_001.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IEventListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.java
