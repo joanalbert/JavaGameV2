@@ -12,7 +12,10 @@ import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
+import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
+import com.mycompany.gamev2.input_system.InputContexts.PlayerCharacter_InputContext;
+import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 
 import java.awt.Color;
@@ -45,10 +48,7 @@ public class PlayerCharacter extends Character implements IInputListener {
         input_setup();
     }
     
-    @Override
-    public void move(){
     
-    }
     
     @Override
     protected boolean setInputContext(InputContext ctx){
@@ -61,14 +61,32 @@ public class PlayerCharacter extends Character implements IInputListener {
     
     @Override
     protected void input_setup(){
+        
+        //THIS SHOULD BE HANDLED BY THE CONTROLLER
+        
+        // Set up input context
+        PlayerCharacter_InputContext context = new PlayerCharacter_InputContext();
+        setInputContext(context);
+        InputManager.getInstance().addContext(context);
+
+        // Find Walk action and set callback
+        ia_walk = (IA_Walk) context.getBindings().stream()
+                .map(InputBinding::getAction)
+                .filter(action -> action instanceof IA_Walk)
+                .findFirst()
+                .orElse(new IA_Walk());
+
+        ia_walk.setOnTriggered(action -> {
+            if (action instanceof IA_Walk walkAction) {
+                Vector3 v = new Vector3(walkAction.getAxisValues()[0],
+                                        walkAction.getAxisValues()[1], 0); 
+                this.vel = v.normalize(); // Update velocity based on input
+            }
+        });
+
         EventManager.getInstance().subscribe(this, IInputListener.class);
-        
     }
-    
-    @Override
-    protected void tick_input(){
-        
-    }
+   
     
     @Override
     public void onEventReceived(BaseEvent event) {
@@ -78,7 +96,6 @@ public class PlayerCharacter extends Character implements IInputListener {
         
         if (event instanceof TickEvent){
             tick((TickEvent) event);
-            tick_input();
         }
         else if (event instanceof RenderEvent){
             render((RenderEvent) event);
@@ -109,6 +126,5 @@ public class PlayerCharacter extends Character implements IInputListener {
         Vector3 location = getObjectLocation();
         Vector3 usable_vel = vel.getScaled(speed * event.getDeltaSeconds());
         setObjectLocation(location.plus(usable_vel));
-        vel = Vector3.ZERO; // Reset after applying
     }
 }

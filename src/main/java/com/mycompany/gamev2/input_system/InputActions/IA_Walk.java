@@ -4,12 +4,18 @@
  */
 package com.mycompany.gamev2.input_system.InputActions;
 
-import com.mycompany.gamev2.gamemath.Vector3;
-
 /**
  *
  * @author J.A
  */
-public class IA_Walk extends InputAction{
-    public Vector3 direction;
+public class IA_Walk extends InputAction {
+    
+    public IA_Walk(){
+        super("IA_Walk", ActionType.AXIS_2D);
+    }
+    
+    @Override
+    public void setAxisValues(float x, float y){
+        super.setAxisValues(x, y);
+    }
 }

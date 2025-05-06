@@ -7,6 +7,7 @@ package com.mycompany.gamev2.gameobjects.characters;
 import com.mycompany.gamev2.component.object.MovementComponent;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
+import com.mycompany.gamev2.input_system.InputManager;
 /**
  *
  * @author J.A
@@ -27,7 +28,9 @@ public abstract class Character extends GameObject{
     @Override
     public void destroy() {
         super.destroy();
-        
+        if(this.input_context != null){
+            InputManager.getInstance().removeContext(input_context);
+        }
     }
     
     protected boolean setInputContext(InputContext ctx){
@@ -36,9 +39,6 @@ public abstract class Character extends GameObject{
         return true;
     }
     
-    protected abstract void move();
     protected abstract void input_setup();
-    protected abstract void tick_input();
-    
-    
+      
 }

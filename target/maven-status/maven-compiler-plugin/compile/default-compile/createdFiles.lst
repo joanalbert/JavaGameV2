@@ -1,7 +1,10 @@
 com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IEventListener.class
+com\mycompany\gamev2\input_system\InputContexts\InputContext.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
+com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
+com\mycompany\gamev2\input_system\InputActions\InputAction$ActionType.class
 com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class
 com\mycompany\gamev2\levels\LevelManager.class
 com\mycompany\gamev2\levels\TestLevel_01.class
@@ -10,6 +13,7 @@ com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\GameV2.class
 com\mycompany\gamev2\input_system\InputManager.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
+com\mycompany\gamev2\input_system\InputBinding.class
 com\mycompany\gamev2\component\object\MovementComponent.class
 com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
@@ -17,6 +21,8 @@ com\mycompany\gamev2\interfaces\ILevel.class
 com\mycompany\gamev2\input_system\InputManager$1.class
 com\mycompany\gamev2\component\BaseComponent.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.class
+com\mycompany\gamev2\input_system\InputActions\InputAction.class
+com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.class
 com\mycompany\gamev2\GameLoopV2.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.class
 com\mycompany\gamev2\window\MyWindow.class
@@ -33,6 +39,7 @@ com\mycompany\gamev2\gameobjects\characters\Character.class
 com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
 com\mycompany\gamev2\event_system\level_events\LevelWindupEvent.class
 com\mycompany\gamev2\component\object\TransformComponent.class
+com\mycompany\gamev2\input_system\InputActions\IA_Walk.class
 com\mycompany\gamev2\component\level\LevelComponent.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\window\MyWindow$1.class

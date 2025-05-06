@@ -4,34 +4,54 @@
  */
 package com.mycompany.gamev2.input_system.InputContexts;
 
-import com.mycompany.gamev2.input_system.InputActions.InputAction;
+import com.mycompany.gamev2.input_system.InputBinding;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author J.A
  */
 public abstract class InputContext {
-    private ArrayList<InputAction> actions;
+    private String name;
+    private int priority; //higher priority contexts are evaluated first
+    private List<InputBinding> bindings;
     
-    protected boolean addAction(InputAction ia){
+    public InputContext(String name, int priority){
+        this.name = name;
+        this.priority = priority;
+        this.bindings = new ArrayList<>();
+    }
+    
+    public boolean addBinding(InputBinding binding){
         try{
-            actions.add(ia);
+            bindings.add(binding);
             return true;
-        } catch(Exception e){
+        } catch (Exception e){
             System.out.println(e.getStackTrace());
             return false;
         }
     }
     
-    
-    protected boolean removeAction(InputAction ia){
+    public boolean removeBinding(InputBinding binding){
         try{
-            actions.remove(ia);
+            bindings.remove(binding);
             return true;
-        } catch(Exception e){
+        } catch (Exception e){
             System.out.println(e.getStackTrace());
             return false;
         }
+    }
+    
+     public List<InputBinding> getBindings() {
+        return bindings;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }
