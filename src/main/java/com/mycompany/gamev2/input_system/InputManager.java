@@ -82,7 +82,7 @@ public class InputManager {
                     }
                     //3D
                     else if (action.getType() == InputAction.ActionType.AXIS_1D){
-                        action.setValue(input.isPressed() ? binding.getAxisScale() : 0.0f);
+                        
                     }
                     
                 //is discrete

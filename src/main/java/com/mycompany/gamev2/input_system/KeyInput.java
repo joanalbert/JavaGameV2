@@ -16,7 +16,7 @@ public class KeyInput {
         this.keyCode = keyCode;
         this.isPressed = isPressed;
     }
-    
+        
     public int getKeyCode(){
         return this.keyCode;
     }

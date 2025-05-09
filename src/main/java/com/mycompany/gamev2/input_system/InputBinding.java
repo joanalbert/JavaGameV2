@@ -16,19 +16,17 @@ import java.util.Set;
 public class InputBinding {
     private InputAction action;
     
-    private Set<Integer> keyCodes;
-    private Set<Integer> modifiers;
+    private Set<BindKey> keyCodes;
+    private Set<BindKey> modifiers;
     
     private boolean isAxis;
-    private float axisScale;
+        
     
-    
-    public InputBinding(InputAction action, Set<Integer> keyCodes, Set<Integer> modifiers, boolean isAxis, float axisScale){
+    public InputBinding(InputAction action, Set<BindKey> keyCodes, Set<Integer> modifiers, boolean isAxis){
         this.action = action;
         this.keyCodes = (keyCodes != null) ? keyCodes : new HashSet<>();
         this.modifiers = (modifiers != null) ? keyCodes : new HashSet<>();
         this.isAxis = isAxis;
-        this.axisScale = axisScale;
     }
     
     public InputAction getAction(){
@@ -36,21 +34,20 @@ public class InputBinding {
     }
     
     public boolean matches(HashMap<Integer, Boolean> keyStates){
-        for(Integer keyCode : keyCodes){
+        for(BindKey k : keyCodes){
+            int keyCode = k.getKeyCode();
             if(!keyStates.getOrDefault(keyCode, false)) return false;
         }
         
-        for(Integer modifier : modifiers){
+        for(BindKey k : modifiers){
+            int modifier = k.getKeyCode();
             if(!keyStates.getOrDefault(modifier, false)) return false;
         }
         
         return true;
     }
     
-    public float getAxisScale() {
-        return axisScale;
-    }
-
+    
     public boolean isAxis() {
         return isAxis;
     }

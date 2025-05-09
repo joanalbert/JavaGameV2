@@ -1,6 +1,7 @@
 com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IEventListener.class
 com\mycompany\gamev2\input_system\InputContexts\InputContext.class
+com\mycompany\gamev2\input_system\Key.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
 com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
