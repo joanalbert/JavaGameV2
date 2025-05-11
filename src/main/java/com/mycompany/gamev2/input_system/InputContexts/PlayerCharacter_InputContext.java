@@ -18,15 +18,15 @@ import java.util.Set;
 public class PlayerCharacter_InputContext extends InputContext {
     
     public PlayerCharacter_InputContext(){
-        super("PlayerGameplay", 10);
+        super("PlayerContext", 10);
         
         IA_Walk  walkAction = new IA_Walk();        
         Set<BindKey> walk_keys = new HashSet<>();
        
-        walk_keys.add(new BindKey(KeyEvent.VK_W,  1.0f));
-        walk_keys.add(new BindKey(KeyEvent.VK_S, -1.0f));
-        walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f));
-        walk_keys.add(new BindKey(KeyEvent.VK_D,  1.0f));
+        walk_keys.add(new BindKey(KeyEvent.VK_W, -1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_S,  1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f, BindKey.Axis.X));
+        walk_keys.add(new BindKey(KeyEvent.VK_D,  1.0f, BindKey.Axis.X));
         
         addBinding(new InputBinding(walkAction, walk_keys, null, true));
         

@@ -1,7 +1,6 @@
 com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IEventListener.class
 com\mycompany\gamev2\input_system\InputContexts\InputContext.class
-com\mycompany\gamev2\input_system\Key.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
 com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
@@ -30,6 +29,7 @@ com\mycompany\gamev2\window\MyWindow.class
 com\mycompany\gamev2\levels\TestLevel_02.class
 com\mycompany\gamev2\component\object\ObjectComponent.class
 com\mycompany\gamev2\GameMath\Vector3.class
+com\mycompany\gamev2\input_system\BindKey.class
 com\mycompany\gamev2\levels\BaseLevel.class
 com\mycompany\gamev2\event_system\game_events\TickEvent.class
 com\mycompany\gamev2\event_system\EventBus.class
@@ -45,3 +45,4 @@ com\mycompany\gamev2\component\level\LevelComponent.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\window\MyWindow$1.class
 com\mycompany\gamev2\event_system\game_events\BaseEvent.class
+com\mycompany\gamev2\input_system\BindKey$Axis.class

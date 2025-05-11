@@ -34,19 +34,36 @@ public class InputBinding {
     }
     
     public boolean matches(HashMap<Integer, Boolean> keyStates){
+        
+        boolean state  = false;
+        boolean state2 = modifiers.isEmpty() ? true : false; 
+        
         for(BindKey k : keyCodes){
             int keyCode = k.getKeyCode();
-            if(!keyStates.getOrDefault(keyCode, false)) return false;
+            if(keyStates.containsKey(keyCode) && keyStates.get(keyCode) == true) state = true;
         }
         
         for(BindKey k : modifiers){
             int modifier = k.getKeyCode();
-            if(!keyStates.getOrDefault(modifier, false)) return false;
+            if(keyStates.containsKey(modifiers)) state = true;
         }
         
-        return true;
+        return state && state2;
     }
     
+    public Set<BindKey> getActiveBindKeys(HashMap<Integer, Boolean> keyStates){
+        
+        Set<BindKey> actives = new HashSet<>();
+        
+        for(BindKey k : keyCodes){
+            int keyCode = k.getKeyCode();
+            if(keyStates.containsKey(keyCode) && keyStates.get(keyCode) == true) actives.add(k);
+        }
+        
+        return actives;
+    }
+    
+    public Set<BindKey> getBindKeys(){return this.keyCodes;}
     
     public boolean isAxis() {
         return isAxis;

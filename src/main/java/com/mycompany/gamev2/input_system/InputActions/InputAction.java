@@ -4,6 +4,8 @@
  */
 package com.mycompany.gamev2.input_system.InputActions;
 
+import com.mycompany.gamev2.input_system.BindKey;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -23,8 +25,8 @@ public abstract class InputAction {
     protected ActionType type;
     protected boolean active = false;
     
-    protected float value = 0.0f; // data for axis inputs
-    protected float[] axisValues = new float[2]; // data for 2d axis inputs
+    protected double value = 0.0f; // data for axis inputs
+    protected double[] axisValues = new double[2]; // data for 2d axis inputs
     
     protected Consumer<InputAction> onTrigger; //callback for handling
     
@@ -48,13 +50,15 @@ public abstract class InputAction {
         }
     }
     
-    public void setAxisValues(float x, float y){
+    public void setAxisValues(double x, double y){
         this.axisValues[0] = x;
         this.axisValues[1] = y;
         if(onTrigger != null){
             onTrigger.accept(this);
         }
     }
+    
+    public abstract void evaluateAxes(Set<BindKey> activeKeys);
     
     public void setOnTriggered(Consumer<InputAction> callback) {
         this.onTrigger = callback;
@@ -72,11 +76,11 @@ public abstract class InputAction {
         return active;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public float[] getAxisValues() {
+    public double[] getAxisValues() {
         return axisValues;
     }
 }

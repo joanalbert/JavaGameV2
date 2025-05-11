@@ -72,8 +72,9 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
     public void onEventReceived(BaseEvent event) {
         
         if(event instanceof KeyPressEvent){
+
             KeyPressEvent kpe = (KeyPressEvent) event;
-            
+           
             if(kpe.getKeyCode() == 76){ //l
                 System.out.println("Switching levels..");
                 BaseLevel next = (BaseLevel) nextLevel();

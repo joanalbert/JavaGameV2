@@ -27,7 +27,8 @@ public class GameLoopV2 implements Runnable {
     
     private static final int FPS = 60;
     private static final long TARGET_TIME = 1000 / FPS;
-
+    private int frames = 0;
+    
     private boolean running = false;
     private Thread thread;
     
@@ -77,7 +78,7 @@ public class GameLoopV2 implements Runnable {
 
             if (elapsedTime >= TARGET_TIME * 1000000) {     
                 //update
-                EventManager.getInstance().post(new TickEvent(deltaTime), IGameUpdateListener.class);
+                EventManager.getInstance().post(new TickEvent(deltaTime, frames), IGameUpdateListener.class);
                 
                 //render
                 Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
@@ -100,6 +101,8 @@ public class GameLoopV2 implements Runnable {
                     e.printStackTrace();
                 }
             }
+            
+            frames++;
         }
         
         System.out.println("STOPPING....");

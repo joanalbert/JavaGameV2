@@ -9,14 +9,25 @@ package com.mycompany.gamev2.input_system;
  * @author J.A
  */
 public class BindKey {
-    private int keyCode;
-    private float axisScale;
     
-    public BindKey(int code, float axisScale){
+    public enum Axis{
+        X,
+        Y,
+        Z,
+        NONE
+    }
+    
+    private int keyCode;
+    private double axisScale;
+    private Axis axis;
+    
+    public BindKey(int code, float axisScale, Axis axis){
         this.keyCode = code;
         this.axisScale = axisScale;
+        this.axis = axis;
     }
     
     public int getKeyCode(){return this.keyCode;}
-    public float getAxisScale(){return this.axisScale;}
+    public double getAxisScale(){return this.axisScale;}
+    public Axis getAxis(){return this.axis;}
 }
