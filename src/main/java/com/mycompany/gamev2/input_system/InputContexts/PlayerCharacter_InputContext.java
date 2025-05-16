@@ -28,7 +28,7 @@ public class PlayerCharacter_InputContext extends InputContext {
         walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f, BindKey.Axis.X));
         walk_keys.add(new BindKey(KeyEvent.VK_D,  1.0f, BindKey.Axis.X));
         
-        addBinding(new InputBinding(walkAction, walk_keys, null, true));
+        addBinding(new InputBinding(walkAction, walk_keys, null, true, true));
         
          // W: Forward (+Y)
         /*Set<Integer> forwardKeys = new HashSet<>();

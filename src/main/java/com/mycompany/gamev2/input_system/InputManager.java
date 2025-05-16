@@ -72,11 +72,12 @@ public class InputManager implements IGameUpdateListener {
     
     
     public void UpdateStates(KeyInput input){
-        if(input.isPressed()) keyStates.put(input.getKeyCode(), input.isPressed());
+        keyStates.put(input.getKeyCode(), input.isPressed());
+        /*if(input.isPressed()) keyStates.put(input.getKeyCode(), input.isPressed());
         else if(!input.isPressed() && keyStates.containsKey(input.getKeyCode()))
         {
-            keyStates.remove(input.getKeyCode());
-        }
+           keyStates.remove(input.getKeyCode()); 
+        }*/
         
         //System.out.println(keyStates.toString());
     }
@@ -91,7 +92,8 @@ public class InputManager implements IGameUpdateListener {
                            
                 //this copy is for ease of debuggin only                
                 HashMap<Integer, Boolean> copyStates = new HashMap<Integer, Boolean>(keyStates);
-                //if(!binding.matches(copyStates)) continue;
+                boolean doKeysMatch = binding.matches(copyStates);
+                if(!doKeysMatch || !binding.getIsHeld() ) continue;
                 //else System.out.println("processing binding");
                 
                 
