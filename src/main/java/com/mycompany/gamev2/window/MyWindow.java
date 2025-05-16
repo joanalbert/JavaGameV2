@@ -29,15 +29,13 @@ public abstract class MyWindow {
     
     static void MakeFrame(String name){
         MyWindow.FRAME = new JFrame(name);
-        
-        
         MyWindow.FRAME.setResizable(false);
         MyWindow.FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MyWindow.FRAME.setLocationRelativeTo(null);
-        
+                
         if(CNV != null) FRAME.add(CNV);
         
         MyWindow.FRAME.pack();
+        MyWindow.FRAME.setLocationRelativeTo(null);
         MyWindow.FRAME.setVisible( true );
         
         

@@ -11,6 +11,7 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.input_system.InputActions.IA_Shoot;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
@@ -34,6 +35,7 @@ public class PlayerCharacter extends Character implements IInputListener {
     private Color color;
 
     private IA_Walk ia_walk;
+    private IA_Shoot ia_shoot;
     
     public PlayerCharacter(){
         super();
@@ -81,6 +83,19 @@ public class PlayerCharacter extends Character implements IInputListener {
                 Vector3 v = new Vector3(walkAction.getAxisValues()[0],
                                         walkAction.getAxisValues()[1], 0); 
                 this.vel = v.normalize(); // Update velocity based on input
+            }
+        });
+        
+        
+        ia_shoot = (IA_Shoot) context.getBindings().stream()
+                .map(InputBinding::getAction)
+                .filter(action -> action instanceof IA_Shoot)
+                .findFirst()
+                .orElse(new IA_Shoot());
+        
+        ia_shoot.setOnTriggered(action -> {
+            if (action instanceof IA_Shoot shootAction) {
+                System.out.println("SHOOTING");
             }
         });
 

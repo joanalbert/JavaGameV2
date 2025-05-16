@@ -83,20 +83,16 @@ public class InputManager implements IGameUpdateListener {
     }
     
     public void UpdateContexts(TickEvent event){
-       
+
+        //copy the map for ease of debugging
+        HashMap<Integer, Boolean> copyStates = new HashMap<Integer, Boolean>(keyStates);
+        
         //LOOP CONTEXTS process all active inputContexts by priority order
         for(InputContext context : this.activeContexts){
             
             //LOOP BINDINGS
             for(InputBinding binding : context.getBindings()){
                            
-                //this copy is for ease of debuggin only                
-                HashMap<Integer, Boolean> copyStates = new HashMap<Integer, Boolean>(keyStates);
-                boolean doKeysMatch = binding.matches(copyStates);
-                if(!doKeysMatch || !binding.getIsHeld() ) continue;
-                //else System.out.println("processing binding");
-                
-                
                 InputAction action  = binding.getAction();          
                                
                 //is axis
@@ -107,14 +103,12 @@ public class InputManager implements IGameUpdateListener {
                     {
                         //System.out.println("Processing: "+context.getName()+": "+action.getName());         
                         
-                        //set action data
+                        
                         Set<BindKey> activeBindKeys = binding.getActiveBindKeys(copyStates);
                         action.evaluateAxes(activeBindKeys);
+                                            
                         
                         //System.out.println(action.getAxisValues()[0]+"/"+action.getAxisValues()[1]);
-                        
-                        //run action callback
-                        double p = Math.PI;
                     }
                     //3D
                     else if (action.getType() == InputAction.ActionType.AXIS_1D)
@@ -127,11 +121,22 @@ public class InputManager implements IGameUpdateListener {
                 } else{
                     // Handle triggered input
                     // no discreen input actions exist as of yet
+                    if(!ShouldSkip(binding)) action.trigger();
                 }
             }
         }
         
      
+    }
+    
+    //if no keys are pressed for this binding it should be skipped, unless it's "held"
+    public boolean ShouldSkip(InputBinding binding){
+        HashMap<Integer, Boolean> copy_states = new HashMap<Integer, Boolean>(keyStates);
+        boolean doKeysMatch = binding.matches(copy_states);
+        if(!doKeysMatch){
+            return true;
+        }
+        else return false;
     }
     
     

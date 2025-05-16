@@ -7,6 +7,7 @@ package com.mycompany.gamev2.input_system.InputActions;
 import com.mycompany.gamev2.input_system.BindKey;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -58,7 +59,36 @@ public abstract class InputAction {
         }
     }
     
-    public abstract void evaluateAxes(Set<BindKey> activeKeys);
+    public void evaluateAxes(Set<BindKey> activeKeys)
+    {
+        if(this.type != ActionType.AXIS_2D) return;
+        
+        Set<BindKey> x_keys = activeKeys.stream().filter(n -> n.getAxis() == BindKey.Axis.X).collect(Collectors.toSet());
+        Set<BindKey> y_keys = activeKeys.stream().filter(n -> n.getAxis() == BindKey.Axis.Y).collect(Collectors.toSet());
+        
+        float x,y;
+        
+        double x_scale = 0.0d;
+        for(BindKey k : x_keys){
+            x_scale = Math.clamp(x_scale + k.getAxisScale(), -1, 1);
+        }
+        
+       
+        double y_scale = 0.0d;
+        for(BindKey k : y_keys){
+            y_scale = Math.clamp(y_scale + k.getAxisScale(), -1, 1);
+        }
+        
+        this.setAxisValues(x_scale, y_scale);
+    }
+    
+    public void trigger(){
+        if(this.type != ActionType.TRIGGERED) return;
+        
+        if(onTrigger != null){
+            onTrigger.accept(this);
+        }
+    }
     
     public void setOnTriggered(Consumer<InputAction> callback) {
         this.onTrigger = callback;
