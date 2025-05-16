@@ -18,6 +18,7 @@ import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.input_system.InputContexts.PlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
+import com.mycompany.gamev2.levels.LevelManager;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -96,6 +97,8 @@ public class PlayerCharacter extends Character implements IInputListener {
         ia_shoot.setOnTriggered(action -> {
             if (action instanceof IA_Shoot shootAction) {
                 System.out.println("SHOOTING");
+                
+                
             }
         });
 

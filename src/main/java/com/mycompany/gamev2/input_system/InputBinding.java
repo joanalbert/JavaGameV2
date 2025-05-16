@@ -21,13 +21,15 @@ public class InputBinding {
     
     private boolean isAxis;
     private boolean isHeld;    
+    private boolean isOneShot;
     
-    public InputBinding(InputAction action, Set<BindKey> keyCodes, Set<Integer> modifiers, boolean isAxis, boolean isHeld){
+    public InputBinding(InputAction action, Set<BindKey> keyCodes, Set<Integer> modifiers, boolean isAxis, boolean isHeld, boolean isOneShot){
         this.action = action;
         this.keyCodes = (keyCodes != null) ? keyCodes : new HashSet<>();
         this.modifiers = (modifiers != null) ? keyCodes : new HashSet<>();
         this.isAxis = isAxis;
         this.isHeld = isHeld;
+        this.isOneShot = isOneShot;
     }
     
     public InputAction getAction(){
@@ -71,4 +73,5 @@ public class InputBinding {
     }
     
     public boolean getIsHeld(){return this.isHeld;}
+    public boolean getIsOneShot(){return this.isOneShot;}
 }

@@ -13,7 +13,6 @@ import com.mycompany.gamev2.input_system.InputActions.InputAction;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
-import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Canvas;
 import java.awt.event.KeyAdapter;
@@ -30,7 +29,8 @@ import java.util.Set;
  */
 public class InputManager implements IGameUpdateListener {
     
-    private static HashMap<Integer, Boolean> keyStates = new HashMap<>();
+    private static HashMap<Integer, Boolean> keyStates      = new HashMap<>();
+    private static HashMap<Integer, Boolean> keyStates_prev = new HashMap<>();
     private static InputManager instance;
     private List<InputContext> activeContexts;
     
@@ -72,12 +72,18 @@ public class InputManager implements IGameUpdateListener {
     
     
     public void UpdateStates(KeyInput input){
-        keyStates.put(input.getKeyCode(), input.isPressed());
+       
         /*if(input.isPressed()) keyStates.put(input.getKeyCode(), input.isPressed());
         else if(!input.isPressed() && keyStates.containsKey(input.getKeyCode()))
         {
            keyStates.remove(input.getKeyCode()); 
         }*/
+        
+        if (input.isPressed()) {
+            keyStates.put(input.getKeyCode(), true);
+        } else {
+            keyStates.remove(input.getKeyCode()); 
+        }
         
         //System.out.println(keyStates.toString());
     }
@@ -119,14 +125,39 @@ public class InputManager implements IGameUpdateListener {
                     
                 //is discrete
                 } else{
-                    // Handle triggered input
+                    // Handle trigger inputs
                     // no discreen input actions exist as of yet
-                    if(!ShouldSkip(binding)) action.trigger();
+                    
+                    if(!ShouldSkip(binding)){
+                        if(binding.getIsOneShot()){
+                            if(isNewlyPressed(binding, new HashMap<Integer, Boolean>(keyStates))) {
+                                action.trigger();
+                            }
+                        }
+                        else action.trigger();
+                        
+                    } 
+                    
                 }
             }
         }
         
-     
+        keyStates_prev = new HashMap<Integer, Boolean>(keyStates);
+    }
+    
+    // Check if any bound key was just pressed 
+    private boolean isNewlyPressed(InputBinding binding, HashMap<Integer, Boolean> currentStates) {
+        for (BindKey k : binding.getBindKeys()) {
+            
+            int keyCode = k.getKeyCode();
+            boolean isCurrentlyPressed = currentStates.containsKey(keyCode) && currentStates.get(keyCode);
+            boolean wasPreviouslyPressed = keyStates_prev.containsKey(keyCode) && keyStates_prev.get(keyCode);
+            
+            if (isCurrentlyPressed && !wasPreviouslyPressed) {
+                return true; // Key was just pressed
+            }
+        }
+        return false;
     }
     
     //if no keys are pressed for this binding it should be skipped, unless it's "held"

@@ -29,7 +29,7 @@ public class PlayerCharacter_InputContext extends InputContext {
         walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f, BindKey.Axis.X));
         walk_keys.add(new BindKey(KeyEvent.VK_D,  1.0f, BindKey.Axis.X));
         
-        addBinding(new InputBinding(walkAction, walk_keys, null, true, true));
+        addBinding(new InputBinding(walkAction, walk_keys, null, true, true, false));
         
         
         IA_Shoot shootAction = new IA_Shoot();
@@ -37,7 +37,7 @@ public class PlayerCharacter_InputContext extends InputContext {
         
         shoot_keys.add(new BindKey(KeyEvent.VK_SPACE, 0.0f, BindKey.Axis.NONE));
         
-        addBinding(new InputBinding(shootAction, shoot_keys, null, false, true));
+        addBinding(new InputBinding(shootAction, shoot_keys, null, false, true, true));
         
          // W: Forward (+Y)
         /*Set<Integer> forwardKeys = new HashSet<>();
