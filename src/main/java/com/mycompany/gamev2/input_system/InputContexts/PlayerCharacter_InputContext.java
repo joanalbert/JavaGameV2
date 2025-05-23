@@ -7,6 +7,7 @@ package com.mycompany.gamev2.input_system.InputContexts;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.BindKey;
+import com.mycompany.gamev2.input_system.InputActions.IA_Look;
 import com.mycompany.gamev2.input_system.InputActions.IA_Shoot;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ public class PlayerCharacter_InputContext extends InputContext {
     public PlayerCharacter_InputContext(){
         super("PlayerContext", 10);
         
+        //WALK
         IA_Walk  walkAction = new IA_Walk();        
         Set<BindKey> walk_keys = new HashSet<>();
        
@@ -31,13 +33,18 @@ public class PlayerCharacter_InputContext extends InputContext {
         
         addBinding(new InputBinding(walkAction, walk_keys, null, true, true, false));
         
-        
+        //SHOOT
         IA_Shoot shootAction = new IA_Shoot();
         Set<BindKey> shoot_keys = new HashSet<>();
         
         shoot_keys.add(new BindKey(KeyEvent.VK_SPACE, 0.0f, BindKey.Axis.NONE));
-        
+     
         addBinding(new InputBinding(shootAction, shoot_keys, null, false, true, true));
+        
+        
+        //LOOK
+        IA_Look lookAction = new IA_Look();
+        addBinding(new InputBinding(lookAction, null, null, true, false, false));
         
          // W: Forward (+Y)
         /*Set<Integer> forwardKeys = new HashSet<>();

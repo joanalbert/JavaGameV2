@@ -11,6 +11,7 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.input_system.InputActions.IA_Look;
 import com.mycompany.gamev2.input_system.InputActions.IA_Shoot;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
@@ -18,7 +19,6 @@ import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.input_system.InputContexts.PlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
-import com.mycompany.gamev2.levels.LevelManager;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -37,6 +37,7 @@ public class PlayerCharacter extends Character implements IInputListener {
 
     private IA_Walk ia_walk;
     private IA_Shoot ia_shoot;
+    private IA_Look ia_look;
     
     public PlayerCharacter(){
         super();
@@ -96,9 +97,25 @@ public class PlayerCharacter extends Character implements IInputListener {
         
         ia_shoot.setOnTriggered(action -> {
             if (action instanceof IA_Shoot shootAction) {
-                System.out.println("SHOOTING");
+                //System.out.println("SHOOTING");
                 
                 
+            }
+        });
+        
+        ia_look = (IA_Look) context.getBindings().stream()
+                .map(InputBinding::getAction)
+                .filter(action -> action instanceof IA_Look)
+                .findFirst()
+                .orElse(new IA_Look());
+        
+        ia_look.setOnTriggered(action -> {
+            if(action instanceof IA_Look lookAction){
+                double[] axis_vals = lookAction.getAxisValues();
+                System.out.println("LOOK");
+                System.out.println(axis_vals[0]);
+                System.out.println(axis_vals[1]);
+                System.out.println("LOOK");
             }
         });
 

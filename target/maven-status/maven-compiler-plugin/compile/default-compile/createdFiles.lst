@@ -15,9 +15,11 @@ com\mycompany\gamev2\input_system\InputManager$1.class
 com\mycompany\gamev2\component\BaseComponent.class
 com\mycompany\gamev2\input_system\InputActions\InputAction.class
 com\mycompany\gamev2\window\MyWindow.class
+com\mycompany\gamev2\input_system\InputActions\IA_Look.class
 com\mycompany\gamev2\event_system\game_events\TickEvent.class
 com\mycompany\gamev2\event_system\EventManager.class
 com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
+com\mycompany\gamev2\input_system\InputManager$2.class
 com\mycompany\gamev2\event_system\level_events\LevelWindupEvent.class
 com\mycompany\gamev2\component\object\TransformComponent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Walk.class
@@ -30,6 +32,7 @@ com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class
 com\mycompany\gamev2\levels\LevelManager.class
 com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\GameV2.class
+com\mycompany\gamev2\input_system\InputManager$3.class
 com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
 com\mycompany\gamev2\interfaces\ILevel.class

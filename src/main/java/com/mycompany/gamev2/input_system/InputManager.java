@@ -13,16 +13,19 @@ import com.mycompany.gamev2.input_system.InputActions.InputAction;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
+import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Canvas;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
 /**
  *
  * @author J.A
@@ -31,6 +34,8 @@ public class InputManager implements IGameUpdateListener {
     
     private static HashMap<Integer, Boolean> keyStates      = new HashMap<>();
     private static HashMap<Integer, Boolean> keyStates_prev = new HashMap<>();
+    private Vector3 mousePosition      = Vector3.ZERO;
+    private Vector3 mousePosition_prev = Vector3.ZERO;
     private static InputManager instance;
     private List<InputContext> activeContexts;
     
@@ -143,6 +148,7 @@ public class InputManager implements IGameUpdateListener {
         }
         
         keyStates_prev = new HashMap<Integer, Boolean>(keyStates);
+        mousePosition_prev = mousePosition;
     }
     
     // Check if any bound key was just pressed 
@@ -202,5 +208,43 @@ public class InputManager implements IGameUpdateListener {
                 UpdateStates(new KeyInput(keyCode, false));
             }
         });
+        
+        
+        // Add mouse motion listener
+        CNV.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                InputManager.getInstance().mousePosition = new Vector3(e.getX(), e.getY(), 0);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                InputManager.getInstance().mousePosition = new Vector3(e.getX(), e.getY(), 0); // Update during drags too
+            }
+        });
+        
+        // Mouse click listener
+        CNV.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) { // Left click
+                    //InputManager.mousePosition = new Vector3(e.getX(), e.getY(), 0);
+                    //System.out.println(mousePosition);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    //InputManager.mousePosition = new Vector3(e.getX(), e.getY(), 0);
+                }
+            }
+        });
     }
+    
+    
+    
+    
+    public Vector3 getMousePos(){return mousePosition;}
+    public Vector3 getMousePos_prev(){return mousePosition_prev;}
 }
