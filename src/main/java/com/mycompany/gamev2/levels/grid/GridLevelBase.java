@@ -34,8 +34,11 @@ public abstract class GridLevelBase extends BaseLevel implements IGameUpdateList
 
     @Override
     public void onEventReceived(BaseEvent event) {
+        super.onEventReceived(event);
+        
         if(!this.isActive()) return;
         
+              
         if (event instanceof TickEvent){
             tick((TickEvent) event);
         }

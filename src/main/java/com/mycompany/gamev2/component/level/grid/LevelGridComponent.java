@@ -53,7 +53,6 @@ public class LevelGridComponent extends LevelComponent {
         }
         
         System.out.println(tile_matrix.toString());
-        System.out.println("QQQQQQQQQQQQQQQQQQQQQ");
         return this;
     }
 }

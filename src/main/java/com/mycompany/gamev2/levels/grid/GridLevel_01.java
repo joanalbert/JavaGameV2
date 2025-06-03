@@ -29,7 +29,7 @@ public class GridLevel_01 extends GridLevelBase{
             .config_tile_size(32).construct();
     }
 
-     
+   
      
     @Override
     public void level_windup() {
