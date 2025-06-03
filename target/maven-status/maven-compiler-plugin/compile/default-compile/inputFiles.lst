@@ -1,5 +1,7 @@
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\BaseComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\ComponentEventListener.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\level\grid\LevelGridComponent.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\level\grid\LevelGridTile.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\level\LevelComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\MovementComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object\ObjectComponent.java
@@ -40,6 +42,8 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\ILevel.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\BaseLevel.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\grid\GridLevel_01.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\grid\GridLevelBase.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\LevelManager.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\TestLevel_01.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\TestLevel_02.java

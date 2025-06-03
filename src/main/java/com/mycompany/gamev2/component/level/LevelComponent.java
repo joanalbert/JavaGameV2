@@ -8,6 +8,7 @@ package com.mycompany.gamev2.component.level;
  *
  * @author J.A
  */
-public class LevelComponent {
+public abstract class LevelComponent {
+    
     
 }

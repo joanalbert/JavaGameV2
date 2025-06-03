@@ -11,9 +11,11 @@ com\mycompany\gamev2\input_system\InputManager.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
 com\mycompany\gamev2\input_system\InputBinding.class
 com\mycompany\gamev2\component\object\MovementComponent.class
+com\mycompany\gamev2\levels\grid\GridLevel_01.class
 com\mycompany\gamev2\input_system\InputManager$1.class
 com\mycompany\gamev2\component\BaseComponent.class
 com\mycompany\gamev2\input_system\InputActions\InputAction.class
+com\mycompany\gamev2\component\level\grid\LevelGridTile.class
 com\mycompany\gamev2\window\MyWindow.class
 com\mycompany\gamev2\input_system\InputActions\IA_Look.class
 com\mycompany\gamev2\event_system\game_events\TickEvent.class
@@ -32,6 +34,7 @@ com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class
 com\mycompany\gamev2\levels\LevelManager.class
 com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\GameV2.class
+com\mycompany\gamev2\component\level\grid\LevelGridComponent.class
 com\mycompany\gamev2\input_system\InputManager$3.class
 com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
@@ -40,6 +43,7 @@ com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.class
 com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.class
 com\mycompany\gamev2\GameLoopV2.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.class
+com\mycompany\gamev2\levels\grid\GridLevelBase.class
 com\mycompany\gamev2\levels\TestLevel_02.class
 com\mycompany\gamev2\component\object\ObjectComponent.class
 com\mycompany\gamev2\GameMath\Vector3.class

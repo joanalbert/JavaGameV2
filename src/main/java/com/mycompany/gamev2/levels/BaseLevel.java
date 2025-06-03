@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.levels;
 
+import com.mycompany.gamev2.component.level.LevelComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
@@ -21,7 +22,10 @@ import java.util.Map;
  */
 public abstract class BaseLevel implements IWorldListener, ILevel {
 
+    protected HashMap<Class<? extends LevelComponent>, LevelComponent> LevelComponents = new HashMap<>();
+    
     protected HashMap<Class<? extends GameObject>, ArrayList<GameObject>> LevelObjects = new HashMap<>();
+    
     protected boolean active = false;
     protected String name;
 
@@ -57,6 +61,7 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
     
     
             
+    ///////////////////////////////////////////////////////// gameobjects management ///////////////////////
     public GameObject addGameObject(GameObject obj){
         if(obj == null) throw new IllegalArgumentException("argument can't be null");
         
@@ -123,7 +128,32 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
         }
         return result_objects;
     }
+    ///////////////////////////////////////////////////////////////////////////////////
 
+    
+    
+    
+    
+    /////////////////////// components management ///////////////////////////////////
+    protected <T extends LevelComponent> boolean addComponent(Class<T> type, LevelComponent comp){
+        if(this.LevelComponents.put(type, comp) != null) return true;
+        else return false;
+    }
+    
+    protected <T extends LevelComponent> T getComponent(Class<T> type){
+        LevelComponent comp = this.LevelComponents.get(type);
+        if(comp != null && type.isInstance(comp)) return type.cast(comp);
+        else return null;
+    }
+    
+    protected <T extends LevelComponent> void removeComponent(LevelComponent comp){
+        this.LevelComponents.remove(comp);
+    }
+    
+    public void ComponentSetup(){}
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
     public boolean isActive() {
         return active;
     }
