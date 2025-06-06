@@ -26,8 +26,8 @@ public class LevelCameraComponent extends LevelComponent {
     private GameObject target = null; 
     private BoxBounds bounds  = null;
     
-    double x_offset = 30;
-    double y_offset = 30;
+    double x_offset = 0;
+    double y_offset = 0;
     
     private BaseLevel owning_level;
        
@@ -64,11 +64,22 @@ public class LevelCameraComponent extends LevelComponent {
         Graphics2D g = e.getGraphics();
         g.setColor(Color.blue);
         
+        /*int x = (int) this.bounds.getLeft();
+        int y = (int) this.bounds.getTop();
+        int w = (int) (this.bounds.getLeft() - this.bounds.getRight());
+        int h = (int) (this.bounds.getBottom() - this.bounds.getTop());
+        
+        g.drawRect(x, y, w, h);*/
+        
+        
         int x = (int) this.bounds.getLeft();
         int y = (int) this.bounds.getTop();
-        int w = (int) this.bounds.getRight();
-        int h = (int) this.bounds.getBottom();
-        
+        int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
+        int h = (int) (this.bounds.getBottom() - this.bounds.getTop()); // Height
+
         g.drawRect(x, y, w, h);
     }
+    
+    
+    public BoxBounds getBounds(){return this.bounds;}
 }

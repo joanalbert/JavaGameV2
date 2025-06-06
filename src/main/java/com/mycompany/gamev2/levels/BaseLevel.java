@@ -10,6 +10,7 @@ import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.interfaces.ILevel;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,7 @@ import java.util.Map;
  *
  * @author J.A
  */
-public abstract class BaseLevel implements IWorldListener, ILevel {
+public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, ILevel {
 
     protected HashMap<Class<? extends LevelComponent>, LevelComponent> LevelComponents = new HashMap<>();
     
@@ -34,6 +35,7 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
     public BaseLevel(String name){
         this.name = name;
         EventManager.getInstance().subscribe(this, IWorldListener.class);
+        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
     
     @Override
@@ -140,7 +142,7 @@ public abstract class BaseLevel implements IWorldListener, ILevel {
         else return false;
     }
     
-    protected <T extends LevelComponent> T getComponent(Class<T> type){
+    public <T extends LevelComponent> T getComponent(Class<T> type){
         LevelComponent comp = this.LevelComponents.get(type);
         if(comp != null && type.isInstance(comp)) return type.cast(comp);
         else return null;

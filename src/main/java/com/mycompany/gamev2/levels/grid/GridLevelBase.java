@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.levels.grid;
 
-import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
+
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;

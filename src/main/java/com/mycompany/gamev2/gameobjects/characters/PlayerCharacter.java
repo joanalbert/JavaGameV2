@@ -112,10 +112,10 @@ public class PlayerCharacter extends Character implements IInputListener {
         ia_look.setOnTriggered(action -> {
             if(action instanceof IA_Look lookAction){
                 double[] axis_vals = lookAction.getAxisValues();
-                System.out.println("LOOK");
+                /*System.out.println("LOOK");
                 System.out.println(axis_vals[0]);
                 System.out.println(axis_vals[1]);
-                System.out.println("LOOK");
+                System.out.println("LOOK");*/
             }
         });
 

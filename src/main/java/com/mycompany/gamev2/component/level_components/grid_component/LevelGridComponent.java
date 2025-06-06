@@ -5,8 +5,10 @@
 package com.mycompany.gamev2.component.level_components.grid_component;
 
 import com.mycompany.gamev2.component.level_components.LevelComponent;
+import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
@@ -26,12 +28,15 @@ public class LevelGridComponent extends LevelComponent {
     
     private GridLevelBase owning_level;
     
+    private boolean viewpoert_culling;
+        
     public LevelGridComponent(GridLevelBase owning_level){
         this.owning_level = owning_level;
+        this.viewpoert_culling = true;
     }
     
     public LevelGridComponent config_width(int w){
-        this.tile_width = w;
+        this.tile_width = w; 
         return this;
     } 
     
@@ -42,6 +47,11 @@ public class LevelGridComponent extends LevelComponent {
     
     public LevelGridComponent config_tile_size(int s){
         this.tile_size = s;
+        return this;
+    }
+    
+    public LevelGridComponent config_viewport_culling(boolean setting){
+        this.viewpoert_culling = setting;
         return this;
     }
     
@@ -68,7 +78,16 @@ public class LevelGridComponent extends LevelComponent {
     @Override
     public void render(RenderEvent e) {
         Graphics2D g = e.getGraphics();
-        int count = 0;
+        
+        if(viewpoert_culling){
+            render_viewport_culling(g);
+        }
+        else render_naive(g);
+    }
+    
+    
+    private void render_naive(Graphics2D g){
+        int draw_calls = 0;
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
                 LevelGridTile tile = tile_matrix[x][y];
@@ -76,13 +95,41 @@ public class LevelGridComponent extends LevelComponent {
                 g.setColor(Color.pink); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
                 
-                count++;
+                draw_calls++;
             }
         }
         
-        System.out.println(count+" DRAW CALLS");
+        System.out.println(draw_calls+" DRAW CALLS");
     }
     
-    
-    
+    private void render_viewport_culling(Graphics2D g){
+        LevelCameraComponent cam = owning_level.getComponent(LevelCameraComponent.class);
+        if(cam == null) return;
+        
+        int draw_calls = 0;
+        BoxBounds bounds = cam.getBounds(); 
+        
+        int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
+        int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
+        
+        int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
+        int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
+        
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
+                LevelGridTile tile = tile_matrix[x][y];
+                Vector3 pos = tile.getWindowLocation();
+                g.setColor(Color.pink); 
+                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
+                
+                draw_calls++;
+            }
+        }
+        
+        /*System.out.printf("Camera: left=%.0f, right=%.0f, top=%.0f, bottom=%.0f, w=%.0f, h=%.0f%n",
+    bounds.getLeft(), bounds.getRight(), bounds.getTop(), bounds.getBottom(),
+        bounds.getRight() - bounds.getLeft(), bounds.getBottom() - bounds.getTop());*/
+        
+        System.out.println(draw_calls+" DRAW CALLS");
+    }
 }

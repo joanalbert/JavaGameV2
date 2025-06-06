@@ -26,9 +26,11 @@ public class GridLevel_01 extends GridLevelBase{
         LevelGridComponent grid = getComponent(LevelGridComponent.class);
         if(grid == null) return;
         
-        grid.config_height(10)
-            .config_width(20)
-            .config_tile_size(32).construct();
+        grid.config_height(110)
+            .config_width(110)
+            .config_tile_size(32)
+            .config_viewport_culling(true)
+            .construct();
     }
 
     
