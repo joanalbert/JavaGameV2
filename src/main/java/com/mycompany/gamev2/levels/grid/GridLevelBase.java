@@ -4,7 +4,8 @@
  */
 package com.mycompany.gamev2.levels.grid;
 
-import com.mycompany.gamev2.component.level.grid.LevelGridComponent;
+import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
@@ -34,7 +35,7 @@ public abstract class GridLevelBase extends BaseLevel implements IGameUpdateList
 
     @Override
     public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event);
+        super.onEventReceived(event); 
         
         if(!this.isActive()) return;
         

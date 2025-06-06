@@ -26,10 +26,17 @@ public class PlayerCharacter_InputContext extends InputContext {
         IA_Walk  walkAction = new IA_Walk();        
         Set<BindKey> walk_keys = new HashSet<>();
        
+        //wasd
         walk_keys.add(new BindKey(KeyEvent.VK_W, -1.0f, BindKey.Axis.Y));
         walk_keys.add(new BindKey(KeyEvent.VK_S,  1.0f, BindKey.Axis.Y));
         walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f, BindKey.Axis.X));
         walk_keys.add(new BindKey(KeyEvent.VK_D,  1.0f, BindKey.Axis.X));
+        
+        //arrows
+        walk_keys.add(new BindKey(KeyEvent.VK_UP, -1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_DOWN, 1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_LEFT, -1.0f, BindKey.Axis.X));
+        walk_keys.add(new BindKey(KeyEvent.VK_RIGHT, 1.0f, BindKey.Axis.X));
         
         addBinding(new InputBinding(walkAction, walk_keys, null, true, true, false));
         

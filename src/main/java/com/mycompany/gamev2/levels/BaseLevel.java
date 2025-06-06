@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.levels;
 
-import com.mycompany.gamev2.component.level.LevelComponent;
+import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;

@@ -4,8 +4,8 @@
  */
 package com.mycompany.gamev2.gameobjects;
 
-import com.mycompany.gamev2.component.object.ObjectComponent;
-import com.mycompany.gamev2.component.object.TransformComponent;
+import com.mycompany.gamev2.component.object_components.ObjectComponent;
+import com.mycompany.gamev2.component.object_components.TransformComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.gamemath.Vector3;

@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
-import com.mycompany.gamev2.component.object.MovementComponent;
+import com.mycompany.gamev2.component.object_components.MovementComponent;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
