@@ -200,6 +200,11 @@ public class InputManager implements IGameUpdateListener {
                     EventManager.getInstance().post(new KeyPressEvent(KeyEvent.VK_L, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                     System.out.println("telling the level manager to switch level");
                 }
+                
+                //TOGGLE DEBUG TEXT
+                if(e.getKeyCode() == KeyEvent.VK_P){
+                    EventManager.getInstance().post(new KeyPressEvent(KeyEvent.VK_P, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
+                }
             }
             
              @Override

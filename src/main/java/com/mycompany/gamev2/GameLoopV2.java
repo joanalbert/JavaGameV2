@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2;
 
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.GameFinishedEvent;
 import com.mycompany.gamev2.event_system.game_events.GameStartEvent;
@@ -11,6 +12,8 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.window.MyWindow;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 
@@ -84,6 +87,7 @@ public class GameLoopV2 implements Runnable {
                 Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
                 g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
                 EventManager.getInstance().post(new RenderEvent(g), IGameUpdateListener.class);
+                render_debug_info(g);
                 g.dispose();
                 MyWindow.BUFFER_STRATEGY.show();
                 
@@ -109,5 +113,20 @@ public class GameLoopV2 implements Runnable {
         EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
     }
     
-    
+    public void render_debug_info(Graphics2D g){
+        
+        g.setColor(Color.BLACK);               
+        g.setFont(new Font("Arial", Font.BOLD, 24)); 
+        
+        
+        DebugFlags flags = DebugFlags.getInstance();
+        
+        System.out.println(flags.getShow_debug_FPS());
+        
+        if(flags.getShow_debug_FPS())
+        {
+            g.drawString("FPS: 0", 10, 30); 
+        }
+        
+    }
 }
