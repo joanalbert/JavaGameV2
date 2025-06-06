@@ -7,6 +7,7 @@ package com.mycompany.gamev2.levels.grid;
 import com.mycompany.gamev2.component.level.grid.LevelGridComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
 
 /**
  *
@@ -24,8 +25,8 @@ public class GridLevel_01 extends GridLevelBase{
         LevelGridComponent grid = getComponent(LevelGridComponent.class);
         if(grid == null) return;
         
-        grid.config_height(50)
-            .config_width(50)
+        grid.config_height(10)
+            .config_width(10)
             .config_tile_size(32).construct();
     }
 
@@ -36,6 +37,8 @@ public class GridLevel_01 extends GridLevelBase{
         System.out.println("GRID WINDUP");
         this.configure_grid_component();
         
+        PlayerCharacter player = new PlayerCharacter();
+        addGameObject(player);
     }
 
     @Override
@@ -45,7 +48,9 @@ public class GridLevel_01 extends GridLevelBase{
 
     @Override
     protected void render(RenderEvent e) {
-        
+        LevelGridComponent grid = getComponent(LevelGridComponent.class);
+        if(grid == null) return;
+        grid.render(e);
     }
      
      

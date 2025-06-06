@@ -5,8 +5,12 @@
 package com.mycompany.gamev2.component.level.grid;
 
 import com.mycompany.gamev2.component.level.LevelComponent;
+import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -55,4 +59,30 @@ public class LevelGridComponent extends LevelComponent {
         System.out.println(tile_matrix.toString());
         return this;
     }
+
+    @Override
+    public void tick(TickEvent e) {
+        
+    }
+
+    @Override
+    public void render(RenderEvent e) {
+        Graphics2D g = e.getGraphics();
+        int count = 0;
+        for(int x = 0; x < tile_width; x++){
+            for(int y = 0; y < tile_height; y++){
+                LevelGridTile tile = tile_matrix[x][y];
+                Vector3 pos = tile.getWindowLocation();
+                g.setColor(Color.pink); 
+                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
+                
+                count++;
+            }
+        }
+        
+        System.out.println(count+" DRAW CALLS");
+    }
+    
+    
+    
 }

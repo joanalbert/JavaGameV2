@@ -4,11 +4,15 @@
  */
 package com.mycompany.gamev2.component.level;
 
+import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
+
 /**
  *
  * @author J.A
  */
 public abstract class LevelComponent {
     
-    
+    public abstract void tick(TickEvent e);
+    public abstract void render(RenderEvent e);
 }
