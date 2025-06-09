@@ -14,7 +14,6 @@ import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.InputStream;
 
 /**
  *
@@ -131,7 +130,10 @@ public class LevelGridComponent extends LevelComponent {
                 if(tile == null) continue;
                 
                 Vector3 pos = tile.getWindowLocation();
-                g.setColor(Color.pink); 
+                
+                Color c = Color.decode(tile.getColor());
+                
+                g.setColor(c); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
                 
                 draw_calls++;
