@@ -1,3 +1,18 @@
+let global_isClicked = false;
+//we want to know whenever mouse click is held down
+document.addEventListener("mousedown", (e)=> global_isClicked = true);
+document.addEventListener("mouseup", (e)=> global_isClicked = false);
+
+
+//tools
+let brush_btn = document.getElementById("brush");
+let bool_brush = false;
+brush_btn.addEventListener("click", (e)=>{
+    bool_brush = !bool_brush;
+    brush_btn.classList.toggle("bg-danger");
+});
+
+
 
 /////////////////////////////////////////////////////////////////////////// MAP TABLE SET AND RESET ///////////////////////////////////////////////////////
 var mapTableElement = document.getElementById("mapTable"); 
@@ -43,6 +58,51 @@ function createTable(){
         
         for(let x = 0; x < TableTileWidth; x++){
             td = createColumn();
+            
+            td.setAttribute("x",x);
+            td.setAttribute("y",y);
+            
+            
+            
+            ////ON CLICK, ASSIGN IMAGE
+            td.addEventListener("click", (e)=>{
+                if(!selected_image){
+                    alert("no tile selected yet");
+                    return;
+                } 
+                
+               
+                //close side menut
+                if(!hidden)togglerIcon.click();
+                
+                
+                e.target.style.backgroundImage = `url(${selected_image})`;
+            });
+            
+            
+            //ON MOUSE ENTER/EXIT SHOW IMAGE BUT DONT ASSIGN IT 
+            td.addEventListener("mouseenter", (e)=>{
+                if(!selected_image)return;
+                
+                let img = document.createElement("img");
+                img.src = selected_image;
+                img.style.position = 'relative;'
+                img.style.top = "0px";
+                img.style.margin = '0px';
+                img.style.padding = "0px";
+                img.style.right = "0px";
+                img.style.pointerEvents = "none";
+                
+                e.target.appendChild(img);
+            });
+            
+            td.addEventListener("mouseleave", (e)=>{
+                let img = e.target.children[0];
+                if(img) e.target.removeChild(img);
+                if(bool_brush && global_isClicked) e.target.click();
+            });
+            //////////////////////////////////////////
+            
             tr.appendChild(td);
         }
         
@@ -127,14 +187,20 @@ function createColumn(){
     td.style.width  = `${TileWidth}px`;
     td.style.height = `${TileHeight}px`;
 
-    td.style.margin  = "none";
-    td.style.padding = "none";
+    td.style.margin  = "0px";
+    td.style.padding = "0px";
     td.style.border = "none";
+    
+    
     
     td.classList.add("mapTableColumn");
     mapTableElement.classList.add("bg-white");
-    
+        
     return td;
+}
+                        
+function test(){
+    console.log("a");    
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -179,7 +245,7 @@ function showMenu(element){
 
 
 
-/////////////////// TILE SHEETS EVENTS //////////////////
+////////////////////////////////////////////////// TILE SHEETS EVENTS ////////////////////////////////////////////////////
 var tileSheet1 = document.getElementById("tileSheet1");
 var marker1 = document.getElementById("marker1");
 var imageTable1 = document.getElementById("imageTable1");
@@ -230,6 +296,15 @@ function createImageTable1(){
        imageTable1.appendChild(r);        
     }
     
+    
+    
+    imageTable1.addEventListener("click", (e)=> {
+        //select tile
+        let tile_pos = select_tile(e, marker1);
+        
+        //update selected tile image
+        update_selected_ui(tile_pos);
+    })
 }
 
 function createImageTable2(){
@@ -257,12 +332,52 @@ function createImageTable2(){
        imageTable2.appendChild(r);        
     }
     
+    imageTable2.addEventListener("click", (e)=>{
+        //select tile
+        let tile_pos = select_tile(e, marker2);   
+        
+        //update selected tile image
+        update_selected_ui(tile_pos);
+    })
 }
 
 
+let canvas = document.getElementById("cnvs");
+let ctx = canvas.getContext("2d");
+let selected_image;
+
+function select_tile(event, marker, imageTable){
+    
+    let tile_sheet = (marker.getAttribute("idx") == "1") ? tileSheet1 : tileSheet2; 
+    
+    let pos = {
+        "x": Number.parseInt(marker.style.left) / imageDimension,
+        "y": Number.parseInt(marker.style.top ) / imageDimension
+    }
+    
+    let x = Number.parseInt(marker.style.left);
+    let y = Number.parseInt(marker.style.top);
+    
+    ctx.drawImage(tile_sheet, x, y, 16, 16, 0, 0, 32, 32);
+    
+    selected_image = canvas.toDataURL();
+    
+    console.log(pos);
+    
+    return pos;
+}
+
+
+function update_selected_ui(tile_pos){
+    let img = document.getElementById("currentTile");
+    img.src = selected_image;
+    img.tile_pos = tile_pos;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
+//FINALLY, UPDATE MAP GRID
 
 
 
