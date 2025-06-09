@@ -15,6 +15,7 @@ import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.text.DecimalFormat;
 
 
 
@@ -81,13 +82,18 @@ public class GameLoopV2 implements Runnable {
 
             if (elapsedTime >= TARGET_TIME * 1000000) {     
                 //update
-                EventManager.getInstance().post(new TickEvent(deltaTime, frames), IGameUpdateListener.class);
+                TickEvent t_event = new TickEvent(deltaTime, frames);
+                EventManager.getInstance().post(t_event, IGameUpdateListener.class);
                 
                 //render
                 Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
                 g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
-                EventManager.getInstance().post(new RenderEvent(g), IGameUpdateListener.class);
-                render_debug_info(g);
+                
+                RenderEvent r_event = new RenderEvent(g);
+                EventManager.getInstance().post(r_event, IGameUpdateListener.class);
+                
+                render_debug_info(t_event, r_event);
+                
                 g.dispose();
                 MyWindow.BUFFER_STRATEGY.show();
                 
@@ -113,7 +119,9 @@ public class GameLoopV2 implements Runnable {
         EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
     }
     
-    public void render_debug_info(Graphics2D g){
+    public void render_debug_info(TickEvent t, RenderEvent r){
+        Graphics2D g = r.getGraphics();
+        double delta = t.getDeltaSeconds();
         
         g.setColor(Color.BLACK);               
         g.setFont(new Font("Arial", Font.BOLD, 24)); 
@@ -125,7 +133,9 @@ public class GameLoopV2 implements Runnable {
         
         if(flags.getShow_debug_FPS())
         {
-            g.drawString("FPS: 0", 10, 30); 
+            double fps = 1/delta;
+            DecimalFormat df = new DecimalFormat("#.##");
+            g.drawString("FPS: "+df.format(fps)  , 10, 30); 
         }
         
     }

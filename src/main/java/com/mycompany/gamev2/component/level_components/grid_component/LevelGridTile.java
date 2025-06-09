@@ -22,6 +22,13 @@ public class LevelGridTile {
         this.window_location = window_location;
     }
     
+    //constructor for json parsing
+    public LevelGridTile(String color, int[] grid_position){
+        this.color = color;
+        this.grid_position = new Vector3(grid_position[0], grid_position[1], grid_position[2]);
+    }
+    
+    public void setWindowLocation(Vector3 loc){this.window_location = loc;}
     
     public Vector3 getWindowLocation(){return this.window_location;}
     public Vector3 getGridPosition(){return this.grid_position;}

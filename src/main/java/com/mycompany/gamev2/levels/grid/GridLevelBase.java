@@ -18,10 +18,18 @@ import com.mycompany.gamev2.levels.BaseLevel;
  * @author J.A
  */
 public abstract class GridLevelBase extends BaseLevel implements IGameUpdateListener {
-    public GridLevelBase(String name){
+    
+    private String json_name;
+    
+    public GridLevelBase(String name, String json_name){
         super(name);        
+        
+        this.json_name = json_name;
+        
+        //components
         ComponentSetup();
         
+        //events
         EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
 
@@ -48,6 +56,7 @@ public abstract class GridLevelBase extends BaseLevel implements IGameUpdateList
         }
     }
    
+    public String getJsonName(){return this.json_name;}
     
     protected abstract void tick(TickEvent e);
     protected abstract void render(RenderEvent e);

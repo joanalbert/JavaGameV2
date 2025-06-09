@@ -10,9 +10,11 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.InputStream;
 
 /**
  *
@@ -52,6 +54,13 @@ public class LevelGridComponent extends LevelComponent {
     
     public LevelGridComponent config_viewport_culling(boolean setting){
         this.viewpoert_culling = setting;
+        return this;
+    }
+    
+    
+    public LevelGridComponent construct_fromJSON(String json_path){
+        JsonReader reader = JsonReader.getInstance();
+        tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); // thse dimensions should be defined in the json itself
         return this;
     }
     
@@ -118,6 +127,9 @@ public class LevelGridComponent extends LevelComponent {
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 LevelGridTile tile = tile_matrix[x][y];
+                
+                if(tile == null) continue;
+                
                 Vector3 pos = tile.getWindowLocation();
                 g.setColor(Color.pink); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
@@ -129,6 +141,12 @@ public class LevelGridComponent extends LevelComponent {
         /*System.out.printf("Camera: left=%.0f, right=%.0f, top=%.0f, bottom=%.0f, w=%.0f, h=%.0f%n",
     bounds.getLeft(), bounds.getRight(), bounds.getTop(), bounds.getBottom(),
         bounds.getRight() - bounds.getLeft(), bounds.getBottom() - bounds.getTop());*/
+        
+  /*Divide by tile_size: Maps world pixels to grid units (32 pixels = 1 tile).
+    Floor ((int)): Picks the tile containing left/top for loop start.
+    Ceil: Includes partial tiles at right/bottom for loop end.
+    Max(0): Handles negative bounds (camera near (0, 0)).
+    Min(tile_width/height): Caps at grid size (1700).*/
         
         System.out.println(draw_calls+" DRAW CALLS");
     }

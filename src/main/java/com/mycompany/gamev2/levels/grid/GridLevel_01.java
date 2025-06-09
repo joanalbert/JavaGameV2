@@ -15,9 +15,9 @@ import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
  * @author J.A
  */
 public class GridLevel_01 extends GridLevelBase{
-    
-     public GridLevel_01(){
-        super("GridLevel_01");        
+        
+    public GridLevel_01(){
+        super("GridLevel_01", "map_layouts/grid_map1.json");
         ComponentSetup();
     }
 
@@ -26,11 +26,11 @@ public class GridLevel_01 extends GridLevelBase{
         LevelGridComponent grid = getComponent(LevelGridComponent.class);
         if(grid == null) return;
         
-        grid.config_height(110)
-            .config_width(110)
+        grid.config_height(20)
+            .config_width(20)
             .config_tile_size(32)
             .config_viewport_culling(true)
-            .construct();
+            .construct_fromJSON(this.getJsonName());
     }
 
     
