@@ -111,17 +111,24 @@
                     <table id="sideTable">
                         <tr>
                             <td></td>
-                            <td id="up"><i class="fas fa-chevron-up"></i></td>
+                            <td style="text-align: center;" id="up"><i class="fas fa-chevron-up"></i></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td  id="left"><i class="fas fa-chevron-left"></i></td>
-                            <td  style="position: relative;" id="currentImg"><img id="currentTile" src="img/image_1_12.png" alt=""></td>
-                            <td  id="right"><i class="fas fa-chevron-right"></i></td>
+                            
+                            <!-- select tile previewer -->
+                            <td style="position: relative;" id="currentImg">
+                                <div style="display: flex; justify-content: center; width: 100%;">
+                                    <canvas id="cnvs" style="margin: 0px;" width="32" height="32"></canvas>    
+                                </div>
+                            </td>
+                            
+                            <td style="text-align: right;" id="right"><i class="fas fa-chevron-right"></i></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td id="down"><i class="fas fa-chevron-down"></i></td>
+                            <td style="text-align: center;" id="down"><i class="fas fa-chevron-down"></i></td>
                             <td></td>
                         </tr>
                     </table>
@@ -167,9 +174,6 @@
             
         </div>
         
-        <div style="display: flex; justify-content: center; width: 100%;">
-            <canvas id="cnvs" width="32" height="32"></canvas>    
-        </div>
         
         
         

@@ -66,39 +66,62 @@ function createTable(){
             
             ////ON CLICK, ASSIGN IMAGE
             td.addEventListener("click", (e)=>{
-                if(!selected_image){
-                    alert("no tile selected yet");
-                    return;
-                } 
+                
+                //we get the drawing context for the clicked grid cell
+                let td_cnv = e.target.getElementsByTagName("canvas")[0];
+                let td_ctx = td_cnv.getContext("2d");
                 
                
-                //close side menut
+                //first we close side menu for ease of use
                 if(!hidden)togglerIcon.click();
                 
+                //we draw from temp canvas to the cell canvas
+                td_ctx.drawImage(temp_canvas, 0, 0);
                 
-                e.target.style.backgroundImage = `url(${selected_image})`;
+                e.target.setAttribute("set", true);
             });
             
             
             //ON MOUSE ENTER/EXIT SHOW IMAGE BUT DONT ASSIGN IT 
             td.addEventListener("mouseenter", (e)=>{
-                if(!selected_image)return;
+                                
+                //create a 'preview' canvas
+                let td_cnv_preview = document.createElement("canvas");
+                td_cnv_preview.style.width  = `${TileWidth}px`;
+                td_cnv_preview.style.height = `${TileHeight}px`;
+                td_cnv_preview.style.pointerEvents = "none";
                 
-                let img = document.createElement("img");
-                img.src = selected_image;
-                img.style.position = 'relative;'
-                img.style.top = "0px";
-                img.style.margin = '0px';
-                img.style.padding = "0px";
-                img.style.right = "0px";
-                img.style.pointerEvents = "none";
+                td_cnv_preview.setAttribute("width", TileWidth);
+                td_cnv_preview.setAttribute("height", TileHeight);
+                td_cnv_preview.id = "td_cnv_preview";
                 
-                e.target.appendChild(img);
+                //draw to the preview
+                let preview_ctx = td_cnv_preview.getContext("2d");
+                preview_ctx.drawImage(temp_canvas, 0, 0);
+                
+                //if there was already a preview canvas in this cell, remove it
+                let previous_preview = e.target.querySelector("#td_cnv_preview");
+                if(previous_preview) e.target.removeChild(previous_preview);
+                
+                //append the current preview
+                e.target.appendChild(td_cnv_preview);
+                
+                //finally hide the real canvas for this cell
+                let td_cnv = e.target.getElementsByTagName("canvas")[0];
+                td_cnv.style.display = "none";
             });
             
             td.addEventListener("mouseleave", (e)=>{
-                let img = e.target.children[0];
-                if(img) e.target.removeChild(img);
+                
+                //get the real canvas for this cell and unhide it
+                let td_cnv = e.target.getElementsByTagName("canvas")[0];
+                td_cnv.style.display = "inline";
+                
+                //remove whatever preview canvas there was, if any
+                let preview = e.target.querySelector("#td_cnv_preview");
+                if(preview) e.target.removeChild(preview);
+                
+                //if the brush tool is active and mouse is pressed, set this cell on mouseleave by clicking it
                 if(bool_brush && global_isClicked) e.target.click();
             });
             //////////////////////////////////////////
@@ -191,7 +214,16 @@ function createColumn(){
     td.style.padding = "0px";
     td.style.border = "none";
     
+    //we add a canvas to each individual tile
+    let td_cnv = document.createElement("canvas");
+    td_cnv.style.border = "none";
+    td_cnv.style.width  = `${TileWidth}px`;
+    td_cnv.style.height = `${TileHeight}px`;
+    td_cnv.style.pointerEvents = "none";
+    td_cnv.setAttribute("width", TileWidth);
+    td_cnv.setAttribute("height", TileHeight);
     
+    td.appendChild(td_cnv);
     
     td.classList.add("mapTableColumn");
     mapTableElement.classList.add("bg-white");
@@ -301,9 +333,6 @@ function createImageTable1(){
     imageTable1.addEventListener("click", (e)=> {
         //select tile
         let tile_pos = select_tile(e, marker1);
-        
-        //update selected tile image
-        update_selected_ui(tile_pos);
     })
 }
 
@@ -336,14 +365,12 @@ function createImageTable2(){
         //select tile
         let tile_pos = select_tile(e, marker2);   
         
-        //update selected tile image
-        update_selected_ui(tile_pos);
     })
 }
 
 
-let canvas = document.getElementById("cnvs");
-let ctx = canvas.getContext("2d");
+let temp_canvas = document.getElementById("cnvs");
+let temp_ctx = temp_canvas.getContext("2d");
 let selected_image;
 
 function select_tile(event, marker, imageTable){
@@ -358,21 +385,14 @@ function select_tile(event, marker, imageTable){
     let x = Number.parseInt(marker.style.left);
     let y = Number.parseInt(marker.style.top);
     
-    ctx.drawImage(tile_sheet, x, y, 16, 16, 0, 0, 32, 32);
+    temp_ctx.drawImage(tile_sheet, x, y, 16, 16, 0, 0, 32, 32);
     
-    selected_image = canvas.toDataURL();
     
-    console.log(pos);
     
     return pos;
 }
 
 
-function update_selected_ui(tile_pos){
-    let img = document.getElementById("currentTile");
-    img.src = selected_image;
-    img.tile_pos = tile_pos;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
