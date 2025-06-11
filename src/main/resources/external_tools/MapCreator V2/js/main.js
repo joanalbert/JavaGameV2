@@ -4,14 +4,11 @@ document.addEventListener("mousedown", (e)=> global_isClicked = true);
 document.addEventListener("mouseup", (e)=> global_isClicked = false);
 
 
-//tools
-let brush_btn = document.getElementById("brush");
-let bool_brush = false;
-brush_btn.addEventListener("click", (e)=>{
-    bool_brush = !bool_brush;
-    brush_btn.classList.toggle("bg-danger");
-});
-
+/*loop();
+function loop(){
+    console.log(window.flags.brush);
+    window.requestAnimationFrame(loop);
+}*/
 
 
 /////////////////////////////////////////////////////////////////////////// MAP TABLE SET AND RESET ///////////////////////////////////////////////////////
@@ -73,7 +70,7 @@ function createTable(){
                 
                
                 //first we close side menu for ease of use
-                if(!hidden)togglerIcon.click();
+                if(!hidden && !locked)togglerIcon.click();
                 
                 //we draw from temp canvas to the cell canvas
                 td_ctx.drawImage(temp_canvas, 0, 0);
@@ -122,7 +119,7 @@ function createTable(){
                 if(preview) e.target.removeChild(preview);
                 
                 //if the brush tool is active and mouse is pressed, set this cell on mouseleave by clicking it
-                if(bool_brush && global_isClicked) e.target.click();
+                if(window.flags.brush && global_isClicked) e.target.click();
             });
             //////////////////////////////////////////
             
@@ -239,39 +236,77 @@ function test(){
 
 
 ///////////////////////////////////////////////////////////////////////////// SIDE MENU SCRIPTS ///////////////////////////////////////////////////////////////////////
-let sideToggler = document.getElementById("toggler");
-let togglerIcon = document.querySelector("#toggler > i");
 
+//sidemenu dom
+let sideToggler = document.getElementById("toggler");
+let togglerIcon = document.querySelector("#toggler button#toggler_btn");
+
+//lock btn dom
+let lockToggler = document.getElementById("toggler"); 
+let lockIcon    = document.querySelector("#toggler button#lock_btn"); 
+
+//sidemenu vars
 let sideMenu = document.getElementById("sideMenu");
 let movementLength = 1200;
 let hidden = true;
 
+//lock vars
+let locked = false;
+
+//sidemenu icons 
 let leftClassName  = "fas fa-arrow-alt-circle-left";
 let rightClassName = "fas fa-arrow-alt-circle-right";
 
+//lock icons
+let lockedClassName = "fas fa-lock";
+let unlockedClassName = "fas fa-lock-open";
 
-togglerIcon.addEventListener("mouseenter", reverseIconOnHover);
-togglerIcon.addEventListener("mouseleave", reverseIconOnHover);
 togglerIcon.addEventListener("click", (event)=>{
     if(hidden) showMenu(event.target);
     else hideMenu(event.target);
 })
 
-function reverseIconOnHover(){}
+lockIcon.addEventListener("click", (event)=>{
+    if(locked) unlockMenu(event.target);
+    else lockMenu(event.target);
+});
 
+
+//sidemenu actions
 function hideMenu(element){
     sideMenu.style.left = "100%";
     hidden = true;
-    element.className = leftClassName;
+    
+    let i = element.children[0];
+    if(i) i.className = leftClassName;
+    else element.className = leftClassName;
 }
 
 function showMenu(element){
     sideMenu.style.left = "45%";
     hidden = false;
-    element.className = rightClassName;
+    
+    let i = element.children[0];
+    if(i) i.className = rightClassName;
+    else element.className = rightClassName;
 }
 
+//lock menu actions
+function unlockMenu(element){
+    locked = false;
+    
+    let i = element.children[0];
+    if(i) i.className = unlockedClassName;
+    else element.className = unlockedClassName;
+}
 
+function lockMenu(element){
+    locked = true;
+    
+    let i = element.children[0];
+    if(i) i.className = lockedClassName;
+    else element.className = lockedClassName;
+}
 
 
 
