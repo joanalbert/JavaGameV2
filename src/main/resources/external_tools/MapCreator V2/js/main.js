@@ -72,10 +72,25 @@ function createTable(){
                 //first we close side menu for ease of use
                 if(!hidden && !locked)togglerIcon.click();
                 
-                //we draw from temp canvas to the cell canvas
-                td_ctx.drawImage(temp_canvas, 0, 0);
                 
-                e.target.setAttribute("set", true);
+                if(window.flags.fill){
+                    //set 
+                    let origin_position = {
+                        "x": x,
+                        "y": y
+                    }
+                    flood_fill_visual(origin_position, selected_cell_data);
+                }
+                else{
+                    //we draw from temp canvas to the cell canvas
+                    td_ctx.drawImage(temp_canvas, 0, 0);
+                    e.target.setAttribute("set", true);
+                    
+                    //when a tile is painted we store the tile's pixel coords from the sheet
+                    e.target.cell_data = selected_cell_data;
+                }
+                
+                
             });
             
             
@@ -399,31 +414,46 @@ function createImageTable2(){
     imageTable2.addEventListener("click", (e)=>{
         //select tile
         let tile_pos = select_tile(e, marker2);   
-        
+        //todo: more stuff later
     })
 }
 
 
 let temp_canvas = document.getElementById("cnvs");
 let temp_ctx = temp_canvas.getContext("2d");
-let selected_image;
+let selected_cell_data;
 
 function select_tile(event, marker, imageTable){
     
+    //use the correct tile sheet depending on the marker
     let tile_sheet = (marker.getAttribute("idx") == "1") ? tileSheet1 : tileSheet2; 
     
+    //get the tile sheet PIXEL coordinates based on marker style position
+    let x = Number.parseInt(marker.style.left);
+    let y = Number.parseInt(marker.style.top);
+    
+    //get the tile sheet GRID coorinates based on the PIXEL coordinates
     let pos = {
         "x": Number.parseInt(marker.style.left) / imageDimension,
         "y": Number.parseInt(marker.style.top ) / imageDimension
     }
     
-    let x = Number.parseInt(marker.style.left);
-    let y = Number.parseInt(marker.style.top);
+    //we save the PIXEL coordinates (and other cell data) for later use
+    //(to attach them to the world grid cells when one is painted)
+    selected_cell_data = {
+        "atlas_id": marker.getAttribute("idx"),
+        "atlas_coords": {
+            "x": x,
+            "y": y
+        }   
+    }
+     
     
+        
+    //finally we draw a 16*16 square from the tile sheet starting at PIXEL coords onto the temp_canvas, at 0,0
     temp_ctx.drawImage(tile_sheet, x, y, 16, 16, 0, 0, 32, 32);
     
-    
-    
+
     return pos;
 }
 
