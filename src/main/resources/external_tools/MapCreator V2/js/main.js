@@ -60,6 +60,18 @@ function createTable(){
             td.setAttribute("y",y);
             
             
+            //RIGHT CLICK HANDLING (copy tile on rihgt click)
+            td.addEventListener("contextmenu", (e)=>{
+                e.preventDefault();
+                let cell = e.currentTarget;
+                let y = cell.getAttribute("y");
+                let x = cell.getAttribute("x");
+                
+                let data = cell.cell_data;
+                if(!data) return;
+                
+                select_tile_rightclick(data);
+            });
             
             ////ON CLICK, ASSIGN IMAGE
             td.addEventListener("click", (e)=>{
@@ -67,6 +79,7 @@ function createTable(){
                 //we get the drawing context for the clicked grid cell
                 let td_cnv = e.target.getElementsByTagName("canvas")[0];
                 let td_ctx = td_cnv.getContext("2d");
+                
                 
                
                 //first we close side menu for ease of use
@@ -455,6 +468,15 @@ function select_tile(event, marker, imageTable){
     
 
     return pos;
+}
+
+function select_tile_rightclick(data){
+    //use the correct tile sheet depending on right-clicked cell
+    let tile_sheet = (data.atlas_id == "1") ? tileSheet1 : tileSheet2; 
+    let x = data.atlas_coords.x;
+    let y = data.atlas_coords.y;
+    
+    temp_ctx.drawImage(tile_sheet, x, y, 16, 16, 0, 0, 32, 32);
 }
 
 

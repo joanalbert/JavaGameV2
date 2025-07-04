@@ -60,6 +60,8 @@ function flood_fill_visual(origin_position, newCellData){
     let y = origin_position.y;
     let data = grid[y][x];
     
+    
+    
     // Create a deep copy of data
     let data_copy = {
         atlas_id: data.atlas_id,
@@ -96,11 +98,12 @@ function fill_iterativeV2(grid, w, h, location, data, ndata){
         
         
         
-        if(current_x < 0 || current_x > w || current_y < 0 || current_y > h)
+        if(current_x < 0 || current_x >= w || current_y < 0 || current_y >= h)
         {
             console.log("out of bounds");        
             continue;
         }
+        
         
         let current_data = grid[current_y][current_x];
         
@@ -119,14 +122,14 @@ function fill_iterativeV2(grid, w, h, location, data, ndata){
         let td2 = document.querySelector(`td[x="${current_x-1}"][y="${current_y}"]`);
         
         let td = document.querySelector(`td[x="${current_x}"][y="${current_y}"]`);
-        td.style.outline = "2px dashed red";
+        //td.style.outline = "2px dashed red";
         
         if(!compareCellData_visual(current_data, data)){
             console.log("flood boundary");
             continue;
         }
         
-        td.style.outline = "2px dashed blue";
+        //td.style.outline = "2px dashed blue";
         
         
         grid[current_y][current_x].atlas_coords.x = ndata.atlas_coords.x;
@@ -168,7 +171,7 @@ function repaint_dirty(grid){
             
             //get drawing toold
             let   td = document.querySelector(`td[x="${x}"][y="${y}"]`);
-            td.style.outline="2px solid limegreen";
+            //td.style.outline="2px solid limegreen";
             let cnvs = td.children[0];
             let ctx  = cnvs.getContext("2d");
             
@@ -231,7 +234,16 @@ function getMatrixFromTable(table){
                 };
                 matrix[i].push(data_copy);
             }
-            else matrix[i].push(null);
+            else {
+                let empty_data_copy = {
+                    atlas_id: "0",
+                    atlas_coords: {
+                        x: 0,
+                        y: 0
+                    }
+                }
+                matrix[i].push(empty_data_copy);
+            }
             
         }
     }
