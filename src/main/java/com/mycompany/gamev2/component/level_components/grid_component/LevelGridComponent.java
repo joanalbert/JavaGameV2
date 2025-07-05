@@ -21,7 +21,7 @@ import java.awt.Graphics2D;
  */
 public class LevelGridComponent extends LevelComponent {
     
-    private LevelGridTile[][] tile_matrix;
+    private LevelGridTileV2[][] tile_matrix;
     
     private int tile_width = 0;
     private int tile_height = 0;
@@ -64,13 +64,13 @@ public class LevelGridComponent extends LevelComponent {
     }
     
     public LevelGridComponent construct(){
-        tile_matrix = new LevelGridTile[tile_width][tile_height];
+        tile_matrix = new LevelGridTileV2[tile_width][tile_height];
         
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
                 Vector3 grid_pos = new Vector3(x, y, 0);
                 Vector3 wndw_loc = new Vector3(x * tile_size, y * tile_size, 0);
-                tile_matrix[x][y] = new LevelGridTile("red", grid_pos, wndw_loc);
+                //tile_matrix[x][y] = new LevelGridTileV2(grid_pos, wndw_loc);
             }
         }
         
@@ -98,7 +98,7 @@ public class LevelGridComponent extends LevelComponent {
         int draw_calls = 0;
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
-                LevelGridTile tile = tile_matrix[x][y];
+                LevelGridTileV2 tile = tile_matrix[x][y];
                 Vector3 pos = tile.getWindowLocation();
                 g.setColor(Color.pink); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
@@ -125,16 +125,19 @@ public class LevelGridComponent extends LevelComponent {
         
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
-                LevelGridTile tile = tile_matrix[x][y];
+                LevelGridTileV2 tile = tile_matrix[x][y];
                 
                 if(tile == null) continue;
                 
                 Vector3 pos = tile.getWindowLocation();
                 
-                Color c = Color.decode(tile.getColor());
+                Color c = Color.decode("red");
                 
+                //this need to change from rendering colors to drawing the image based on atlas coords from the tile object
                 g.setColor(c); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
+                
+                
                 
                 draw_calls++;
             }

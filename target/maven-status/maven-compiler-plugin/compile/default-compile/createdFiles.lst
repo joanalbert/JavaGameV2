@@ -56,5 +56,6 @@ com\mycompany\gamev2\component\ComponentEventListener.class
 com\mycompany\gamev2\event_system\game_events\GameStartEvent.class
 com\mycompany\gamev2\gameobjects\characters\Character.class
 com\mycompany\gamev2\debug\DebugFlags.class
+com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\component\object_components\TransformComponent.class

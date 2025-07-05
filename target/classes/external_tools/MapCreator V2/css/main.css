@@ -1,0 +1,206 @@
+.mapTableColumn:hover{
+    cursor: pointer;
+    outline: 2px solid blue;
+    transition: outline 0.2s;
+}
+
+
+body {
+    overflow-x: hidden;
+}
+
+
+
+
+
+/* TAB-CONTROL STYLES */
+
+#exTab1 .tab-content {
+  color : white;
+  /*background-color: #428bca;*/
+  padding : 5px 15px;
+}
+
+#exTab2 h3 {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+/* remove border radius for the tab */
+
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+/* change border radius for the tab , apply corners on top*/
+
+#exTab3 .nav-pills > li > a {
+  border-radius: 4px 4px 0 0 ;
+}
+
+#exTab3 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+
+
+
+/* SIDEMENU STYLES */
+#sideMenu{
+    position: absolute;
+    top: 5%;
+    lefT: 100%;
+    width: 1650px;
+    height: 700px;;
+    background: white;
+    border: 1px solid royalblue;
+    border-left-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    padding: 0;
+    border-bottom-left-radius: 15px;
+    transition: left 0.5s;
+}
+
+#toggler{
+    position: absolute;
+    top: -3px;
+    lefT: -64.5px;
+    margin: 0;
+    border-top: 3px solid darkblue;
+    border-left: 3px solid darkblue;
+    border-bottom: 3px solid darkblue;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding: none;
+    height: 256px;
+    width: 64px;
+    background: white;
+    overflow: hidden;
+    z-index: 999;
+}
+#toggler > i{
+    font-size: 32px; 
+    margin: 10px;
+}
+
+#toggler > i:hover{
+    cursor: pointer;
+    color: darkblue;
+}
+
+
+#sideListParent{
+    width: 64px;
+    height: 64px;
+    margin: none;
+    position: relative;
+}
+#sideTable{
+    margin: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#sideTable tr{
+    margin: 0;
+    padding: 0;
+}
+#sideTable td{
+    margin: 0;
+    padding: 0;
+    width: 33%;
+}
+#currentTile{
+    position: absolute;
+    top: 0px;
+    left: -3px;
+    width: 100%;
+    height: 100%;
+}
+
+#tileSlider{
+    height: 650px;
+    width: 3500px;
+    overflow-x: auto;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.tileContainer{
+    width: 400px;
+    height: 625px;
+    overflow-x: scroll;
+    overflow-y: scroll;   
+    flex: 0 0 auto;
+    display: block;
+    position: relative;
+    padding: 2px;
+}
+
+
+
+#marker1, #marker2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    outline: 4px solid red;
+    background-color: transparent;
+    height: 16px;
+    width: 16px;
+    pointer-events: none;
+    z-index: 1;
+    transition: top 0.1s, left 0.1s;
+}
+
+
+#imageTable1, #imageTable2, #tileSheet1, #tileSheet2{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    padding: 0px;    
+}
+
+
+#imageTable2 td:hover{
+    background-color: yellow;
+}
+
+
+
+
+#cnvs{
+    margin: 10px;
+    border: 3px solid red;
+    height: 32px;
+    width: 32px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.gamemath.Vector3;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,20 +33,21 @@ public class JsonReader {
     
     
     
-    public LevelGridTile[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
+    public LevelGridTileV2[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
         Gson gson = new Gson();
-        LevelGridTile[][] grid = new LevelGridTile[w][h];
+        LevelGridTileV2[][] grid = new LevelGridTileV2[w][h];
         
         try {
             String full_path = ClassLoader.getSystemResource(json_path).getPath();
             FileReader reader = new FileReader(full_path);
           
-            JsonArray tiles = JsonParser.parseReader(reader).getAsJsonArray();
-            
+            JsonObject map = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonArray tiles = map.getAsJsonArray("tiles");
+                
             int length = tiles.size();
             for(int i = 0; i < length; i++){
                 JsonObject obj = tiles.get(i).getAsJsonObject();
-                LevelGridTile tile = gson.fromJson(obj, LevelGridTile.class);
+                LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
                 
                 Vector3 grid_pos   = tile.getGridPosition();
                 Vector3 window_loc = grid_pos.getScaled(size);

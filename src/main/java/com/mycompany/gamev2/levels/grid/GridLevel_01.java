@@ -17,7 +17,7 @@ import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
 public class GridLevel_01 extends GridLevelBase{
         
     public GridLevel_01(){
-        super("GridLevel_01", "map_layouts/grid_map1.json");
+        super("GridLevel_01", "map_layouts/map_1751673514230.json");
         ComponentSetup();
     }
 
