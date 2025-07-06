@@ -14,22 +14,23 @@ import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
  *
  * @author J.A
  */
-public class GridLevel_01 extends GridLevelBase{
+public class GridLevel_02 extends GridLevelBase{
         
-    public GridLevel_01(){
-        super("GridLevel_01_docks", "map_layouts/map_docks.json");
+    public GridLevel_02(){
+        super("GridLevel_02_town", "map_layouts/map_town.json");
         ComponentSetup();
     }
-
+    
+    
     @Override
     protected void configure_grid_component() {
         LevelGridComponent grid = getComponent(LevelGridComponent.class);
         if(grid == null) return;
         
         grid.config_height(20)
-            .config_width(50)
+            .config_width(20)
             .config_tile_size(32)
-            .config_viewport_culling(true)
+            .config_viewport_culling(false)
             .construct_fromJSON(this.getJsonName());
     }
 
@@ -37,6 +38,7 @@ public class GridLevel_01 extends GridLevelBase{
     @Override 
     public void ComponentSetup() {
         super.ComponentSetup();
+        
         LevelCameraComponent level_camera = new LevelCameraComponent(this);
         addComponent(level_camera.getClass(), level_camera);
     }
@@ -70,7 +72,5 @@ public class GridLevel_01 extends GridLevelBase{
         LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
         if(cam != null) cam.render(e);
     }
-     
-     
-         
+
 }

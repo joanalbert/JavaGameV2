@@ -47,10 +47,20 @@ public class LevelCameraComponent extends LevelComponent {
     private void compute_bounds(){
         if(this.target == null) return;
         
+        /*
         double top    = this.position.getY() - MyWindow.DIMENSIONS.height/2;
         double bottom = this.position.getY() + MyWindow.DIMENSIONS.height/2;
         double left   = this.position.getX() - MyWindow.DIMENSIONS.width/2;
         double right  = this.position.getX() + MyWindow.DIMENSIONS.width/2;
+        */
+        
+        int test = 240;
+        
+        double top    = this.position.getY() - test/2;
+        double bottom = this.position.getY() + test/2;
+        double left   = this.position.getX() - test/2;
+        double right  = this.position.getX() + test/2;
+        
         bounds = new BoxBounds(top - y_offset, bottom + y_offset , left + x_offset, right - x_offset);
     }
     

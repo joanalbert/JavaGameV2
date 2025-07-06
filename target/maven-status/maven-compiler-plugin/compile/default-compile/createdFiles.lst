@@ -21,6 +21,7 @@ com\mycompany\gamev2\window\MyWindow.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridComponent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Look.class
 com\mycompany\gamev2\event_system\game_events\TickEvent.class
+com\mycompany\gamev2\levels\grid\GridLevel_02.class
 com\mycompany\gamev2\event_system\EventManager.class
 com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
 com\mycompany\gamev2\input_system\InputManager$2.class

@@ -16,6 +16,7 @@ import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
 import com.mycompany.gamev2.levels.grid.GridLevel_01;
+import com.mycompany.gamev2.levels.grid.GridLevel_02;
 import java.util.ArrayList;
 
 /**
@@ -36,6 +37,7 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         levels.add(new TestLevel_01());
         levels.add(new TestLevel_02());
         levels.add(new GridLevel_01());
+        levels.add(new GridLevel_02());
     }
     
     

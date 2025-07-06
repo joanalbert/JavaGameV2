@@ -105,10 +105,10 @@ public class LevelGridComponent extends LevelComponent {
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
                 LevelGridTileV2 tile = tile_matrix[x][y];
-                Vector3 pos = tile.getWindowLocation();
+                /*Vector3 pos = tile.getWindowLocation();
                 g.setColor(Color.pink); 
-                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
-                
+                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); */
+                render_tile(g, tile);
                 draw_calls++;
             }
         }
@@ -139,18 +139,15 @@ public class LevelGridComponent extends LevelComponent {
                 
                 if(tile == null) continue;
                 
-                Vector3 pos = tile.getWindowLocation();
+                render_tile(g, tile);
                 
+                draw_calls++;
                 /*
+                Vector3 pos = tile.getWindowLocation();
                 Color c = Color.decode("red");
                 g.setColor(c); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
-                */
-                
-                render_tile(g, tile);
-                
-                
-                draw_calls++;
+                */  
             }
         }
         
