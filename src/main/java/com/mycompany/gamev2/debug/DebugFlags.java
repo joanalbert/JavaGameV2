@@ -18,7 +18,7 @@ public class DebugFlags implements IInputListener{
 
     private static DebugFlags instance;
     
-    private boolean show_debug_FPS = false;
+    private boolean show_debug_FPS = true;
     
     private DebugFlags(){
         EventManager.getInstance().subscribe(this, IInputListener.class);

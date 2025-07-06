@@ -14,6 +14,10 @@ import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -26,15 +30,16 @@ public class LevelGridComponent extends LevelComponent {
     private int tile_width = 0;
     private int tile_height = 0;
     private int tile_size = 32;
-    
     private GridLevelBase owning_level;
-    
     private boolean viewpoert_culling;
+    private HashMap<Integer, BufferedImage> atlases;
         
     public LevelGridComponent(GridLevelBase owning_level){
         this.owning_level = owning_level;
         this.viewpoert_culling = true;
+        load_atlases();
     }
+    
     
     public LevelGridComponent config_width(int w){
         this.tile_width = w; 
@@ -63,19 +68,20 @@ public class LevelGridComponent extends LevelComponent {
         return this;
     }
     
-    public LevelGridComponent construct(){
-        tile_matrix = new LevelGridTileV2[tile_width][tile_height];
+    private void load_atlases(){
         
-        for(int x = 0; x < tile_width; x++){
-            for(int y = 0; y < tile_height; y++){
-                Vector3 grid_pos = new Vector3(x, y, 0);
-                Vector3 wndw_loc = new Vector3(x * tile_size, y * tile_size, 0);
-                //tile_matrix[x][y] = new LevelGridTileV2(grid_pos, wndw_loc);
-            }
+        this.atlases = new HashMap<Integer, BufferedImage>();
+        
+        try{
+            BufferedImage atlas1 = ImageIO.read(ClassLoader.getSystemResource("textures/tilesets/1_interior.png"));
+            BufferedImage atlas2 = ImageIO.read(ClassLoader.getSystemResource("textures/tilesets/2_exterior.png"));
+            
+            atlases.put(0, atlas1);
+            atlases.put(1, atlas2);
+           
+        } catch(IOException e){
+            e.printStackTrace();
         }
-        
-        System.out.println(tile_matrix.toString());
-        return this;
     }
 
     @Override
@@ -112,7 +118,11 @@ public class LevelGridComponent extends LevelComponent {
     
     private void render_viewport_culling(Graphics2D g){
         LevelCameraComponent cam = owning_level.getComponent(LevelCameraComponent.class);
-        if(cam == null) return;
+        
+        if(cam == null) {
+            System.out.println("Viewport culling requires a LevelCameraComponent to be present. We won't render.");
+            return;
+        }
         
         int draw_calls = 0;
         BoxBounds bounds = cam.getBounds(); 
@@ -131,28 +141,56 @@ public class LevelGridComponent extends LevelComponent {
                 
                 Vector3 pos = tile.getWindowLocation();
                 
+                /*
                 Color c = Color.decode("red");
-                
-                //this need to change from rendering colors to drawing the image based on atlas coords from the tile object
                 g.setColor(c); 
                 g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
+                */
                 
+                render_tile(g, tile);
                 
                 
                 draw_calls++;
             }
         }
         
-        /*System.out.printf("Camera: left=%.0f, right=%.0f, top=%.0f, bottom=%.0f, w=%.0f, h=%.0f%n",
-    bounds.getLeft(), bounds.getRight(), bounds.getTop(), bounds.getBottom(),
-        bounds.getRight() - bounds.getLeft(), bounds.getBottom() - bounds.getTop());*/
+        /*  System.out.printf("Camera: left=%.0f, right=%.0f, top=%.0f, bottom=%.0f, w=%.0f, h=%.0f%n",
+            bounds.getLeft(), bounds.getRight(), bounds.getTop(), bounds.getBottom(),
+            bounds.getRight() - bounds.getLeft(), bounds.getBottom() - bounds.getTop());
+        */
         
-  /*Divide by tile_size: Maps world pixels to grid units (32 pixels = 1 tile).
-    Floor ((int)): Picks the tile containing left/top for loop start.
-    Ceil: Includes partial tiles at right/bottom for loop end.
-    Max(0): Handles negative bounds (camera near (0, 0)).
-    Min(tile_width/height): Caps at grid size (1700).*/
+        /*  Divide by tile_size: Maps world pixels to grid units (32 pixels = 1 tile).
+            Floor ((int)): Picks the tile containing left/top for loop start.
+            Ceil: Includes partial tiles at right/bottom for loop end.
+            Max(0): Handles negative bounds (camera near (0, 0)).
+            Min(tile_width/height): Caps at grid size (1700).
+        */
         
         System.out.println(draw_calls+" DRAW CALLS");
+    }
+    
+    private void render_tile(Graphics2D g, LevelGridTileV2 tile){
+        Vector3 pos = tile.getWindowLocation();
+        BufferedImage atlas = atlases.get(tile.atls_id-1);
+        
+        if (atlas == null) {
+            // Fallback to drawing a colored rectangle if atlas is missing
+            g.setColor(java.awt.Color.RED);
+            g.fillRect((int) pos.getX(), (int) pos.getY(), tile_size, tile_size);
+            return;
+        }
+        
+        // Source coordinates in the atlas
+        int srcX = (int) tile.atls_pos.getX();
+        int srcY = (int) tile.atls_pos.getY();
+        // Destination coordinates on the screen
+        int destX = (int) pos.getX();
+        int destY = (int) pos.getY();
+
+        // Draw the specific region of the atlas
+        g.drawImage(atlas, 
+            destX, destY, destX + tile_size, destY + tile_size, // Destination rectangle
+            srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
+            null);
     }
 }
