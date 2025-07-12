@@ -54,12 +54,15 @@ public class LevelCameraComponent extends LevelComponent {
         double right  = this.position.getX() + MyWindow.DIMENSIONS.width/2;
         */
         
-        int test = 240;
+        //int test = 240;
         
-        double top    = this.position.getY() - test/2;
-        double bottom = this.position.getY() + test/2;
-        double left   = this.position.getX() - test/2;
-        double right  = this.position.getX() + test/2;
+        int w = MyWindow.DIMENSIONS.width;
+        int h = MyWindow.DIMENSIONS.height;
+        
+        double top    = this.position.getY() - h/2;
+        double bottom = this.position.getY() + h/2;
+        double left   = this.position.getX() - w/2;
+        double right  = this.position.getX() + w/2;
         
         bounds = new BoxBounds(top - y_offset, bottom + y_offset , left + x_offset, right - x_offset);
     }

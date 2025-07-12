@@ -65,6 +65,7 @@ public class LevelGridComponent extends LevelComponent {
     public LevelGridComponent construct_fromJSON(String json_path){
         JsonReader reader = JsonReader.getInstance();
         tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); // thse dimensions should be defined in the json itself
+        System.out.println(tile_matrix);
         return this;
     }
     

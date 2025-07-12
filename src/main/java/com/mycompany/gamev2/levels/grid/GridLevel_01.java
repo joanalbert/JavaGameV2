@@ -8,7 +8,7 @@ import com.mycompany.gamev2.component.level_components.camera_component.LevelCam
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
-import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
+import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 
 /**
  *
@@ -47,7 +47,8 @@ public class GridLevel_01 extends GridLevelBase{
         System.out.println("GRID WINDUP");
         this.configure_grid_component();
         
-        PlayerCharacter player = new PlayerCharacter();
+        //PlayerCharacter player = new PlayerCharacter();
+        GridPlayerCharacter2D player = new GridPlayerCharacter2D();
         addGameObject(player);
         
         LevelCameraComponent cam = getComponent(LevelCameraComponent.class);

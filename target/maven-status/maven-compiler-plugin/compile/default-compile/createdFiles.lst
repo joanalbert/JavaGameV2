@@ -27,6 +27,7 @@ com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
 com\mycompany\gamev2\input_system\InputManager$2.class
 com\mycompany\gamev2\event_system\level_events\LevelWindupEvent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Walk.class
+com\mycompany\gamev2\gameobjects\characters\GridPlayerCharacter2D.class
 com\mycompany\gamev2\window\MyWindow$1.class
 com\mycompany\gamev2\event_system\game_events\BaseEvent.class
 com\mycompany\gamev2\input_system\BindKey$Axis.class
@@ -57,6 +58,7 @@ com\mycompany\gamev2\component\ComponentEventListener.class
 com\mycompany\gamev2\event_system\game_events\GameStartEvent.class
 com\mycompany\gamev2\gameobjects\characters\Character.class
 com\mycompany\gamev2\debug\DebugFlags.class
+com\mycompany\gamev2\input_system\InputContexts\GridPlayerCharacter_InputContext.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\component\object_components\TransformComponent.class

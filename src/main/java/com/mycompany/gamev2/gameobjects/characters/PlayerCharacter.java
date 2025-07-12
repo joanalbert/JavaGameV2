@@ -30,10 +30,10 @@ import java.awt.geom.Ellipse2D;
  */
 public class PlayerCharacter extends Character implements IInputListener {
     
-    private Vector3 vel;
-    private double speed;
-    private double radius;
-    private Color color;
+    protected Vector3 vel;
+    protected double speed;
+    protected double radius;
+    protected Color color;
 
     private IA_Walk ia_walk;
     private IA_Shoot ia_shoot;
@@ -97,7 +97,7 @@ public class PlayerCharacter extends Character implements IInputListener {
         
         ia_shoot.setOnTriggered(action -> {
             if (action instanceof IA_Shoot shootAction) {
-                //System.out.println("SHOOTING");
+                System.out.println("SHOOTING");
                 
                 
             }
@@ -142,7 +142,7 @@ public class PlayerCharacter extends Character implements IInputListener {
 
     
    
-    private void render(RenderEvent event){
+    protected void render(RenderEvent event){
         if(!this.isActive) return;
         
         //System.out.println("render sphere");
@@ -157,7 +157,7 @@ public class PlayerCharacter extends Character implements IInputListener {
         g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
     }
     
-    private void tick(TickEvent event){
+    protected void tick(TickEvent event){
         Vector3 location = getObjectLocation();
         Vector3 usable_vel = vel.getScaled(speed * event.getDeltaSeconds());
         setObjectLocation(location.plus(usable_vel));
