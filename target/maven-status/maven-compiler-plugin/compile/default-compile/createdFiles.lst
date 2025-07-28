@@ -9,6 +9,7 @@ com\mycompany\gamev2\component\object_components\ObjectComponent.class
 com\mycompany\gamev2\levels\TestLevel_01.class
 com\mycompany\gamev2\event_system\input_events\KeyReleaseEvent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Shoot.class
+com\mycompany\gamev2\gamemath\Transform.class
 com\mycompany\gamev2\input_system\InputManager.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
 com\mycompany\gamev2\input_system\InputBinding.class
