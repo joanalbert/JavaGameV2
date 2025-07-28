@@ -5,11 +5,23 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.component.BaseComponent;
+import com.mycompany.gamev2.gameobjects.GameObject;
 
 /**
  *
  * @author J.A
  */
-public class ObjectComponent extends BaseComponent {
+public class ObjectComponent<T extends GameObject> extends BaseComponent {
     
+    protected T owner;
+    
+    public ObjectComponent(T owner){
+        this.owner = owner;
+    }
+    
+    public  void setOwner(T o){
+        if(o != null) this.owner = o;
+    }
+    
+    public T getOwner(){return this.owner;}
 }

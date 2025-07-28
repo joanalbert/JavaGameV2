@@ -129,7 +129,7 @@ public class GameLoopV2 implements Runnable {
         
         DebugFlags flags = DebugFlags.getInstance();
         
-        System.out.println(flags.getShow_debug_FPS());
+        //System.out.println(flags.getShow_debug_FPS());
         
         if(flags.getShow_debug_FPS())
         {

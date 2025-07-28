@@ -5,19 +5,28 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.gameobjects.GameObject;
 
 /**
  *
  * @author J.A
  */
-public class TransformComponent extends ObjectComponent {
+public class TransformComponent<T extends GameObject> extends ObjectComponent {
  
     private Vector3 location;
-    private Vector3 scale;
     private Vector3 rotation;
+    private Vector3 scale;
     
     
-    public TransformComponent(Vector3 l, Vector3 s, Vector3 r){
+    public TransformComponent(T owner){
+        super(owner);
+        this.scale = new Vector3(1,1,1);
+        this.location = Vector3.ZERO;
+        this.rotation = Vector3.ZERO;
+    }
+        
+    public TransformComponent(T owner, Vector3 l, Vector3 s, Vector3 r){
+        super(owner);
         this.scale = s;
         this.location = l;
         this.rotation = r;

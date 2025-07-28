@@ -19,7 +19,7 @@ public class IA_Look extends InputAction {
     }
 
     @Override
-    public void evaluateAxes(Set<BindKey> activeKeys) {
+    public void evaluateAxes(Set<BindKey> activeKeys, double deltaTime) {
         Vector3 mpos      = InputManager.getInstance().getMousePos();
         Vector3 prev_mpos = InputManager.getInstance().getMousePos_prev();
         Vector3 mouse_dir = mpos.minus(prev_mpos);

@@ -24,8 +24,8 @@ public class IA_Walk extends InputAction {
     }
 
     @Override
-    public void evaluateAxes(Set<BindKey> activeKeys) {
-        super.evaluateAxes(activeKeys);
+    public void evaluateAxes(Set<BindKey> activeKeys, double deltaTime) {
+        super.evaluateAxes(activeKeys, deltaTime);
     }
  
 }

@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
+import com.mycompany.gamev2.component.object_components.MovementComponent;
 import com.mycompany.gamev2.component.object_components.TransformComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
@@ -30,11 +31,11 @@ import java.awt.geom.Ellipse2D;
  */
 public class PlayerCharacter extends Character implements IInputListener {
     
-    protected Vector3 vel;
-    protected double speed;
     protected double radius;
     protected Color color;
 
+    private MovementComponent<PlayerCharacter> movement;
+    
     private IA_Walk ia_walk;
     private IA_Shoot ia_shoot;
     private IA_Look ia_look;
@@ -46,10 +47,18 @@ public class PlayerCharacter extends Character implements IInputListener {
         
         this.color = Color.RED;
         this.radius = 70;
-        this.vel = Vector3.ZERO;
-        this.speed = 220;
         
         input_setup();
+    }
+
+    @Override
+    public void ComponentSetup() {
+        super.ComponentSetup(); 
+        
+        //initialize character specific components
+        this.movement = new MovementComponent<PlayerCharacter>(this);
+        this.addComponent(MovementComponent.class, this.movement);
+        this.movement.setWalkSpeed(80);
     }
     
     
@@ -82,9 +91,16 @@ public class PlayerCharacter extends Character implements IInputListener {
 
         ia_walk.setOnTriggered(action -> {
             if (action instanceof IA_Walk walkAction) {
+                
+                if(this.movement == null) return;
+                
                 Vector3 v = new Vector3(walkAction.getAxisValues()[0],
                                         walkAction.getAxisValues()[1], 0); 
-                this.vel = v.normalize(); // Update velocity based on input
+                                
+                if(v.equals(Vector3.ZERO)) return; //no movement
+
+                //delegate movement to MovementComponent
+                this.movement.applyMovement(v, walkAction.getDeltaTime());
             }
         });
         
@@ -158,8 +174,6 @@ public class PlayerCharacter extends Character implements IInputListener {
     }
     
     protected void tick(TickEvent event){
-        Vector3 location = getObjectLocation();
-        Vector3 usable_vel = vel.getScaled(speed * event.getDeltaSeconds());
-        setObjectLocation(location.plus(usable_vel));
+       
     }
 }

@@ -44,6 +44,13 @@ public class LevelCameraComponent extends LevelComponent {
         this.position = target.getObjectLocation();
     }
     
+    private void smooth_track(GameObject target) {
+        if (target == null) return;
+        Vector3 targetPos = target.getObjectLocation();
+        double lerpFactor = 0.1; // Adjust for smoothness
+        this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
+    }
+    
     private void compute_bounds(){
         if(this.target == null) return;
         

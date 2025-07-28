@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
-import com.mycompany.gamev2.component.object_components.MovementComponent;
+
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
@@ -16,15 +16,7 @@ public abstract class Character extends GameObject{
    
     protected InputContext input_context;
     
-    @Override
-    public void ComponentSetup() {
-        super.ComponentSetup(); 
-        
-        //initialize character specific components
-        this.addComponent(MovementComponent.class, new MovementComponent());
-    }
-
-    
+       
     @Override
     public void destroy() {
         super.destroy();

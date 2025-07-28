@@ -12,7 +12,6 @@ import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -114,7 +113,7 @@ public class LevelGridComponent extends LevelComponent {
             }
         }
         
-        System.out.println(draw_calls+" DRAW CALLS");
+        //System.out.println(draw_calls+" DRAW CALLS");
     }
     
     private void render_viewport_culling(Graphics2D g){
@@ -143,28 +142,13 @@ public class LevelGridComponent extends LevelComponent {
                 render_tile(g, tile);
                 
                 draw_calls++;
-                /*
-                Vector3 pos = tile.getWindowLocation();
-                Color c = Color.decode("red");
-                g.setColor(c); 
-                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
-                */  
+                
             }
         }
         
-        /*  System.out.printf("Camera: left=%.0f, right=%.0f, top=%.0f, bottom=%.0f, w=%.0f, h=%.0f%n",
-            bounds.getLeft(), bounds.getRight(), bounds.getTop(), bounds.getBottom(),
-            bounds.getRight() - bounds.getLeft(), bounds.getBottom() - bounds.getTop());
-        */
         
-        /*  Divide by tile_size: Maps world pixels to grid units (32 pixels = 1 tile).
-            Floor ((int)): Picks the tile containing left/top for loop start.
-            Ceil: Includes partial tiles at right/bottom for loop end.
-            Max(0): Handles negative bounds (camera near (0, 0)).
-            Min(tile_width/height): Caps at grid size (1700).
-        */
         
-        System.out.println(draw_calls+" DRAW CALLS");
+        //System.out.println(draw_calls+" DRAW CALLS");
     }
     
     private void render_tile(Graphics2D g, LevelGridTileV2 tile){

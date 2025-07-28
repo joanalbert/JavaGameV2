@@ -29,9 +29,9 @@ public class GameObject implements IGameUpdateListener  {
     
     
     public void ComponentSetup(){
-        TransformComponent transform = new TransformComponent(new Vector3(1,1,1),
-                                                              new Vector3(0,0,0),
-                                                              new Vector3(0,0,0));
+        TransformComponent transform = new TransformComponent<GameObject>(this, new Vector3(1,1,1),
+                                                                                     new Vector3(0,0,0),
+                                                                                     new Vector3(0,0,0));
         this.addComponent(TransformComponent.class, transform);        
     }
     
@@ -44,7 +44,7 @@ public class GameObject implements IGameUpdateListener  {
         else return false;
     }
     
-    protected <T extends ObjectComponent> T getComponent(Class<T> type){
+    public <T extends ObjectComponent> T getComponent(Class<T> type){
         ObjectComponent comp = this.components.get(type);
         if(comp != null && type.isInstance(comp)) return type.cast(comp);
         else return null;

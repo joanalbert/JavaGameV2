@@ -116,12 +116,12 @@ public class InputManager implements IGameUpdateListener {
                         
                         
                         Set<BindKey> activeBindKeys = binding.getActiveBindKeys(copyStates);
-                        action.evaluateAxes(activeBindKeys);
+                        action.evaluateAxes(activeBindKeys, event.getDeltaSeconds());
                                             
                         
                         //System.out.println(action.getAxisValues()[0]+"/"+action.getAxisValues()[1]);
                     }
-                    //3D
+                    //1D
                     else if (action.getType() == InputAction.ActionType.AXIS_1D)
                     {
                         // handle stuff

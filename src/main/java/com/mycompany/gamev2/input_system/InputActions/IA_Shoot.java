@@ -10,7 +10,7 @@ package com.mycompany.gamev2.input_system.InputActions;
  */
 public class IA_Shoot extends InputAction {
     public IA_Shoot(){
-        super("IA_Walk", ActionType.TRIGGERED);
+        super("IA_Shoot", ActionType.TRIGGERED);
     }
     
     

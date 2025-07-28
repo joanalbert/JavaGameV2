@@ -28,6 +28,7 @@ public abstract class InputAction {
     
     protected double value = 0.0f; // data for axis inputs
     protected double[] axisValues = new double[2]; // data for 2d axis inputs
+    protected double deltaTime;
     
     protected Consumer<InputAction> onTrigger; //callback for handling
     
@@ -59,7 +60,7 @@ public abstract class InputAction {
         }
     }
     
-    public void evaluateAxes(Set<BindKey> activeKeys)
+    public void evaluateAxes(Set<BindKey> activeKeys, double deltaTime)
     {
         if(this.type != ActionType.AXIS_2D) return;
         
@@ -80,6 +81,7 @@ public abstract class InputAction {
         }
         
         this.setAxisValues(x_scale, y_scale);
+        this.deltaTime = deltaTime;
     }
     
     public void trigger(){
@@ -112,5 +114,9 @@ public abstract class InputAction {
 
     public double[] getAxisValues() {
         return axisValues;
+    }
+    
+    public double getDeltaTime(){
+        return deltaTime;
     }
 }

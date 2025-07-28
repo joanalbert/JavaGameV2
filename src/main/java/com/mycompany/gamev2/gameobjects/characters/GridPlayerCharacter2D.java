@@ -4,7 +4,9 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
+import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
@@ -21,8 +23,22 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
  
     private IA_Walk ia_walk;
     
+    private GridMovementComponent<GridPlayerCharacter2D> movement;
+    
     public GridPlayerCharacter2D(){
         this.color = Color.YELLOW;
+    }
+    
+     @Override
+    public void ComponentSetup() {
+        super.ComponentSetup(); 
+        
+        //initialize character specific components
+        
+        //movement
+        this.movement = new GridMovementComponent<GridPlayerCharacter2D>(this);
+        this.addComponent(GridMovementComponent.class, this.movement);
+        this.movement.setWalkSpeed(200);
     }
 
     @Override
@@ -41,13 +57,30 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
 
         ia_walk.setOnTriggered(action -> {
             if (action instanceof IA_Walk walkAction) {
-                Vector3 v = new Vector3(walkAction.getAxisValues()[0],
-                                        walkAction.getAxisValues()[1], 0); 
-                this.vel = v.normalize(); // Update velocity based on input
+                this.move(walkAction);
             }
         });
     }
+    
+    private void move(IA_Walk walkAction){
+        Vector3 v = new Vector3(walkAction.getAxisValues()[0],
+                                walkAction.getAxisValues()[1], 0); 
+        
+        if(this.movement == null) return;
+        
+        if(v.equals(Vector3.ZERO)) return; //no movement
+        
+        //delegate movement to MovementComponent
+        this.movement.applyMovement(v, walkAction.getDeltaTime());
+    }
 
+    @Override
+    protected void tick(TickEvent event) {
+        //we do nothing here (we override super behavior)
+    }
+
+    
+    
     @Override
     protected void render(RenderEvent event) {
         if(!this.isActive) return;
