@@ -26,6 +26,7 @@ public class Vector3 {
         this.z = z;
     }
     
+     
     public Vector3 getScaled(double factor){
         return new Vector3(this.x*factor, this.y*factor, this.z*factor);
     }
@@ -85,6 +86,14 @@ public class Vector3 {
         double d = n1.dot(n2);
         return Math.acos(d) / Math.PI * 180d;
     }
+    
+    
+    public boolean isCardinalDirection(){
+        Vector3 v = this.normalize();
+        if(v.equals(UP) || v.equals(DOWN) || v.equals(LEFT) || v.equals(RIGHT)) return true;
+        else return false;
+    }
+    
     
     @Override
     public String toString() {

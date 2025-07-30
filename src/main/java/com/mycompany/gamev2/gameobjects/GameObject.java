@@ -19,8 +19,8 @@ import java.util.HashMap;
 public class GameObject implements IGameUpdateListener  {
     
     protected HashMap<Class<? extends ObjectComponent>, ObjectComponent> components = new HashMap<>();
-    
     protected boolean isActive = true;
+        
     
     public GameObject(){
         ComponentSetup();
@@ -28,6 +28,7 @@ public class GameObject implements IGameUpdateListener  {
     }
     
     
+        
     public void ComponentSetup(){
         TransformComponent transform = new TransformComponent<GameObject>(this, new Vector3(1,1,1),
                                                                                      new Vector3(0,0,0),
@@ -67,10 +68,12 @@ public class GameObject implements IGameUpdateListener  {
         return isActive;
     }
 
+    
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-   
+    
+     
     
     public void destroy() {
         EventManager.getInstance().unsubscribeAll(this);

@@ -108,4 +108,6 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         if(result == null) return null;
         return result.get(0);
     }
+    
+    public BaseLevel getCurrentLevel(){return this.current_level;}
 }

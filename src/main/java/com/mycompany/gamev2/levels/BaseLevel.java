@@ -67,18 +67,23 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     public GameObject addGameObject(GameObject obj){
         if(obj == null) throw new IllegalArgumentException("argument can't be null");
         
+        
+        //retreieve the proper object list based on object type
         Class<? extends GameObject> type =  obj.getClass();
         ArrayList<GameObject> objects = LevelObjects.get(type);
         
+        //if there is none, we spin up a new one
         if(objects == null){
             objects = new ArrayList<>();
             LevelObjects.put(type, objects);
         }
         
+        //if we dont need to add it, return null as the operation "failed"
         if(objects.contains(obj)){
             return null;
         }
         
+        //add it and return it
         objects.add(obj);
         return obj;
     }

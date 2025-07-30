@@ -7,6 +7,8 @@ package com.mycompany.gamev2.gameobjects.characters;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
+import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
@@ -23,7 +25,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
  
     private IA_Walk ia_walk;
     
-    private GridMovementComponent<GridPlayerCharacter2D> movement;
+    private GridMovementComponent movement;
     
     public GridPlayerCharacter2D(){
         this.color = Color.YELLOW;
@@ -36,9 +38,15 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         //initialize character specific components
         
         //movement
-        this.movement = new GridMovementComponent<GridPlayerCharacter2D>(this);
-        this.addComponent(GridMovementComponent.class, this.movement);
-        this.movement.setWalkSpeed(200);
+        try{
+            this.movement = new GridMovementComponent(this); //this line could throw an exception
+            this.addComponent(GridMovementComponent.class, this.movement);
+            this.movement.setWalkSpeed(200);
+        }
+        catch(NoSuchLevelComponentException | NonGridLevelException e){
+            System.out.println(e.getMessage());
+        }
+        
     }
 
     @Override
@@ -66,7 +74,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         Vector3 v = new Vector3(walkAction.getAxisValues()[0],
                                 walkAction.getAxisValues()[1], 0); 
         
-        if(this.movement == null) return;
+        if(this.movement == null) return; //movement component not initialized
         
         if(v.equals(Vector3.ZERO)) return; //no movement
         
