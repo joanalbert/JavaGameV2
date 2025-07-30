@@ -9,6 +9,7 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
+import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
@@ -43,8 +44,9 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
         }
-        catch(NoSuchLevelComponentException | NonGridLevelException e){
+        catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException e){
             System.out.println(e.getMessage());
+            return;
         }
         
     }

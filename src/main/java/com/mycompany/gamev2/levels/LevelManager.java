@@ -9,12 +9,15 @@ import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.GameStartEvent;
 import com.mycompany.gamev2.event_system.input_events.KeyPressEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
+import com.mycompany.gamev2.exceptions.NonGridLevelException;
+import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
 import com.mycompany.gamev2.interfaces.ILevel;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 import com.mycompany.gamev2.interfaces.event_listeners.IWorldListener;
+import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import com.mycompany.gamev2.levels.grid.GridLevel_01;
 import com.mycompany.gamev2.levels.grid.GridLevel_02;
 import java.util.ArrayList;
@@ -110,4 +113,14 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
     }
     
     public BaseLevel getCurrentLevel(){return this.current_level;}
+    
+    public GridLevelBase getCurrentGridLevel() throws NullLevelException, NonGridLevelException{
+        if (current_level == null) {
+            throw new NullLevelException("No active level set in LevelManager");
+        }
+        if (!(current_level instanceof GridLevelBase)) {
+            throw new NonGridLevelException("Current level is not a GridLevelBase");
+        }
+        return (GridLevelBase) current_level;
+    }
 }
