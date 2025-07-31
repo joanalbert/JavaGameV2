@@ -10,7 +10,6 @@ import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
-import com.mycompany.gamev2.levels.BaseLevel;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 
@@ -44,6 +43,8 @@ public class GridMovementComponent extends MovementComponent{
         //not valid direction or the previous movement hasn't completed yet
         if(!vel.isCardinalDirection() || this.isMoving) return; 
         
+
+
         
         
         Vector3 location    = this.transform.getLocation();

@@ -74,8 +74,8 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         //before the levels level_windup method has had a chance to complete
         current_level.enableAllComponents();
         
-        //then we can also disable the components on the old map
-        old.disableAllComponents();
+        //then we can also disable the components on the old map (the null check is needed for the very 1st time we switch level, where there is no 'old' level
+        if(old != null) old.disableAllComponents();
     }
     
     public ILevel nextLevel(){
