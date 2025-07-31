@@ -23,8 +23,9 @@ public class GridMovementComponent extends MovementComponent{
     private LevelGridComponent grid_component;
     
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
-        super(owner);
+        super(owner); //call super constructor, sets a reference to the owner's transform component
         
+        //get the current level's LevelGridComponent
         GridLevelBase current_level = LevelManager.getInstance().getCurrentGridLevel();
         LevelGridComponent grid = current_level.getComponent(LevelGridComponent.class);
         if(grid != null) this.grid_component = grid; 
@@ -35,7 +36,7 @@ public class GridMovementComponent extends MovementComponent{
     public void applyMovement(Vector3 vel, double deltaTime){
         
         //catch exception
-        if(transform == null){
+        if(owner_transform == null){
             System.out.println("Cant apply movement: owner transform is not set");
             return;
         } 
@@ -43,12 +44,36 @@ public class GridMovementComponent extends MovementComponent{
         //not valid direction or the previous movement hasn't completed yet
         if(!vel.isCardinalDirection() || this.isMoving) return; 
         
-
-
+        //we only move 1 tile at a time
+        Vector3 dir = vel.normalize();
         
         
-        Vector3 location    = this.transform.getLocation();
-        Vector3 newLocation = location.plus(vel.getScaled(this.walk_speed * deltaTime));
-        transform.setLocation(newLocation);
+        //calculate starting tile coordinates in the grid
+        Vector3 currentPos = owner_transform.getLocation();
+        int tile_size = grid_component.getTileSize();
+        Vector3 currentGridPos = new Vector3(currentPos.getX() / tile_size, currentPos.getY() / tile_size, 0);
+        
+        //calculatte target grid pos
+        Vector3 targetGridPos = currentGridPos.plus(dir);
+        
+        // Check if target is within bounds
+        if (targetGridPos.getX() < 0 || targetGridPos.getX() >= grid_component.getTileWidth() ||
+            targetGridPos.getY() < 0 || targetGridPos.getY() >= grid_component.getTileHeight()) {
+            System.out.println("Movement blocked: Target tile out of bounds");
+            return;
+        }
+        
+        //HERE WE DOULD CHECK FOR COLLISSIONS, BUT NOT YET
+        
+        
+        // Set moving flag to prevent new moves until this one completes
+        isMoving = true;
+
+        // Move to the target grid position (snap to grid) IN THE FUTURE, WE'LL LERP POSITION
+        Vector3 newLocation = new Vector3(targetGridPos.getX() * tile_size, targetGridPos.getY() * tile_size, 0);
+        owner_transform.setLocation(newLocation);
+
+        // Reset moving flag (for now, assume instant movement; see Step 4 for smooth movement)
+        isMoving = false;
     }
 }

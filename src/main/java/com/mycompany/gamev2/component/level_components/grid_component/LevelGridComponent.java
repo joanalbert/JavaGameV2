@@ -39,6 +39,9 @@ public class LevelGridComponent extends LevelComponent {
         load_atlases();
     }
     
+    public int getTileSize(){return this.tile_size;}
+    public int getTileWidth(){return this.tile_width;}
+    public int getTileHeight(){return this.tile_height;}
     
     public LevelGridComponent config_width(int w){
         this.tile_width = w; 

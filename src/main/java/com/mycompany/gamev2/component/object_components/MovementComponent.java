@@ -13,16 +13,16 @@ import com.mycompany.gamev2.gameobjects.GameObject;
  */
 public class MovementComponent<T extends GameObject> extends ObjectComponent {
     
-    protected TransformComponent transform;
+    protected TransformComponent owner_transform;
     protected double walk_speed = 0;
     protected Vector3 direction;
     
     public MovementComponent(T owner){
         super(owner);
-        transform = owner.getComponent(TransformComponent.class);
+        owner_transform = owner.getComponent(TransformComponent.class);
     }
     
-    public TransformComponent getTransform(){return this.transform;}
+    public TransformComponent getTransform(){return this.owner_transform;}
     public double getWalkSpeed(){return this.walk_speed;}
     public Vector3 getDirection(){return this.direction;}
     
@@ -38,8 +38,8 @@ public class MovementComponent<T extends GameObject> extends ObjectComponent {
     
     
     public void applyMovement(Vector3 vel, double deltaTime){
-        Vector3 location    = this.transform.getLocation();
+        Vector3 location    = this.owner_transform.getLocation();
         Vector3 newLocation = location.plus(vel.getScaled(this.walk_speed * deltaTime));
-        transform.setLocation(newLocation);
+        owner_transform.setLocation(newLocation);
     }
 }
