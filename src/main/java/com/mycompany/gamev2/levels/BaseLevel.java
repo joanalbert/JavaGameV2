@@ -23,9 +23,10 @@ import java.util.Map;
  */
 public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, ILevel {
 
+    protected HashMap<Class<? extends GameObject>, ArrayList<GameObject>> LevelObjects = new HashMap<>();
     protected HashMap<Class<? extends LevelComponent>, LevelComponent> LevelComponents = new HashMap<>();
     
-    protected HashMap<Class<? extends GameObject>, ArrayList<GameObject>> LevelObjects = new HashMap<>();
+    
     
     protected boolean active = false;
     protected String name;
@@ -55,6 +56,7 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
             game_objects.clear();
         }
         
+        disableAllComponents();
         clearGameObjectsV2();
     }
 
@@ -156,6 +158,33 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     protected <T extends LevelComponent> void removeComponent(LevelComponent comp){
         this.LevelComponents.remove(comp);
     }
+    
+    public void enableAllComponents(){
+        Iterator<Map.Entry<Class<? extends LevelComponent>, LevelComponent>> iterator = LevelComponents.entrySet().iterator();
+        
+        while (iterator.hasNext()) {
+            Map.Entry<Class<? extends LevelComponent>, LevelComponent> entry = iterator.next();
+            Class<? extends LevelComponent> key = entry.getKey();
+            LevelComponent component = entry.getValue();
+           
+            component.setActive(true);
+        }
+        
+        
+    }
+    
+    public void disableAllComponents(){
+        Iterator<Map.Entry<Class<? extends LevelComponent>, LevelComponent>> iterator = LevelComponents.entrySet().iterator();
+        
+        while (iterator.hasNext()) {
+            Map.Entry<Class<? extends LevelComponent>, LevelComponent> entry = iterator.next();
+            Class<? extends LevelComponent> key = entry.getKey();
+            LevelComponent component = entry.getValue();
+           
+            component.setActive(false);
+        }
+    }
+    
     
     public void ComponentSetup(){}
     ///////////////////////////////////////////////////////////////////////////////////////////////

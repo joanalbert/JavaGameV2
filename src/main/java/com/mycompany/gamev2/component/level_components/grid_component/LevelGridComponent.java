@@ -91,6 +91,8 @@ public class LevelGridComponent extends LevelComponent {
 
     @Override
     public void render(RenderEvent e) {
+        if(!this.isActive()) return; //only render if active
+        
         Graphics2D g = e.getGraphics();
         
         if(viewpoert_culling){

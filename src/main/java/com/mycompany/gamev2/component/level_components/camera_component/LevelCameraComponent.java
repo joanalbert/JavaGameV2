@@ -8,6 +8,7 @@ package com.mycompany.gamev2.component.level_components.camera_component;
 import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.CameraNoTargetException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
@@ -51,8 +52,10 @@ public class LevelCameraComponent extends LevelComponent {
         this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
     }
     
-    private void compute_bounds(){
-        if(this.target == null) return;
+    private void compute_bounds() throws CameraNoTargetException{
+        if(this.target == null) {
+            throw new CameraNoTargetException("Attempted to compute bounds of a camera which has no target");
+        }
         
         /*
         double top    = this.position.getY() - MyWindow.DIMENSIONS.height/2;
@@ -76,11 +79,20 @@ public class LevelCameraComponent extends LevelComponent {
     
     @Override
     public void tick(TickEvent e) {
+        if(!this.isActive()) return; //only tick if active
+        
         track(this.target);
-        compute_bounds();
+        
+        try{compute_bounds();}
+        catch(CameraNoTargetException ex){
+            System.out.println(ex.getMessage());
+        }
     }
+    
     @Override
     public void render(RenderEvent e) {
+         if(!this.isActive()) return; //only render if active
+         
         Graphics2D g = e.getGraphics();
         g.setColor(Color.blue);
         

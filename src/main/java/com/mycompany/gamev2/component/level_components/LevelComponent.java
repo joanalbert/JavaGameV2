@@ -13,8 +13,12 @@ import com.mycompany.gamev2.event_system.game_events.TickEvent;
  */
 public abstract class LevelComponent {
     
-    
+    protected boolean active = false;
     
     public abstract void tick(TickEvent e);
     public abstract void render(RenderEvent e);
+    
+        
+    public boolean isActive(){return this.active;}
+    public void setActive(boolean state){this.active = state;}
 }

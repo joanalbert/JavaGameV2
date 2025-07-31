@@ -47,27 +47,38 @@ public class GridLevel_01 extends GridLevelBase{
         System.out.println("GRID WINDUP");
         this.configure_grid_component();
         
+        //GAME OBJECTS
+        
         //PlayerCharacter player = new PlayerCharacter();
         GridPlayerCharacter2D player = new GridPlayerCharacter2D();
         addGameObject(player);
         
+        
+        //LEVEL COMPONENTS
+        
         LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.setTarget(player);
+        if(cam != null){
+            cam.setTarget(player);
+        }
     }
+    
 
     @Override
     protected void tick(TickEvent e) {
+        
+        //tick cam if active
         LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
         if(cam != null) cam.tick(e);
     }
 
     @Override
     protected void render(RenderEvent e) {
+        
+        //render grid if active
         LevelGridComponent grid = getComponent(LevelGridComponent.class);
-        if(grid == null) return;
-        grid.render(e);
-        
-        
+        if(grid != null) grid.render(e);
+           
+        //render cam if active
         LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
         if(cam != null) cam.render(e);
     }

@@ -46,7 +46,6 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         }
         catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException e){
             System.out.println(e.getMessage());
-            return;
         }
         
     }

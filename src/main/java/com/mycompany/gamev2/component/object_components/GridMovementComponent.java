@@ -30,7 +30,6 @@ public class GridMovementComponent extends MovementComponent{
         LevelGridComponent grid = current_level.getComponent(LevelGridComponent.class);
         if(grid != null) this.grid_component = grid; 
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
-        
     }
    
        

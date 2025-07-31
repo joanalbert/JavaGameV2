@@ -57,15 +57,25 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         {
             current_level.setActive(false);
         }
+
+        BaseLevel old = this.current_level;
+        BaseLevel nou = level;
         
-        //send out a level switch event; can't think of any possible interested listeners as of yet, but hey, it'll prove useful in the future
-        LevelSwitchEvent lse = new LevelSwitchEvent(current_level, level);
-        EventManager.getInstance().post(lse, IWorldListener.class);
-
-
         //actually switch the level
         current_level = level;       
         current_level.setActive(true);
+        
+        //send out a level switch event; can't think of any possible interested listeners as of yet, but hey, it'll prove useful in the future
+        LevelSwitchEvent lse = new LevelSwitchEvent(old, nou);
+        EventManager.getInstance().post(lse, IWorldListener.class);
+        
+        //after sending out the LevelSwitchEvent, we enable all components on the current map
+        //by doing it after the event post we make sure that whatever levelcomponents this map has, that they don't start ticking and rendering
+        //before the levels level_windup method has had a chance to complete
+        current_level.enableAllComponents();
+        
+        //then we can also disable the components on the old map
+        old.disableAllComponents();
     }
     
     public ILevel nextLevel(){
@@ -119,7 +129,7 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
             throw new NullLevelException("No active level set in LevelManager");
         }
         if (!(current_level instanceof GridLevelBase)) {
-            throw new NonGridLevelException("Current level is not a GridLevelBase");
+            throw new NonGridLevelException("Current level is not a GridLevelBase: Any grid based charaters will not be able to move!");
         }
         return (GridLevelBase) current_level;
     }
