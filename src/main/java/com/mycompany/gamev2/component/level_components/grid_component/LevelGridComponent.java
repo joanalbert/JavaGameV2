@@ -43,6 +43,8 @@ public class LevelGridComponent extends LevelComponent {
     public int getTileWidth(){return this.tile_width;}
     public int getTileHeight(){return this.tile_height;}
     
+    
+    ////grid config
     public LevelGridComponent config_width(int w){
         this.tile_width = w; 
         return this;
@@ -70,6 +72,7 @@ public class LevelGridComponent extends LevelComponent {
         System.out.println(tile_matrix);
         return this;
     }
+    ///////////////////
     
     private void load_atlases(){
         
@@ -179,5 +182,12 @@ public class LevelGridComponent extends LevelComponent {
             destX, destY, destX + tile_size, destY + tile_size, // Destination rectangle
             srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
             null);
+    }
+    
+    
+    public Vector3 snapPositionToGrid(Vector3 location){
+        Vector3 grid_location = new Vector3(location.getX() / tile_size, location.getY() / tile_size, 0);
+        grid_location.roundComponents();
+        return grid_location;
     }
 }

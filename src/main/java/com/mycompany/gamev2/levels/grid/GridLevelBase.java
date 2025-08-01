@@ -38,9 +38,9 @@ public abstract class GridLevelBase extends BaseLevel implements IGameUpdateList
         LevelGridComponent grid = new LevelGridComponent(this);
         addComponent(grid.getClass(), grid);
     }
-    
-    
 
+    
+    
     @Override
     public void onEventReceived(BaseEvent event) {
         super.onEventReceived(event); 

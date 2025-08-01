@@ -32,6 +32,9 @@ public class GridMovementComponent extends MovementComponent{
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
     }
    
+    public void snapToGrid(){
+        
+    }
        
     public void applyMovement(Vector3 vel, double deltaTime){
         
@@ -44,6 +47,8 @@ public class GridMovementComponent extends MovementComponent{
         //not valid direction or the previous movement hasn't completed yet
         if(!vel.isCardinalDirection() || this.isMoving) return; 
         
+        if(this.isMoving) return;
+        
         //we only move 1 tile at a time
         Vector3 dir = vel.normalize();
         
@@ -52,7 +57,8 @@ public class GridMovementComponent extends MovementComponent{
         Vector3 currentPos = owner_transform.getLocation();
         int tile_size = grid_component.getTileSize();
         Vector3 currentGridPos = new Vector3(currentPos.getX() / tile_size, currentPos.getY() / tile_size, 0);
-        
+        currentGridPos.roundComponents();
+                
         //calculatte target grid pos
         Vector3 targetGridPos = currentGridPos.plus(dir);
         

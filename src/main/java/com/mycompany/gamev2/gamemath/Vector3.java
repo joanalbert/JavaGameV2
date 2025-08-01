@@ -94,6 +94,11 @@ public class Vector3 {
         else return false;
     }
     
+    public void roundComponents(){
+        this.x = Math.rint(this.x);
+        this.y = Math.rint(this.y);
+        this.z = Math.rint(this.z); 
+    }
     
     @Override
     public String toString() {

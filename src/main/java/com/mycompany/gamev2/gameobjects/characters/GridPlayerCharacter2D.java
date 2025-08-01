@@ -32,9 +32,9 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         this.color = Color.YELLOW;
     }
     
-     @Override
+    @Override
     public void ComponentSetup() {
-        super.ComponentSetup(); 
+        //super.ComponentSetup(); 
         
         //initialize character specific components
         
@@ -43,6 +43,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             this.movement = new GridMovementComponent(this); //this line could throw an exception
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
+            this.movement.snapToGrid();
         }
         catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException e){
             System.out.println(e.getMessage());
