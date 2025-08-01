@@ -30,6 +30,7 @@ public class GameObject implements IGameUpdateListener  {
     
         
     public void ComponentSetup(){
+        System.out.println("GameObject.ComponentSetup for " + getClass().getSimpleName());
         TransformComponent transform = new TransformComponent<GameObject>(this, new Vector3(1,1,1),
                                                                                      new Vector3(0,0,0),
                                                                                      new Vector3(0,0,0));

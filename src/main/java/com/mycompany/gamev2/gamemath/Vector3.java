@@ -26,6 +26,9 @@ public class Vector3 {
         this.z = z;
     }
     
+    public static Vector3 copy(Vector3 o){
+        return new Vector3(o.getX(), o.getY(), o.getZ());
+    }
      
     public Vector3 getScaled(double factor){
         return new Vector3(this.x*factor, this.y*factor, this.z*factor);
@@ -98,6 +101,12 @@ public class Vector3 {
         this.x = Math.rint(this.x);
         this.y = Math.rint(this.y);
         this.z = Math.rint(this.z); 
+    }
+    
+    public Vector3 getRoundComponents(){
+        return new Vector3(this.x = Math.rint(this.x),
+                           this.y = Math.rint(this.y),
+                           this.z = Math.rint(this.z));
     }
     
     @Override

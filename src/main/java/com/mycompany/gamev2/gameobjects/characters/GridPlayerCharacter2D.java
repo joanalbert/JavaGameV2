@@ -34,7 +34,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     
     @Override
     public void ComponentSetup() {
-        //super.ComponentSetup(); 
+        System.out.println("GridPlayerCharacter2D.ComponentSetup");
+        super.ComponentSetup(); 
         
         //initialize character specific components
         
@@ -43,7 +44,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             this.movement = new GridMovementComponent(this); //this line could throw an exception
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
-            this.movement.snapToGrid();
+            this.movement.ensure_grid_alignment();
         }
         catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException e){
             System.out.println(e.getMessage());

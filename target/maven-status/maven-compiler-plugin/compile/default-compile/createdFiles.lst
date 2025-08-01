@@ -33,6 +33,7 @@ com\mycompany\gamev2\gameobjects\characters\GridPlayerCharacter2D.class
 com\mycompany\gamev2\window\MyWindow$1.class
 com\mycompany\gamev2\event_system\game_events\BaseEvent.class
 com\mycompany\gamev2\input_system\BindKey$Axis.class
+com\mycompany\gamev2\gamemath\Utils.class
 com\mycompany\gamev2\gamemath\BoxBounds.class
 com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class

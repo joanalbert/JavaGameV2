@@ -8,6 +8,7 @@ import com.mycompany.gamev2.component.level_components.grid_component.LevelGridC
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
+import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.levels.LevelManager;
@@ -32,10 +33,57 @@ public class GridMovementComponent extends MovementComponent{
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
     }
    
-    public void snapToGrid(){
         
+    private Vector3 screenLoc_to_GridCoords(Vector3 loc ){
+        int tile_size = grid_component.getTileSize();
+        Vector3 grid_coords = new Vector3(loc.getX() / tile_size,
+                                          loc.getY() / tile_size, 0);
+        return grid_coords;
     }
+    
+    private Vector3 GridCoords_to_ScreenLoc(Vector3 grid_coords){
+        int tile_size = grid_component.getTileSize();
+        Vector3 screen_loc = new Vector3(grid_coords.getX() * tile_size,
+                                         grid_coords.getY() * tile_size, 0);
+        return screen_loc;
+    }
+
+    private void snapToGridCoords(Vector3 coords){
+        //catch exception
+        if(owner_transform == null){
+            System.out.println("GridMovementComponent can't snap owner to grid: owner transform is not set");
+            return;
+        } 
+        
+        Vector3 new_screen_loc = this.GridCoords_to_ScreenLoc(coords);
+        this.owner_transform.setLocation(new_screen_loc);
+    }
+    
+   
+    public Vector3 ensure_grid_alignment(){
+        if (owner_transform == null) {
+            System.out.println("GridMovementComponent cannot ensure grid alignment: owner transform is not set");
+            return null;
+        }
+        
+        //calculate starting tile coordinates in the grid
+        Vector3 currentPos = owner_transform.getLocation();
+        
+        //we convert screen location to grid coordinates
+        Vector3 grid_coords = this.screenLoc_to_GridCoords(currentPos);
        
+        //ensure the owner remains grid-aligned
+        if(!Utils.isInteger(grid_coords.getX()) || !Utils.isInteger(grid_coords.getY())){
+           System.out.println("GridMovementComponent snapping owner to grid");
+           Vector3 corrected_grid_coords = grid_coords.getRoundComponents();
+           this.snapToGridCoords(corrected_grid_coords);
+           
+           return corrected_grid_coords;
+        }
+        
+        return grid_coords;
+    }
+    
     public void applyMovement(Vector3 vel, double deltaTime){
         
         //catch exception
@@ -46,25 +94,24 @@ public class GridMovementComponent extends MovementComponent{
         
         //not valid direction or the previous movement hasn't completed yet
         if(!vel.isCardinalDirection() || this.isMoving) return; 
-        
-        if(this.isMoving) return;
-        
+                
+                
+        //maintain grid-alignment
+        Vector3 grid_coords = this.ensure_grid_alignment();
+        if(grid_coords == null){
+            System.out.println("Cant apply movement: owner transform is not set");
+            return;
+        } 
+       
         //we only move 1 tile at a time
         Vector3 dir = vel.normalize();
-        
-        
-        //calculate starting tile coordinates in the grid
-        Vector3 currentPos = owner_transform.getLocation();
-        int tile_size = grid_component.getTileSize();
-        Vector3 currentGridPos = new Vector3(currentPos.getX() / tile_size, currentPos.getY() / tile_size, 0);
-        currentGridPos.roundComponents();
-                
+                       
         //calculatte target grid pos
-        Vector3 targetGridPos = currentGridPos.plus(dir);
+        Vector3 target_grid_coords = grid_coords.plus(dir);
         
         // Check if target is within bounds
-        if (targetGridPos.getX() < 0 || targetGridPos.getX() >= grid_component.getTileWidth() ||
-            targetGridPos.getY() < 0 || targetGridPos.getY() >= grid_component.getTileHeight()) {
+        if (target_grid_coords.getX() < 0 || target_grid_coords.getX() >= grid_component.getTileWidth() ||
+            target_grid_coords.getY() < 0 || target_grid_coords.getY() >= grid_component.getTileHeight()) {
             System.out.println("Movement blocked: Target tile out of bounds");
             return;
         }
@@ -76,7 +123,8 @@ public class GridMovementComponent extends MovementComponent{
         isMoving = true;
 
         // Move to the target grid position (snap to grid) IN THE FUTURE, WE'LL LERP POSITION
-        Vector3 newLocation = new Vector3(targetGridPos.getX() * tile_size, targetGridPos.getY() * tile_size, 0);
+        int tile_size = grid_component.getTileSize();
+        Vector3 newLocation = this.GridCoords_to_ScreenLoc(target_grid_coords);
         owner_transform.setLocation(newLocation);
 
         // Reset moving flag (for now, assume instant movement; see Step 4 for smooth movement)

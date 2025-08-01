@@ -53,12 +53,17 @@ public class PlayerCharacter extends Character implements IInputListener {
 
     @Override
     public void ComponentSetup() {
+        System.out.println("PlayerCharacter.ComponentSetup for " + getClass().getSimpleName());
         super.ComponentSetup(); 
         
         //initialize character specific components
-        this.movement = new MovementComponent<PlayerCharacter>(this);
-        this.addComponent(MovementComponent.class, this.movement);
-        this.movement.setWalkSpeed(80);
+        
+        //add a MovementComponent only if this is not a grid based character
+        if (!(this instanceof GridPlayerCharacter2D)){
+            this.movement = new MovementComponent<PlayerCharacter>(this);
+            this.addComponent(MovementComponent.class, this.movement);
+            this.movement.setWalkSpeed(80);
+        }
     }
     
     
