@@ -42,8 +42,11 @@ public class PlayerCharacter extends Character implements IInputListener {
     
     public PlayerCharacter(){
         super();
-        TransformComponent transform = this.getComponent(TransformComponent.class);
-        if(transform != null) transform.setLocation(new Vector3(50,50,0));
+        
+        //we dont need to get the transform in order to set location
+        //TransformComponent transform = this.getComponent(TransformComponent.class);
+        //if(transform != null) transform.setLocation(new Vector3(50,50,0));
+        setObjectLocation(new Vector3(50,50,0));
         
         this.color = Color.RED;
         this.radius = 70;

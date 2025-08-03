@@ -45,6 +45,7 @@ com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
 com\mycompany\gamev2\interfaces\ILevel.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.class
+com\mycompany\gamev2\Utils\Timer.class
 com\mycompany\gamev2\io\JsonReader.class
 com\mycompany\gamev2\gamemath\Vector3.class
 com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.class

@@ -85,6 +85,16 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         this.movement.applyMovement(v, walkAction.getDeltaTime());
     }
 
+    
+    //for grid based characters we make sure that setObjectLocation always snaps to the grid
+    @Override
+    public void setObjectLocation(Vector3 newLocation) {
+        super.setObjectLocation(newLocation);
+        this.movement.ensure_grid_alignment();
+    }
+    
+    
+
     @Override
     protected void tick(TickEvent event) {
         //we do nothing here (we override super behavior)

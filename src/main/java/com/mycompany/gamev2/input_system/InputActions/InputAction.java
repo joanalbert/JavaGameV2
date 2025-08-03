@@ -66,9 +66,7 @@ public abstract class InputAction {
         
         Set<BindKey> x_keys = activeKeys.stream().filter(n -> n.getAxis() == BindKey.Axis.X).collect(Collectors.toSet());
         Set<BindKey> y_keys = activeKeys.stream().filter(n -> n.getAxis() == BindKey.Axis.Y).collect(Collectors.toSet());
-        
-        float x,y;
-        
+                
         double x_scale = 0.0d;
         for(BindKey k : x_keys){
             x_scale = Math.clamp(x_scale + k.getAxisScale(), -1, 1);

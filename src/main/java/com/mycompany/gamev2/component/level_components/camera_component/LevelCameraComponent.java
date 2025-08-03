@@ -31,6 +31,8 @@ public class LevelCameraComponent extends LevelComponent {
     double y_offset = 0;
     
     private BaseLevel owning_level;
+    
+    private boolean smooth_tracking = false;
        
     public LevelCameraComponent(BaseLevel level){
         this.owning_level = level;
@@ -81,7 +83,8 @@ public class LevelCameraComponent extends LevelComponent {
     public void tick(TickEvent e) {
         if(!this.isActive()) return; //only tick if active
         
-        track(this.target);
+        if(this.smooth_tracking) smooth_track(this.target);
+        else track(this.target);
         
         try{compute_bounds();}
         catch(CameraNoTargetException ex){
@@ -114,4 +117,5 @@ public class LevelCameraComponent extends LevelComponent {
     
     
     public BoxBounds getBounds(){return this.bounds;}
+    public void setSmoothTracking(boolean b){this.smooth_tracking = b;}
 }

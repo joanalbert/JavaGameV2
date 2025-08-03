@@ -5,12 +5,16 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
+import com.mycompany.gamev2.event_system.EventManager;
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 
@@ -18,13 +22,24 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
  *
  * @author J.A
  */
-public class GridMovementComponent extends MovementComponent{
+public class GridMovementComponent extends MovementComponent implements IGameUpdateListener{
     
     private boolean isMoving = false;
     private LevelGridComponent grid_component;
     
+    private Vector3 prev_dir;
+    
+    private Vector3 startPos;
+    private Vector3 targetPos;
+    
+    private double moveDuration = 0.2d;
+    private double moveTimer = 0f;
+    
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
         super(owner); //call super constructor, sets a reference to the owner's transform component
+        
+        
+        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
         
         //get the current level's LevelGridComponent
         GridLevelBase current_level = LevelManager.getInstance().getCurrentGridLevel();
@@ -32,7 +47,13 @@ public class GridMovementComponent extends MovementComponent{
         if(grid != null) this.grid_component = grid; 
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
     }
+
+    @Override
+    public void onEventReceived(BaseEvent event) {
+        if(event instanceof TickEvent tevent) this.tick(tevent);
+    }
    
+    
         
     private Vector3 screenLoc_to_GridCoords(Vector3 loc ){
         int tile_size = grid_component.getTileSize();
@@ -57,6 +78,7 @@ public class GridMovementComponent extends MovementComponent{
         
         Vector3 new_screen_loc = this.GridCoords_to_ScreenLoc(coords);
         this.owner_transform.setLocation(new_screen_loc);
+        
     }
     
    
@@ -92,8 +114,13 @@ public class GridMovementComponent extends MovementComponent{
             return;
         } 
         
-        //not valid direction or the previous movement hasn't completed yet
-        if(!vel.isCardinalDirection() || this.isMoving) return; 
+        //we only move if we're not already moving
+        if(this.isMoving) return;
+        
+        //if directions isn't a cardinal one, we use pre previous one if available
+        if(!vel.isCardinalDirection()){
+           if(this.prev_dir != null) vel = this.prev_dir;
+        }
                 
                 
         //maintain grid-alignment
@@ -119,15 +146,36 @@ public class GridMovementComponent extends MovementComponent{
         //HERE WE DOULD CHECK FOR COLLISSIONS, BUT NOT YET
         
         
-        // Set moving flag to prevent new moves until this one completes
         isMoving = true;
 
-        // Move to the target grid position (snap to grid) IN THE FUTURE, WE'LL LERP POSITION
-        int tile_size = grid_component.getTileSize();
-        Vector3 newLocation = this.GridCoords_to_ScreenLoc(target_grid_coords);
-        owner_transform.setLocation(newLocation);
-
-        // Reset moving flag (for now, assume instant movement; see Step 4 for smooth movement)
-        isMoving = false;
+        this.prev_dir  = vel;  
+        this.startPos  = this.GridCoords_to_ScreenLoc(grid_coords); 
+        this.targetPos = this.GridCoords_to_ScreenLoc(target_grid_coords);
+        System.out.println("INITIATING MOVEMENT");
     }
+    
+    private void tick(TickEvent event){
+        if(this.isMoving) {
+            System.out.println("MOVING");
+            this.processMovement(event.getDeltaSeconds());
+        }
+    }
+    
+    private void processMovement(double deltsSeconds){
+        this.moveTimer += deltsSeconds;
+        
+        double t = Math.min(this.moveTimer / this.moveDuration, 1f);
+        
+        Vector3 newLocation = Utils.dlerp(this.startPos, this.targetPos, t);
+        this.owner_transform.setLocation(newLocation);
+        
+        if(t >= 1f){
+            this.owner_transform.setLocation(newLocation);
+            this.moveTimer = 0f;
+            this.isMoving = false;
+            System.out.println("MOVEMENT COMPLETED");
+        }
+    }
+    
+    
 }

@@ -6,12 +6,14 @@ package com.mycompany.gamev2.component.level_components.grid_component;
 
 import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -182,6 +184,11 @@ public class LevelGridComponent extends LevelComponent {
             destX, destY, destX + tile_size, destY + tile_size, // Destination rectangle
             srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
             null);
+        
+        if(DebugFlags.getInstance().getShow_level_grids()){
+            g.setColor(Color.red);
+            g.drawRect(destX, destY, tile_size, tile_size);
+        }
     }
     
     

@@ -38,7 +38,7 @@ public class PlayerCharacter_InputContext extends InputContext {
         walk_keys.add(new BindKey(KeyEvent.VK_LEFT, -1.0f, BindKey.Axis.X));
         walk_keys.add(new BindKey(KeyEvent.VK_RIGHT, 1.0f, BindKey.Axis.X));
         
-        addBinding(new InputBinding(walkAction, walk_keys, null, true, true, false));
+        addBinding(new InputBinding(walkAction, walk_keys, null, true, false, false));
         
         //SHOOT
         IA_Shoot shootAction = new IA_Shoot();

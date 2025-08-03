@@ -18,7 +18,9 @@ public class DebugFlags implements IInputListener{
 
     private static DebugFlags instance;
     
-    private boolean show_debug_FPS = true;
+    private boolean show_debug_FPS = false;
+    private boolean show_level_grids = false;
+    
     
     private DebugFlags(){
         EventManager.getInstance().subscribe(this, IInputListener.class);
@@ -40,6 +42,7 @@ public class DebugFlags implements IInputListener{
             switch(code){
                 case KeyEvent.VK_P:
                         show_debug_FPS = !show_debug_FPS;
+                        show_level_grids = !show_level_grids;
                     break;
             }
             
@@ -49,4 +52,7 @@ public class DebugFlags implements IInputListener{
     
    
     public boolean getShow_debug_FPS(){return show_debug_FPS;}
+    public boolean getShow_level_grids(){return show_level_grids;}
+    
+   
 }

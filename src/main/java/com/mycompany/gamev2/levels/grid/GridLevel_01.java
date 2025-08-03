@@ -38,6 +38,7 @@ public class GridLevel_01 extends GridLevelBase{
     public void ComponentSetup() {
         super.ComponentSetup();
         LevelCameraComponent level_camera = new LevelCameraComponent(this);
+        level_camera.setSmoothTracking(true);
         addComponent(level_camera.getClass(), level_camera);
     }
    

@@ -170,7 +170,7 @@ public class InputManager implements IGameUpdateListener {
     public boolean ShouldSkip(InputBinding binding){
         HashMap<Integer, Boolean> copy_states = new HashMap<Integer, Boolean>(keyStates);
         boolean doKeysMatch = binding.matches(copy_states);
-        if(!doKeysMatch){
+        if(!doKeysMatch && !binding.getIsHeld()){
             return true;
         }
         else return false;
@@ -202,8 +202,9 @@ public class InputManager implements IGameUpdateListener {
                 }
                 
                 //TOGGLE DEBUG TEXT
-                if(e.getKeyCode() == KeyEvent.VK_P){
-                    EventManager.getInstance().post(new KeyPressEvent(KeyEvent.VK_P, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
+                int code = e.getKeyCode();
+                if(code == KeyEvent.VK_P || code == KeyEvent.VK_I){
+                    EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                 }
             }
             
