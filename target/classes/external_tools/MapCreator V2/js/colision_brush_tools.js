@@ -81,6 +81,7 @@ function set_cell_collision_logical(cell){
     
 }
 
+//do come across
 
 function set_cell_collision_visual(cell){
     

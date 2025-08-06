@@ -9,6 +9,7 @@ import com.mycompany.gamev2.component.level_components.grid_component.LevelGridT
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
@@ -148,11 +149,16 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         }
         
         //HERE WE DOULD CHECK FOR COLLISSIONS, BUT NOT YET
-        LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.checkColisionOfTile(target_grid_coords);
-        if(colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
-           colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)){
-            System.out.println("Movement blocked: world collision");
-            return;
+        try{
+            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords); //this can throw an exception
+            
+            if(colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+               colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)){
+                System.out.println("Movement blocked: world collision");
+                return;
+            }
+        } catch (NoSuchGridTileException e){
+            System.out.println(e.getMessage());
         }
         
         

@@ -33,6 +33,54 @@ public class JsonReader {
     }
     
     
+    public GridAndDimensionsWrapper getTileMatrixFromJSON(String json_path, int size){
+        //we use GsonBuilder in order to register our deserializer fro LevelGridTileV2.COLISION_TYPE
+        Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LevelGridTileV2.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .create();
+        
+        LevelGridTileV2[][] grid = null;
+        int w = 0;
+        int h = 0;
+        
+        try {
+            String full_path = ClassLoader.getSystemResource(json_path).getPath();
+            FileReader reader = new FileReader(full_path);
+          
+            JsonObject map = JsonParser.parseReader(reader).getAsJsonObject();
+            
+            //get the tiles array
+            JsonArray tiles = map.getAsJsonArray("tiles");
+            
+            //get the map dimensions
+            w = map.getAsJsonPrimitive("width").getAsInt();
+            h = map.getAsJsonPrimitive("height").getAsInt();
+            
+            grid = new LevelGridTileV2[w][h];
+                
+            int length = tiles.size();
+            for(int i = 0; i < length; i++){
+                JsonObject obj = tiles.get(i).getAsJsonObject();
+                LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
+                
+                Vector3 grid_pos   = tile.getGridPosition();
+                Vector3 window_loc = grid_pos.getScaled(size);
+                
+                tile.setWindowLocation(window_loc);
+                
+                grid[(int)grid_pos.getX()][(int)grid_pos.getY()] = tile;
+            }
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        finally{
+            return new GridAndDimensionsWrapper(grid, new Vector3(w,h,0));
+        }
+    }
     
     public LevelGridTileV2[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
         

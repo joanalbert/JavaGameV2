@@ -33,6 +33,7 @@ com\mycompany\gamev2\debug\DebugFlags.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\component\object_components\TransformComponent.class
 com\mycompany\gamev2\input_system\InputContexts\InputContext.class
+com\mycompany\gamev2\exceptions\NoSuchGridTileException.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Shoot.class
@@ -70,5 +71,6 @@ com\mycompany\gamev2\event_system\game_events\GameStartEvent.class
 com\mycompany\gamev2\component\object_components\GridMovementComponent.class
 com\mycompany\gamev2\input_system\InputContexts\GridPlayerCharacter_InputContext.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2.class
+com\mycompany\gamev2\io\GridAndDimensionsWrapper.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2$COLISION_TYPE.class
 com\mycompany\gamev2\exceptions\CameraNoTargetException.class

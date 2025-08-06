@@ -66,7 +66,7 @@ public class LevelCameraComponent extends LevelComponent {
         double right  = this.position.getX() + MyWindow.DIMENSIONS.width/2;
         */
         
-        //int test = 240;
+        //int test = 400;
         
         int w = MyWindow.DIMENSIONS.width;
         int h = MyWindow.DIMENSIONS.height;

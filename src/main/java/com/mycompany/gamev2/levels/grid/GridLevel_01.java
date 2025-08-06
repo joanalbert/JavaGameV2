@@ -30,6 +30,7 @@ public class GridLevel_01 extends GridLevelBase{
             .config_width(50)
             .config_tile_size(32)
             .config_viewport_culling(true)
+            .config_override_json_dimensions(false)
             .construct_fromJSON(this.getJsonName());
     }
 

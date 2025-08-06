@@ -30,6 +30,9 @@ public class LevelGridTileV2 {
         }
         
         public static COLISION_TYPE fromLabel(String label) {
+            
+            if(label == null || label.equals("")) return COLISION_TYPE.BLOCK;
+            
             for (COLISION_TYPE type : values()) {
                 if (type.label.equals(label)) {
                     return type;

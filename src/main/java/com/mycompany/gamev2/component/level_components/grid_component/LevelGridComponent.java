@@ -9,8 +9,10 @@ import com.mycompany.gamev2.component.level_components.camera_component.LevelCam
 import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.io.GridAndDimensionsWrapper;
 import com.mycompany.gamev2.io.JsonReader;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
@@ -27,13 +29,16 @@ import javax.imageio.ImageIO;
 public class LevelGridComponent extends LevelComponent {
     
     private LevelGridTileV2[][] tile_matrix;
+    private GridLevelBase owning_level;
+    private HashMap<Integer, BufferedImage> atlases;
     
+    //grid config fields
     private int tile_width = 0;
     private int tile_height = 0;
     private int tile_size = 32;
-    private GridLevelBase owning_level;
     private boolean viewpoert_culling;
-    private HashMap<Integer, BufferedImage> atlases;
+    private boolean override_json_grid_dimensions = true;
+    
         
     public LevelGridComponent(GridLevelBase owning_level){
         this.owning_level = owning_level;
@@ -67,11 +72,25 @@ public class LevelGridComponent extends LevelComponent {
         return this;
     }
     
+    public LevelGridComponent config_override_json_dimensions(boolean setting){
+        this.override_json_grid_dimensions = setting;
+        return this;
+    }
     
     public LevelGridComponent construct_fromJSON(String json_path){
         JsonReader reader = JsonReader.getInstance();
-        tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); // thse dimensions should be defined in the json itself
-        System.out.println(tile_matrix);
+        
+        if(this.override_json_grid_dimensions){
+            tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); //pass in user defined widht and height
+        }
+        else{
+            GridAndDimensionsWrapper wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); // ignore user defined width and height, the ones in the json will be used
+            tile_matrix = wrapper.getGrid();
+            
+            //update width & height based on what was read in the JSON
+            this.tile_width  = (int) wrapper.getDimensions().getX();
+            this.tile_height = (int) wrapper.getDimensions().getY();
+        }
         return this;
     }
     ///////////////////
@@ -145,14 +164,17 @@ public class LevelGridComponent extends LevelComponent {
         
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
+                
+                //this check is necessary for when the camera goes outside the grid
+                if(x >= this.tile_width || y >= this.tile_height){
+                    System.out.println("CAM OUTSIDE");
+                    continue;
+                }
+                
                 LevelGridTileV2 tile = tile_matrix[x][y];
-                
                 if(tile == null) continue;
-                
                 render_tile(g, tile);
-                
                 draw_calls++;
-                
             }
         }
         
@@ -202,10 +224,20 @@ public class LevelGridComponent extends LevelComponent {
         return grid_location;
     }
     
-    public LevelGridTileV2.COLISION_TYPE checkColisionOfTile(Vector3 tile_coords){
+    public LevelGridTileV2.COLISION_TYPE getColisionForTile(Vector3 tile_coords) throws NoSuchGridTileException{
         int x = ((int) tile_coords.getX());
         int y = ((int) tile_coords.getY());
         LevelGridTileV2 tile = this.tile_matrix[x][y];
-        return tile.getColision();
+        
+        if(tile == null) throw new NoSuchGridTileException("The provided coordinates do not map to a GridTileV2 in this grid.");
+        
+        LevelGridTileV2.COLISION_TYPE colision_type = tile.getColision();
+        
+        if(colision_type == null){
+            System.out.println("no colision");
+            return LevelGridTileV2.COLISION_TYPE.BLOCK;
+        }
+        
+        return colision_type;
     }
 }
