@@ -1,7 +1,37 @@
 let global_isClicked = false;
+window.global_isClicked = global_isClicked;
 //we want to know whenever mouse click is held down
-document.addEventListener("mousedown", (e)=> global_isClicked = true);
-document.addEventListener("mouseup", (e)=> global_isClicked = false);
+document.addEventListener("mousedown", (e)=> {
+    global_isClicked = true;
+    window.global_isClicked = global_isClicked;
+});
+
+document.addEventListener("mouseup", (e)=> {
+    global_isClicked = false;
+    window.global_isClicked = global_isClicked;
+});
+
+
+
+//depending on what tab is active, hide or show the tile selection menu
+let editing_colisions = false;
+let collisions_tab = document.getElementById("collisions_tab");
+collisions_tab.addEventListener("click", () => {
+    createCollisionsTable();
+    editing_colisions = true;
+    
+    sideMenu.classList.remove("d-flex");
+    sideMenu.classList.add("d-none");
+});
+
+let visual_tab = document.getElementById("visual_tab");
+visual_tab.addEventListener("click", ()=> {
+    editing_colisions = false;
+    
+    sideMenu.classList.remove("d-none");
+    sideMenu.classList.add("d-flex");
+});
+
 
 
 /*loop();
@@ -34,6 +64,8 @@ changeTableBtn.addEventListener("click",changeTableFunction);
 
 
 function createTable(){
+    
+    mapTableElement.classList.add("slidingTable");
     
     mapTableElement.style.width = `${TablePixelWidth}px`;
     mapTableElement.style.height = `${TablePixelHeight}px`;
@@ -159,34 +191,100 @@ function createTable(){
         mapTableElement.appendChild(tr);
     }
     
-    createCollisionsTable();
+    
 }
 
 //copy the map table, and from that, create the collisions table (and assign its rows and columns the propper class name)
 function createCollisionsTable(){
-    let parent = document.getElementById("collisionsTableParent");
-    let t  = document.createElement("table");
     
-    if(parent.children.length > 0) parent.removeChild(parent.children[0]);
+    let container       = document.getElementById("collisionsTableParent");
+    let collisionsTable = document.createElement("table");
     
-    t = mapTableElement.cloneNode(true);
+    collisionsTable.setAttribute("class", "bg-white");
+    collisionsTable.setAttribute("style", "border: 1px dashed red; margin: 32px auto;");
     
-    t.id = "mapCollisionsTable";
     
-    for(let i = 0; i < t.children.length; i++){
-        let row = t.children[i];
+    let width  = widthInput.valueAsNumber;
+    let height = heightInput.valueAsNumber;
+    
+    if(container.children.length > 0) return; //container.removeChild(container.children[0]);
+    
+    for(let y = 0; y < height; y++){
         
-        row.classList.remove("mapTableRow");
-        row.classList.add("mapCollisionsRow");
+        let row = document.createElement("tr");
         
-        for(let p = 0; p < row.children.length; p++){
-            let cell = row.children[p];
-            cell.classList.remove("mapTableColumn");
-            cell.classList.add("mapCollisionColumn");
+        row.classList.add("d-flex");
+        row.classList.add("center");
+        
+        for(let x = 0; x < width; x++){
+            
+            let cell = document.createElement("td");
+            let c    = document.createElement("canvas");
+            
+            cell.setAttribute("style", "width: 32px; height: 32px; margin: 0px; padding: 0px; position: relative;");
+            
+            cell.setAttribute("x",x);
+            cell.setAttribute("y",y);
+            
+            cell.classList.add("col_table_cell");
+            
+            c.setAttribute("width", 32);
+            c.setAttribute("height", 32);
+            
+            c.style.height = "32px";
+            c.style.width = "32px";
+            c.style.pointerEvents = "none";
+            
+            collisions_table_add_cell_events(cell);
+            
+            let ctx  = c.getContext("2d");
+            
+            let other_td = document.querySelector(`td.mapTableColumn[x="${x}"][y="${y}"]`);
+            let other_canvas = other_td.children[0];
+            
+            if(other_canvas == null) continue;
+            
+            ctx.drawImage(other_canvas,0,0);
+            
+            if(x == 0 && y == 0){
+                let prev_img = collisions_table_create_preview_img();
+                cell.appendChild(prev_img);
+            }
+            
+            cell.appendChild(c);
+            row.appendChild(cell);
         }
+        
+        collisionsTable.appendChild(row);
     }
     
-    parent.appendChild(t);
+    container.appendChild(collisionsTable);
+    
+    cell_events();
+}
+
+function collisions_table_add_cell_events(cell){
+    
+    //event to update the position fo the preview image based on what cell the mouse is over
+    cell.addEventListener("mouseenter", (e)=>{
+        let prev_img = document.getElementsByClassName("coll_prev_img")[0];
+        let x = e.target.getAttribute("x");
+        let y = e.target.getAttribute("y");
+        
+        let y_pos = y * 32;
+        let x_pos = x * 32;
+                
+        prev_img.style.top  = `${y_pos}px`
+        prev_img.style.left = `${x_pos}px`
+    });
+}
+
+function collisions_table_create_preview_img(){
+    let img = document.createElement("img");
+    img.classList.add("coll_prev_img");
+    
+    
+    return img;
 }
 
 
@@ -270,6 +368,7 @@ function test(){
 //sidemenu dom
 let sideToggler = document.getElementById("toggler");
 let togglerIcon = document.querySelector("#toggler button#toggler_btn");
+let tiles_tray  = document.getElementById("tile_tray");
 
 //lock btn dom
 let lockToggler = document.getElementById("toggler"); 
@@ -291,9 +390,16 @@ let rightClassName = "fas fa-arrow-alt-circle-right";
 let lockedClassName = "fas fa-lock";
 let unlockedClassName = "fas fa-lock-open";
 
+
 togglerIcon.addEventListener("click", (event)=>{
-    if(hidden) showMenu(event.target);
-    else hideMenu(event.target);
+    if(hidden) {
+        mapTableElement.style.marginLeft = "0px";
+        showMenu(event.target);
+    }
+    else {
+        mapTableElement.style.marginLeft = "auto";
+        hideMenu(event.target);
+    }
 })
 
 lockIcon.addEventListener("click", (event)=>{

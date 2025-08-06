@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     
     <link rel="stylesheet" href="css/main.css">
-
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <script src="https://kit.fontawesome.com/4212cb22d0.js" crossorigin="anonymous"></script>
     <title>Hello, world!</title>
   </head>
@@ -27,42 +29,7 @@
            </div>
        </div>
         
-        <!-- tools -->
-        <div class="col-12 bg-dark d-flex justify-content-start">
-            
-            <!-- point -->
-            <button class="m-1 p-2 btn btn-primary toolButton" id="pointer" title="Point and click">
-                <i class="far fa-hand-point-up" style="pointer-events: none;"></i>
-            </button>
-            
-            <!-- brush -->
-            <button class="m-1 p-2 btn btn-primary toolButton" id="brush" title="Brush over an area">
-                <i class="fas fa-paint-brush" style="pointer-events: none;"></i>
-            </button>
-            
-            <!-- area -->
-            <button class="m-1 p-2 btn btn-primary toolButton" id="area" title="Click and drag to select an area">
-                <i class="fas fa-vector-square" style="pointer-events: none;"></i>
-            </button>
-            
-            <!-- fill -->
-            <button class="m-1 p-2 btn btn-primary toolButton" id="fill" title="Click to paint whole map">
-                <i class="fas fa-fill-drip" style="pointer-events: none;"></i>
-            </button>
-            
-            <div class="d-flex">
-                <div class="mt-auto mb-auto" >
-                    <input type="number" min=0 placeholder="width" id="width" value=20>
-                    <input type="number" min=0 placeholder="height" id="height" value=20>
-                </div>
-                <button class="m-1 p-2 btn btn-warning resizeButton" id="changeTable"><strong>Set map dimensions</strong></button>
-            </div>
-            
-            <!-- export -->
-            <button class="m-1 p-2 btn btn-danger toolButton" id="export" title="download">
-                <i class="fas fa-download" style="pointer-events: none;"></i>
-            </button>
-        </div>
+        
         
         <!-- map table area -->
         <div class="container-fluid">            
@@ -73,11 +40,11 @@
                
                 <!-- tabs list -->
                 <ul class="nav nav-pills">
-                    <li class="active mr-2 bg-dark p-2 rounded-top">
+                    <li id="visual_tab" class="active mr-2 bg-dark p-2 rounded-top">
                         <a href="#1a" data-toggle="tab" class="text-white"><strong>Tile Editor</strong></a>
                     </li>
                     <li class="mr-2 bg-dark p-2 rounded-top">
-                        <a href="#2a" data-toggle="tab" class="text-white"><strong>Collisions editor</strong></a>
+                        <a id="collisions_tab" href="#2a" data-toggle="tab" class="text-white"><strong>Collisions editor</strong></a>
                     </li>
 
                 </ul>
@@ -87,6 +54,43 @@
                     <!-- TILE EDITOR TAB AREA-->
                     <div class="tab-pane active" id="1a">
                         <h3 class="text-center">Select the tiles that make up your map</h3>
+                                  
+                            <!-- tools -->
+                            <div class="col-12 bg-dark d-flex justify-content-start">
+
+                                <!-- point -->
+                                <button class="m-1 p-2 btn btn-primary toolButton" id="pointer" title="Point and click">
+                                    <i class="far fa-hand-point-up" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- brush -->
+                                <button class="m-1 p-2 btn btn-primary toolButton" id="brush" title="Brush over an area">
+                                    <i class="fas fa-paint-brush" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- area -->
+                                <button class="m-1 p-2 btn btn-primary toolButton" id="area" title="Click and drag to select an area">
+                                    <i class="fas fa-vector-square" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- fill -->
+                                <button class="m-1 p-2 btn btn-primary toolButton" id="fill" title="Click to paint whole map">
+                                    <i class="fas fa-fill-drip" style="pointer-events: none;"></i>
+                                </button>
+                                
+                                <div class="d-flex">
+                                    <div class="mt-auto mb-auto" >
+                                        <input type="number" min=0 placeholder="width" id="width" value=20>
+                                        <input type="number" min=0 placeholder="height" id="height" value=20>
+                                    </div>
+                                    <button class="m-1 p-2 btn btn-warning resizeButton" id="changeTable"><strong>Set map dimensions</strong></button>
+                                </div>
+
+                                <!-- export -->
+                                <button class="m-1 p-2 btn btn-danger toolButton" id="export" title="download">
+                                    <i class="fas fa-download" style="pointer-events: none;"></i>
+                                </button>
+                            </div>
                                    
                         <div class="col-12 w-100" style="height: 600px; overflow-x: scroll; overflow-y: scroll">
 
@@ -99,6 +103,58 @@
                     </div>
                     <div class="tab-pane" id="2a">
                         <h3 class="text-center">Define where the player can and can't walk</h3>
+                        
+                        <div id="brushes_box" class="col-12 bg-dark d-flex justify-content-around">
+                            
+                            <!-- collision edit tools -->
+                            <div class="d-flex justify-content-start">
+
+                                <!-- point -->
+                                <button class="m-1 p-2 btn btn-success toolButton" id="c_pointer" title="Point and click">
+                                    <i class="far fa-hand-point-up" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- brush -->
+                                <button class="m-1 p-2 btn btn-success toolButton" id="c_brush" title="Brush over an area">
+                                    <i class="fas fa-paint-brush" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- area -->
+                                <button class="m-1 p-2 btn btn-success toolButton" id="c_area" title="Click and drag to select an area">
+                                    <i class="fas fa-vector-square" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- fill -->
+                                <button class="m-1 p-2 btn btn-success toolButton" id="c_fill" title="Click to paint whole map">
+                                    <i class="fas fa-fill-drip" style="pointer-events: none;"></i>
+                                </button>
+
+
+                            </div>
+                            
+                                                        
+                            <!-- collision type picker -->
+                            <div class="bg-dark d-flex justify-content-center">
+                                
+                                <!-- walk -->
+                                <button class="m-1 p-2 btn btn-success toolButton" id="col_walk" title="Walkable tile">
+                                    <i class="fa-solid fa-person-hiking" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- block -->
+                                <button class="m-1 p-2 btn btn-danger toolButton" id="col_block" title="Non walkable tile">
+                                    <i class="fas fa-solid fa-ban" style="pointer-events: none;"></i>
+                                </button>
+
+                                <!-- surf -->
+                                <button class="m-1 p-2 btn btn-primary toolButton" id="col_surf" title="Only walkable if surfing">
+                                    <i class="fa-solid fa-water" style="pointer-events: none;"></i>
+                                </button>
+                                
+                            </div>
+                            
+                            
+                        </div>
                         
                         <div id="collisionsTableParent" class="col-12 w-100" style="height: 600px; overflow-x: scroll; overflow-y: scroll">
 
@@ -171,7 +227,7 @@
             
             
             <!-- tile selector -->
-            <div class="row">                
+            <div id="tile_tray" class="row">                
                 <div class="m-4 d-flex flex-row justify-content-around">
                                     
                     <div id="tileSlider" class="bg-dark rounded-left p-2">
@@ -230,6 +286,12 @@
   <footer>
       <!-- brush tools control -->
       <script src="js/brush_tools.js"></script> 
+      
+      <!-- collision brush tools -->
+      <script src="js/colision_brush_tools.js"></script> 
+      
+      <!-- collision-types tools -->
+      <script src="js/collision_types_tools.js"></script> 
       
       <script src="js/export.js"></script> 
       

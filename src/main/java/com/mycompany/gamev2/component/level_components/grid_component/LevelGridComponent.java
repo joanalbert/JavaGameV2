@@ -185,9 +185,13 @@ public class LevelGridComponent extends LevelComponent {
             srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
             null);
         
+        //debug grid outline
         if(DebugFlags.getInstance().getShow_level_grids()){
-            g.setColor(Color.red);
+            if(tile.colision.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+               tile.colision.equals(LevelGridTileV2.COLISION_TYPE.SURF)) g.setColor(Color.red);
+            else g.setColor(Color.blue);
             g.drawRect(destX, destY, tile_size, tile_size);
+            
         }
     }
     
@@ -196,5 +200,12 @@ public class LevelGridComponent extends LevelComponent {
         Vector3 grid_location = new Vector3(location.getX() / tile_size, location.getY() / tile_size, 0);
         grid_location.roundComponents();
         return grid_location;
+    }
+    
+    public LevelGridTileV2.COLISION_TYPE checkColisionOfTile(Vector3 tile_coords){
+        int x = ((int) tile_coords.getX());
+        int y = ((int) tile_coords.getY());
+        LevelGridTileV2 tile = this.tile_matrix[x][y];
+        return tile.getColision();
     }
 }

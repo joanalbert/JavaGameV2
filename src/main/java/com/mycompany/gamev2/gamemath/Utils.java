@@ -14,7 +14,7 @@ public class Utils {
     }
     
     public static double dlerp(double a, double b, double t){
-        return (1-t)*a + t*b;
+        return a + (b-a) * t;
     }
     
     public static Vector3 dlerp(Vector3 a, Vector3 b, double t){

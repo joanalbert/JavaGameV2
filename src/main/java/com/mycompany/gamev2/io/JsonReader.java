@@ -5,11 +5,13 @@
 package com.mycompany.gamev2.io;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.io.gson_deserializers.ColisionTypeDeserializer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -33,7 +35,12 @@ public class JsonReader {
     
     
     public LevelGridTileV2[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
-        Gson gson = new Gson();
+        
+        //we use GsonBuilder in order to register our deserializer fro LevelGridTileV2.COLISION_TYPE
+        Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LevelGridTileV2.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .create();
+        
         LevelGridTileV2[][] grid = new LevelGridTileV2[w][h];
         
         try {

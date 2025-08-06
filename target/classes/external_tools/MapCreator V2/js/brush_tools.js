@@ -21,7 +21,7 @@ Object.values(btns).forEach(item => {
         resetAll();
         
         updateStyles(e.target);
-         updateFlags(e.target);
+        updateFlags(e.target);
         
     });
     
@@ -192,6 +192,7 @@ function repaint_dirty(grid){
             let coords = grid[y][x].atlas_coords;
             ctx.drawImage(sheet, coords.x, coords.y, 16, 16, 0, 0, 32, 32);
             
+            
             //this cell is no longer dirty
             grid[y][x].dirty = false;
         }
@@ -237,6 +238,7 @@ function getMatrixFromTable(table){
                 
                 let data_copy = {
                     atlas_id: cd.atlas_id,
+                    colision: cd.colision,
                     atlas_coords: {
                         x: cd.atlas_coords.x,
                         y: cd.atlas_coords.y
@@ -247,6 +249,7 @@ function getMatrixFromTable(table){
             else {
                 let empty_data_copy = {
                     atlas_id: "0",
+                    colision: "unset",
                     atlas_coords: {
                         x: 0,
                         y: 0

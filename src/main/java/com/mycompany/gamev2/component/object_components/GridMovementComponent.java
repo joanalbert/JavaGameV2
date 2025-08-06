@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -115,11 +116,14 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         } 
         
         //we only move if we're not already moving
-        if(this.isMoving) return;
+        if (isMoving) return;
+            
+    
         
         //if directions isn't a cardinal one, we use pre previous one if available
         if(!vel.isCardinalDirection()){
-           if(this.prev_dir != null) vel = this.prev_dir;
+           //if(this.prev_dir != null) vel = this.prev_dir;
+           vel = this.prev_dir;
         }
                 
                 
@@ -144,6 +148,12 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         }
         
         //HERE WE DOULD CHECK FOR COLLISSIONS, BUT NOT YET
+        LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.checkColisionOfTile(target_grid_coords);
+        if(colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+           colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)){
+            System.out.println("Movement blocked: world collision");
+            return;
+        }
         
         
         isMoving = true;
@@ -174,6 +184,8 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
             this.moveTimer = 0f;
             this.isMoving = false;
             System.out.println("MOVEMENT COMPLETED");
+            
+           
         }
     }
     

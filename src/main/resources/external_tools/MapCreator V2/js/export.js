@@ -41,7 +41,8 @@ function make_json(){
                     x: data.atlas_coords.x,
                     y: data.atlas_coords.y
                 },
-                atls_id: data.atlas_id
+                colision: data.colision,
+                atls_id: data.atlas_id,
             }
         
             
