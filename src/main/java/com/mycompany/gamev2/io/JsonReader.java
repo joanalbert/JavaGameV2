@@ -63,6 +63,13 @@ public class JsonReader {
                 JsonObject obj = tiles.get(i).getAsJsonObject();
                 LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
                 
+                //here we need to check manually that the colision type was loaded correctly
+                //just in case it wasn't defined in the json.
+                //to handle sthis case there are security checks both in "LevelGridTileV2.COLISION_TYPE.fromLabel" and in "ColisionTypeDeserializer.deserialize"
+                //but since these methods dont even run if a json propery/objet doesn't exists, we have to do the following here:
+                //fallback to COLISION_TYPE.BLOCK
+                if(tile.colision == null) tile.colision = LevelGridTileV2.COLISION_TYPE.BLOCK;
+                
                 Vector3 grid_pos   = tile.getGridPosition();
                 Vector3 window_loc = grid_pos.getScaled(size);
                 
@@ -102,6 +109,13 @@ public class JsonReader {
             for(int i = 0; i < length; i++){
                 JsonObject obj = tiles.get(i).getAsJsonObject();
                 LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
+                
+                //here we need to check manually that the colision type was loaded correctly
+                //just in case it wasn't defined in the json.
+                //to handle sthis case there are security checks both in "LevelGridTileV2.COLISION_TYPE.fromLabel" and in "ColisionTypeDeserializer.deserialize"
+                //but since these methods dont even run if a json propery/objet doesn't exists, we have to do the following here:
+                //fallback to COLISION_TYPE.BLOCK
+                if(tile.colision == null) tile.colision = LevelGridTileV2.COLISION_TYPE.BLOCK;
                 
                 Vector3 grid_pos   = tile.getGridPosition();
                 Vector3 window_loc = grid_pos.getScaled(size);

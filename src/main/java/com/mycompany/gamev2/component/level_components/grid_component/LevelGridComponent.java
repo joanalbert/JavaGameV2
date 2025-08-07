@@ -184,8 +184,6 @@ public class LevelGridComponent extends LevelComponent {
             }
         }
         
-        
-        
         //System.out.println(draw_calls+" DRAW CALLS");
     }
     

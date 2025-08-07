@@ -17,7 +17,7 @@ public class ColisionTypeDeserializer implements JsonDeserializer<LevelGridTileV
     @Override
     public LevelGridTileV2.COLISION_TYPE deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String label = json.getAsString();
-        if(label == null || label.isEmpty()) label = "B";
+        if(label == null || label.isEmpty() || label.equals("")) label = "B";
         return LevelGridTileV2.COLISION_TYPE.fromLabel(label);
     }
 }

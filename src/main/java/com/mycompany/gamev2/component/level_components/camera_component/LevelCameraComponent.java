@@ -6,6 +6,8 @@ package com.mycompany.gamev2.component.level_components.camera_component;
 
 
 import com.mycompany.gamev2.component.level_components.LevelComponent;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.CameraNoTargetException;
@@ -13,6 +15,7 @@ import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.levels.BaseLevel;
+import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.window.MyWindow;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -104,26 +107,29 @@ public class LevelCameraComponent extends LevelComponent {
     
     @Override
     public void render(RenderEvent e) {
-         if(!this.isActive()) return; //only render if active
+        if(!this.isActive()) return; //only render if active
          
-        Graphics2D g = e.getGraphics();
-        g.setColor(Color.blue);
-      
-        
-        /*int x = (int) this.bounds.getLeft();
-        int y = (int) this.bounds.getTop();
-        int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
-        int h = (int) (this.bounds.getBottom() - this.bounds.getTop());*/ // Height
-        //g.drawRect(x, y, w, h);
-        /*
-        g.setColor(Color.blue);
-        int w = MyWindow.DIMENSIONS.width;
-        int h = MyWindow.DIMENSIONS.height;
-        int x = w / 2 - w / 2; // Screen center - half width
-        int y = h / 2 - h / 2; // Screen center - half height
-        g.drawRect(x, y, w, h);*/ // Draw at screen coordinates
-
-        
+        if(DebugFlags.getInstance().getShow_level_grids()){
+            Graphics2D g = e.getGraphics();
+            LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
+            
+            g.setColor(Color.red);
+            
+            if(grid.getIsCameraFollow()){
+                int w = MyWindow.DIMENSIONS.width;
+                int h = MyWindow.DIMENSIONS.height;
+                int x = w / 2 - w / 2; // Screen center - half width
+                int y = h / 2 - h / 2; // Screen center - half height
+                g.drawRect(x, y, w, h); // Draw at screen coordinates
+            }
+            else{
+                int x = (int) this.bounds.getLeft();
+                int y = (int) this.bounds.getTop();
+                int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
+                int h = (int) (this.bounds.getBottom() - this.bounds.getTop()); // Height
+                g.drawRect(x, y, w, h);
+            }  
+        }       
     }
     
     

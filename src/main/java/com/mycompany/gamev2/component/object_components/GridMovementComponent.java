@@ -123,8 +123,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         
         //if directions isn't a cardinal one, we use pre previous one if available
         if(!vel.isCardinalDirection()){
-           //if(this.prev_dir != null) vel = this.prev_dir;
-           vel = this.prev_dir;
+           if(this.prev_dir != null) vel = this.prev_dir;
         }
                 
                 
@@ -172,7 +171,6 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     
     private void tick(TickEvent event){
         if(this.isMoving) {
-            System.out.println("MOVING");
             this.processMovement(event.getDeltaSeconds());
         }
     }
@@ -190,8 +188,6 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
             this.moveTimer = 0f;
             this.isMoving = false;
             System.out.println("MOVEMENT COMPLETED");
-            
-           
         }
     }
     
