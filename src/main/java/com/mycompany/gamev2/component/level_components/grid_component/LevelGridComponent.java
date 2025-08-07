@@ -38,6 +38,7 @@ public class LevelGridComponent extends LevelComponent {
     private int tile_size = 32;
     private boolean viewpoert_culling;
     private boolean override_json_grid_dimensions = true;
+    private boolean camera_follow = false;
     
         
     public LevelGridComponent(GridLevelBase owning_level){
@@ -49,7 +50,7 @@ public class LevelGridComponent extends LevelComponent {
     public int getTileSize(){return this.tile_size;}
     public int getTileWidth(){return this.tile_width;}
     public int getTileHeight(){return this.tile_height;}
-    
+    public boolean getIsCameraFollow(){return this.camera_follow;}
     
     ////grid config
     public LevelGridComponent config_width(int w){
@@ -74,6 +75,11 @@ public class LevelGridComponent extends LevelComponent {
     
     public LevelGridComponent config_override_json_dimensions(boolean setting){
         this.override_json_grid_dimensions = setting;
+        return this;
+    }
+    
+    public LevelGridComponent config_camera_follow(boolean setting){
+        this.camera_follow = setting;
         return this;
     }
     
@@ -184,11 +190,12 @@ public class LevelGridComponent extends LevelComponent {
     }
     
     private void render_tile(Graphics2D g, LevelGridTileV2 tile){
+        
         Vector3 pos = tile.getWindowLocation();
         BufferedImage atlas = atlases.get(tile.atls_id-1);
         
+        // Fallback to drawing a colored rectangle if atlas is missing
         if (atlas == null) {
-            // Fallback to drawing a colored rectangle if atlas is missing
             g.setColor(java.awt.Color.RED);
             g.fillRect((int) pos.getX(), (int) pos.getY(), tile_size, tile_size);
             return;
@@ -197,9 +204,18 @@ public class LevelGridComponent extends LevelComponent {
         // Source coordinates in the atlas
         int srcX = (int) tile.atls_pos.getX();
         int srcY = (int) tile.atls_pos.getY();
+        
         // Destination coordinates on the screen
         int destX = (int) pos.getX();
         int destY = (int) pos.getY();
+        
+        // Destination coordinates on the screen (based on camera)
+        if(this.camera_follow){
+            LevelCameraComponent cam = owning_level.getComponent(LevelCameraComponent.class);
+            Vector3 cam_offsets = cam.getCamOffsets();
+            destX -= cam_offsets.getX();
+            destY -= cam_offsets.getY();
+        }
 
         // Draw the specific region of the atlas
         g.drawImage(atlas, 

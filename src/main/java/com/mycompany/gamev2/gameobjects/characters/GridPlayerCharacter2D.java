@@ -4,6 +4,8 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
+import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -15,6 +17,7 @@ import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
+import com.mycompany.gamev2.levels.LevelManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -108,6 +111,13 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         
         Graphics2D g = event.getGraphics();
         Vector3 location = getObjectLocation();
+       
+        LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
+        if(grid != null && grid.getIsCameraFollow()){
+            LevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(LevelCameraComponent.class);
+            Vector3 offset = cam.getCamOffsets();
+            location = location.minus(offset);
+        }
         
         g.setColor(this.color);
         g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);

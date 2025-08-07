@@ -34,7 +34,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     private Vector3 startPos;
     private Vector3 targetPos;
     
-    private double moveDuration = 0.2d;
+    private double moveDuration = 0.225d;
     private double moveTimer = 0f;
     
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {

@@ -23,9 +23,10 @@ import java.awt.Graphics2D;
  */
 public class LevelCameraComponent extends LevelComponent {
     
-    private Vector3 position = Vector3.ZERO;
-    private GameObject target = null; 
-    private BoxBounds bounds  = null;
+    private Vector3 cam_offset = Vector3.ZERO;
+    private Vector3 position   = Vector3.ZERO;
+    private GameObject target  = null; 
+    private BoxBounds bounds   = null;
     
     double x_offset = 0;
     double y_offset = 0;
@@ -52,6 +53,12 @@ public class LevelCameraComponent extends LevelComponent {
         Vector3 targetPos = target.getObjectLocation();
         double lerpFactor = 0.1; // Adjust for smoothness
         this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
+    }
+    
+    private void compute_cam_offsets(){
+        int w = MyWindow.DIMENSIONS.width;
+        int h = MyWindow.DIMENSIONS.height;
+        this.cam_offset = new Vector3(this.position.getX() - w/2, this.position.getY() - h/2, 0 );
     }
     
     private void compute_bounds() throws CameraNoTargetException{
@@ -86,7 +93,10 @@ public class LevelCameraComponent extends LevelComponent {
         if(this.smooth_tracking) smooth_track(this.target);
         else track(this.target);
         
-        try{compute_bounds();}
+        try{
+            compute_bounds();
+            compute_cam_offsets();
+        }
         catch(CameraNoTargetException ex){
             System.out.println(ex.getMessage());
         }
@@ -98,24 +108,26 @@ public class LevelCameraComponent extends LevelComponent {
          
         Graphics2D g = e.getGraphics();
         g.setColor(Color.blue);
+      
         
         /*int x = (int) this.bounds.getLeft();
         int y = (int) this.bounds.getTop();
-        int w = (int) (this.bounds.getLeft() - this.bounds.getRight());
-        int h = (int) (this.bounds.getBottom() - this.bounds.getTop());
-        
-        g.drawRect(x, y, w, h);*/
-        
-        
-        int x = (int) this.bounds.getLeft();
-        int y = (int) this.bounds.getTop();
         int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
-        int h = (int) (this.bounds.getBottom() - this.bounds.getTop()); // Height
+        int h = (int) (this.bounds.getBottom() - this.bounds.getTop());*/ // Height
+        //g.drawRect(x, y, w, h);
+        /*
+        g.setColor(Color.blue);
+        int w = MyWindow.DIMENSIONS.width;
+        int h = MyWindow.DIMENSIONS.height;
+        int x = w / 2 - w / 2; // Screen center - half width
+        int y = h / 2 - h / 2; // Screen center - half height
+        g.drawRect(x, y, w, h);*/ // Draw at screen coordinates
 
-        g.drawRect(x, y, w, h);
+        
     }
     
     
     public BoxBounds getBounds(){return this.bounds;}
     public void setSmoothTracking(boolean b){this.smooth_tracking = b;}
+    public Vector3 getCamOffsets(){return this.cam_offset;}
 }
