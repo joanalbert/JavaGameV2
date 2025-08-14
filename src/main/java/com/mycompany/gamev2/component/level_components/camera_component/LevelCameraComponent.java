@@ -53,15 +53,20 @@ public class LevelCameraComponent extends LevelComponent {
     
     private void smooth_track(GameObject target) {
         if (target == null) return;
+        
+               
         Vector3 targetPos = target.getObjectLocation();
-        double lerpFactor = 0.1; // Adjust for smoothness
+        double lerpFactor = 0.2; // Adjust for smoothness
         this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
     }
     
     private void compute_cam_offsets(){
         int w = MyWindow.DIMENSIONS.width;
         int h = MyWindow.DIMENSIONS.height;
-        this.cam_offset = new Vector3(this.position.getX() - w/2, this.position.getY() - h/2, 0 );
+        double x = this.position.getX() - w/2;
+        double y = this.position.getY() - h/2;
+        
+        this.cam_offset = new Vector3(x, y, 0 );
     }
     
     private void compute_bounds() throws CameraNoTargetException{

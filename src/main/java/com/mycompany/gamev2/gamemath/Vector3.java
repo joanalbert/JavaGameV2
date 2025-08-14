@@ -97,6 +97,16 @@ public class Vector3 {
         else return false;
     }
     
+    public boolean isOppositeDirection(Vector3 other){
+        Vector3 thisN = this.normalize();
+        Vector3 otheN = other.normalize();
+        double dot = thisN.dot(otheN);
+        double tolerance = 1e-6;
+        
+        //is the dot product close enough to zero? (floating point safety)
+        return Math.abs(dot+1) < tolerance;
+    }
+    
     public void roundComponents(){
         this.x = Math.rint(this.x);
         this.y = Math.rint(this.y);

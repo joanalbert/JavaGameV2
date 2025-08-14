@@ -139,4 +139,6 @@ public class GameLoopV2 implements Runnable {
         }
         
     }
+    
+    public double getFrames(){return this.frames;}
 }

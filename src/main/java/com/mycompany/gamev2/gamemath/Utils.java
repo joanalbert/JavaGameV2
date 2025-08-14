@@ -14,10 +14,12 @@ public class Utils {
     }
     
     public static double dlerp(double a, double b, double t){
+        //double easedT = t * t * (3.0 - 2.0 * t); // Smoothstep
         return a + (b-a) * t;
     }
     
     public static Vector3 dlerp(Vector3 a, Vector3 b, double t){
+        
         double x = dlerp(a.getX(), b.getX(), t);
         double y = dlerp(a.getY(), b.getY(), t);
         double z = dlerp(a.getZ(), b.getZ(), t);

@@ -119,7 +119,12 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             location = location.minus(offset);
         }
         
-        g.setColor(this.color);
+        GridMovementComponent movement = this.getComponent(GridMovementComponent.class);
+        
+         g.setColor(this.color);
+        /*if(movement.getIsMoving()) g.setColor(this.color);
+        else g.setColor(Color.BLUE);*/
+        
         g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
     }
     
