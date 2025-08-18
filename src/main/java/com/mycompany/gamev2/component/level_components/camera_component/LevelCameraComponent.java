@@ -11,6 +11,7 @@ import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.CameraNoTargetException;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
@@ -26,10 +27,11 @@ import java.awt.Graphics2D;
  */
 public class LevelCameraComponent extends LevelComponent {
     
-    private Vector3 cam_offset = Vector3.ZERO;
-    private Vector3 position   = Vector3.ZERO;
-    private GameObject target  = null; 
-    private BoxBounds bounds   = null;
+    protected Vector3 cam_offset = Vector3.ZERO;
+    protected Vector3 position   = Vector3.ZERO;
+    protected GameObject target  = null; 
+    protected BoxBounds bounds   = null;
+    protected double delta;
     
     double x_offset = 0;
     double y_offset = 0;
@@ -37,7 +39,8 @@ public class LevelCameraComponent extends LevelComponent {
     private BaseLevel owning_level;
     
     private boolean smooth_tracking = false;
-       
+    
+           
     public LevelCameraComponent(BaseLevel level){
         this.owning_level = level;
     }
@@ -45,13 +48,15 @@ public class LevelCameraComponent extends LevelComponent {
     public void setTarget(GameObject target){
         if(target != null) this.target = target;
     }
+   
     
-    private void track(GameObject target){
+    
+    protected void track(){
         if(target == null) return;
-        this.position = target.getObjectLocation();
+        this.position = this.target.getObjectLocation();
     }
-    
-    private void smooth_track(GameObject target) {
+        
+    protected void smooth_track(GameObject target) {
         if (target == null) return;
         
                
@@ -60,7 +65,7 @@ public class LevelCameraComponent extends LevelComponent {
         this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
     }
     
-    private void compute_cam_offsets(){
+    protected void compute_cam_offsets(){
         int w = MyWindow.DIMENSIONS.width;
         int h = MyWindow.DIMENSIONS.height;
         double x = this.position.getX() - w/2;
@@ -69,7 +74,7 @@ public class LevelCameraComponent extends LevelComponent {
         this.cam_offset = new Vector3(x, y, 0 );
     }
     
-    private void compute_bounds() throws CameraNoTargetException{
+    protected void compute_bounds() throws CameraNoTargetException{
         if(this.target == null) {
             throw new CameraNoTargetException("Attempted to compute bounds of a camera which has no target");
         }
@@ -98,12 +103,19 @@ public class LevelCameraComponent extends LevelComponent {
     public void tick(TickEvent e) {
         if(!this.isActive()) return; //only tick if active
         
-        if(this.smooth_tracking) smooth_track(this.target);
-        else track(this.target);
+        this.delta = e.getDeltaSeconds();
         
+        
+        //track the target's position
+        if(this.smooth_tracking) smooth_track(this.target);
+        else track();
+        
+                
+        //update camera bounds and offsets
         try{
             compute_bounds();
             compute_cam_offsets();
+            System.out.println("calc");
         }
         catch(CameraNoTargetException ex){
             System.out.println(ex.getMessage());
@@ -115,25 +127,28 @@ public class LevelCameraComponent extends LevelComponent {
         if(!this.isActive()) return; //only render if active
          
         if(DebugFlags.getInstance().getShow_level_grids()){
-            Graphics2D g = e.getGraphics();
-            LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
             
-            g.setColor(Color.red);
-            
-            if(grid.getIsCameraFollow()){
-                int w = MyWindow.DIMENSIONS.width;
-                int h = MyWindow.DIMENSIONS.height;
-                int x = w / 2 - w / 2; // Screen center - half width
-                int y = h / 2 - h / 2; // Screen center - half height
-                g.drawRect(x, y, w, h); // Draw at screen coordinates
-            }
-            else{
-                int x = (int) this.bounds.getLeft();
-                int y = (int) this.bounds.getTop();
-                int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
-                int h = (int) (this.bounds.getBottom() - this.bounds.getTop()); // Height
-                g.drawRect(x, y, w, h);
-            }  
+            try{
+                Graphics2D g = e.getGraphics();
+                LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
+
+                g.setColor(Color.red);
+
+                if(grid.getIsCameraFollow()){
+                    int w = MyWindow.DIMENSIONS.width;
+                    int h = MyWindow.DIMENSIONS.height;
+                    int x = w / 2 - w / 2; // Screen center - half width
+                    int y = h / 2 - h / 2; // Screen center - half height
+                    g.drawRect(x, y, w, h); // Draw at screen coordinates
+                }
+                else{
+                    int x = (int) this.bounds.getLeft();
+                    int y = (int) this.bounds.getTop();
+                    int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
+                    int h = (int) (this.bounds.getBottom() - this.bounds.getTop()); // Height
+                    g.drawRect(x, y, w, h);
+                }  
+            } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
         }       
     }
     

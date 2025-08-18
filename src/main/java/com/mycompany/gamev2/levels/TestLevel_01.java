@@ -5,10 +5,10 @@
 package com.mycompany.gamev2.levels;
 
 import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.TestSphere;
 import com.mycompany.gamev2.gameobjects.characters.PlayerCharacter;
@@ -72,8 +72,10 @@ public class TestLevel_01 extends BaseLevel {
         PlayerCharacter player = new PlayerCharacter();
         addGameObject(player);
         
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.setTarget(player);
+        try{
+            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
+            if(cam != null) cam.setTarget(player);
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
     @Override
@@ -84,14 +86,18 @@ public class TestLevel_01 extends BaseLevel {
     
     
     protected void tick(TickEvent e) {
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.tick(e);
+        try{
+            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
+            if(cam != null) cam.tick(e);
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
     
     protected void render(RenderEvent e) {
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.render(e);
+        try{
+            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
+            if(cam != null) cam.render(e);
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
     @Override

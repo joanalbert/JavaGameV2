@@ -5,11 +5,13 @@
 package com.mycompany.gamev2.component.level_components.grid_component;
 
 import com.mycompany.gamev2.component.level_components.LevelComponent;
+import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.io.GridAndDimensionsWrapper;
@@ -20,6 +22,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 
 /**
@@ -152,37 +155,47 @@ public class LevelGridComponent extends LevelComponent {
     }
     
     private void render_viewport_culling(Graphics2D g){
-        LevelCameraComponent cam = owning_level.getComponent(LevelCameraComponent.class);
         
-        if(cam == null) {
-            System.out.println("Viewport culling requires a LevelCameraComponent to be present. We won't render.");
-            return;
-        }
-        
-        int draw_calls = 0;
-        BoxBounds bounds = cam.getBounds(); 
-        
-        int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
-        int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
-        
-        int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
-        int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
-        
-        for (int x = startX; x < endX; x++) {
-            for (int y = startY; y < endY; y++) {
-                
-                //this check is necessary for when the camera goes outside the grid
-                if(x >= this.tile_width || y >= this.tile_height){
-                    System.out.println("CAM OUTSIDE");
-                    continue;
-                }
-                
-                LevelGridTileV2 tile = tile_matrix[x][y];
-                if(tile == null) continue;
-                render_tile(g, tile);
-                draw_calls++;
+        try{
+            
+            GridLevelCameraComponent cam = owning_level.getComponent(GridLevelCameraComponent.class);
+            
+            if(cam == null) {
+                System.out.println("Viewport culling requires a LevelCameraComponent to be present. We won't render.");
+                return;
             }
+
+            int draw_calls = 0;
+            BoxBounds bounds = cam.getBounds(); 
+
+            
+            int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
+            int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
+
+            int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
+            int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
+
+            for (int x = startX; x < endX; x++) {
+                for (int y = startY; y < endY; y++) {
+
+                    //this check is necessary for when the camera goes outside the grid
+                    if(x >= this.tile_width || y >= this.tile_height){
+                        System.out.println("CAM OUTSIDE");
+                        continue;
+                    }
+
+                    LevelGridTileV2 tile = tile_matrix[x][y];
+                    if(tile == null) continue;
+                    render_tile(g, tile);
+                    draw_calls++;
+                }
+            }
+            
+        } catch (NoSuchLevelComponentException ex){
+            System.out.println(ex.getMessage());
+            //GameLoopV2.getInstance().stop();
         }
+        
         
         //System.out.println(draw_calls+" DRAW CALLS");
     }
@@ -208,13 +221,27 @@ public class LevelGridComponent extends LevelComponent {
         int destY = (int) pos.getY();
         
         // Destination coordinates on the screen (based on camera)
-        if(this.camera_follow){
-            LevelCameraComponent cam = owning_level.getComponent(LevelCameraComponent.class);
+        
+        //exception approach
+        /*try{
+            if(this.camera_follow){
+                GridLevelCameraComponent cam = owning_level.getComponent(GridLevelCameraComponent.class);
+                Vector3 cam_offsets = cam.getCamOffsets();
+                destX -= cam_offsets.getX();
+                destY -= cam_offsets.getY();
+            }
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}*/
+        
+        //optional approach
+        Optional<GridLevelCameraComponent> opt_cam = owning_level.tryGetComponent(GridLevelCameraComponent.class);
+        if(opt_cam.isPresent()){
+            GridLevelCameraComponent cam = opt_cam.get();
             Vector3 cam_offsets = cam.getCamOffsets();
             destX -= cam_offsets.getX();
             destY -= cam_offsets.getY();
         }
-
+        
+       
         // Draw the specific region of the atlas
         g.drawImage(atlas, 
             destX, destY, destX + tile_size, destY + tile_size, // Destination rectangle

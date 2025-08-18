@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
+import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
@@ -109,23 +110,26 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     protected void render(RenderEvent event) {
         if(!this.isActive) return;
         
-        Graphics2D g = event.getGraphics();
-        Vector3 location = getObjectLocation();
-       
-        LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
-        if(grid != null && grid.getIsCameraFollow()){
-            LevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(LevelCameraComponent.class);
-            Vector3 offset = cam.getCamOffsets();
-            location = location.minus(offset);
-        }
-        
-        GridMovementComponent movement = this.getComponent(GridMovementComponent.class);
-        
-         g.setColor(this.color);
-        /*if(movement.getIsMoving()) g.setColor(this.color);
-        else g.setColor(Color.BLUE);*/
-        
-        g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
+        try {
+            Graphics2D g = event.getGraphics();
+            Vector3 location = getObjectLocation();
+
+            LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
+            if(grid != null && grid.getIsCameraFollow()){
+                GridLevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(GridLevelCameraComponent.class);
+                Vector3 offset = cam.getCamOffsets();
+                location = location.minus(offset);
+            }
+
+            GridMovementComponent movement = this.getComponent(GridMovementComponent.class);
+
+            //g.setColor(this.color);
+            if(movement.getIsMoving()) g.setColor(this.color);
+            else g.setColor(Color.BLUE);
+
+            g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
+            
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
     
 }

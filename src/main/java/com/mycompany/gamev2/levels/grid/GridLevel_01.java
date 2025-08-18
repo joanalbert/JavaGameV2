@@ -4,10 +4,12 @@
  */
 package com.mycompany.gamev2.levels.grid;
 
+import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 
 /**
@@ -23,24 +25,26 @@ public class GridLevel_01 extends GridLevelBase{
 
     @Override
     protected void configure_grid_component() {
-        LevelGridComponent grid = getComponent(LevelGridComponent.class);
-        if(grid == null) return;
-        
-        grid.config_height(20)
-            .config_width(50)
-            .config_tile_size(32)
-            .config_viewport_culling(true)
-            .config_override_json_dimensions(false)
-            .config_camera_follow(false)
-            .construct_fromJSON(this.getJsonName());
+        try{
+            LevelGridComponent grid = getComponent(LevelGridComponent.class);
+            if(grid == null) return;
+
+            grid.config_height(20)
+                .config_width(50)
+                .config_tile_size(32)
+                .config_viewport_culling(true)
+                .config_override_json_dimensions(false)
+                .config_camera_follow(true)
+                .construct_fromJSON(this.getJsonName());
+            
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
     
     @Override 
     public void ComponentSetup() {
         super.ComponentSetup();
-        LevelCameraComponent level_camera = new LevelCameraComponent(this);
-        level_camera.setSmoothTracking(true);
+        GridLevelCameraComponent level_camera = new GridLevelCameraComponent(this);
         addComponent(level_camera.getClass(), level_camera);
     }
    
@@ -59,31 +63,37 @@ public class GridLevel_01 extends GridLevelBase{
         
         //LEVEL COMPONENTS
  
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null){
-            cam.setTarget(player);
-        }
+        try{
+            GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
+            if(cam != null){
+                cam.setTarget(player);
+            }
+        } catch (NoSuchLevelComponentException e){System.out.println(e.getMessage());}
     }
     
 
     @Override
     protected void tick(TickEvent e) {
         
-        //tick cam if active
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.tick(e);
+        try{
+            //tick cam if active
+            GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
+            if(cam != null) cam.tick(e);
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
     @Override
     protected void render(RenderEvent e) {
         
-        //render grid if active
-        LevelGridComponent grid = getComponent(LevelGridComponent.class);
-        if(grid != null) grid.render(e);
+        try{
+            //render grid if active
+            LevelGridComponent grid = getComponent(LevelGridComponent.class);
+            if(grid != null) grid.render(e);
            
-        //render cam if active
-        LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-        if(cam != null) cam.render(e);
+            //render cam if active
+            GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
+            if(cam != null) cam.render(e);
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
      
      

@@ -8,6 +8,7 @@ import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
+import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.interfaces.ILevel;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -149,10 +151,36 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
         else return false;
     }
     
-    public <T extends LevelComponent> T getComponent(Class<T> type){
+    public <T extends LevelComponent> T getComponent(Class<T> type) throws NoSuchLevelComponentException{
+                    
         LevelComponent comp = this.LevelComponents.get(type);
-        if(comp != null && type.isInstance(comp)) return type.cast(comp);
-        else return null;
+
+        if (comp == null) {
+            // Get the call stack to find the caller of getComponent()
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+            // stackTrace[0] = Thread.getStackTrace
+            // stackTrace[1] = getComponent (this method)
+            // stackTrace[2] = the method that called getComponent ← this is what we want
+            StackTraceElement caller = stackTrace.length > 2 ? stackTrace[2] : null;
+
+            String location = caller != null
+                ? caller.getFileName() + "." + caller.getMethodName() + " (line " + caller.getLineNumber() + ")"
+                : "Unknown location";
+
+            throw new NoSuchLevelComponentException(
+                "Level " + this.getName() + " has no " + type.getSimpleName() +
+                ". Attempted to retrieve at " + location
+            );
+        }
+
+        return type.cast(comp);
+    }
+    
+    public <T extends LevelComponent> Optional<T> tryGetComponent(Class<T> type) {
+        LevelComponent comp = this.LevelComponents.get(type);
+        if (comp == null || !type.isInstance(comp)) return Optional.empty();
+        return Optional.of(type.cast(comp));
     }
     
     protected <T extends LevelComponent> void removeComponent(LevelComponent comp){

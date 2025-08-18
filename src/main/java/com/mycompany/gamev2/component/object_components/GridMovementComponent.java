@@ -28,6 +28,8 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
  */
 public class GridMovementComponent extends MovementComponent implements IGameUpdateListener{
     
+    private boolean startedMoving = false;
+    private boolean wasMoving = false;
     private boolean isMoving = false;
     private LevelGridComponent grid_component;
     
@@ -36,7 +38,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     private Vector3 startPos;
     private Vector3 targetPos;
     
-    private GridMoveTimer move_timer;
+    public GridMoveTimer move_timer;
     
     /*private double moveDuration = 0.225d;
     private double moveTimer = 0f;*/
@@ -187,6 +189,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
                
         //set the flag and initiate the timer
         isMoving = true;
+        System.out.println("PLAYER STAR MOVEMENT FRAME: "+GameLoopV2.getInstance().getFrames());
         this.move_timer.start();
     }
     
@@ -198,7 +201,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         double t = this.move_timer.getProgress();
         Vector3 newLocation = Utils.dlerp(this.startPos, this.targetPos, t);
         this.owner_transform.setLocation(newLocation);
-        System.out.println("progress: "+t +" time: "+System.currentTimeMillis());
+        //System.out.println("progress: "+t +" time: "+System.currentTimeMillis());
     }
         
     private void timer_onComplete(){
@@ -219,6 +222,47 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         
         
     }
+
+    public Vector3 getPrev_dir() {
+        return prev_dir;
+    }
+
+    public void setPrev_dir(Vector3 prev_dir) {
+        this.prev_dir = prev_dir;
+    }
+
+    public Vector3 getQueued_dir() {
+        return queued_dir;
+    }
+
+    public void setQueued_dir(Vector3 queued_dir) {
+        this.queued_dir = queued_dir;
+    }
+
+    public Vector3 getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(Vector3 startPos) {
+        this.startPos = startPos;
+    }
+
+    public Vector3 getTargetPos() {
+        return targetPos;
+    }
+
+    public void setTargetPos(Vector3 targetPos) {
+        this.targetPos = targetPos;
+    }
+
+    public GridMoveTimer getMove_timer() {
+        return move_timer;
+    }
+
+    public void setMove_timer(GridMoveTimer move_timer) {
+        this.move_timer = move_timer;
+    }
+    
     
     public boolean getIsMoving(){return this.isMoving;}
 }

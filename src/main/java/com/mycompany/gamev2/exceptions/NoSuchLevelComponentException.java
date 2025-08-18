@@ -9,5 +9,8 @@ package com.mycompany.gamev2.exceptions;
  * @author J.A
  */
 public class NoSuchLevelComponentException extends Exception{
-    public NoSuchLevelComponentException(String msg){super(msg);}
+    
+    public NoSuchLevelComponentException(String message) {
+        super("NoSuchLevelComponentException: " + message);
+    }
 }
