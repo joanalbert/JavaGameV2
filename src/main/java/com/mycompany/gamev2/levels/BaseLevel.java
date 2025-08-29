@@ -8,6 +8,7 @@ import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
+import com.mycompany.gamev2.exceptions.ExceptionUtils;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.interfaces.ILevel;
@@ -33,7 +34,6 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     protected boolean active = false;
     protected String name;
 
-    
     
     public BaseLevel(String name){
         this.name = name;
@@ -154,20 +154,9 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     public <T extends LevelComponent> T getComponent(Class<T> type) throws NoSuchLevelComponentException{
                     
         LevelComponent comp = this.LevelComponents.get(type);
-
+                
         if (comp == null) {
-            // Get the call stack to find the caller of getComponent()
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-            // stackTrace[0] = Thread.getStackTrace
-            // stackTrace[1] = getComponent (this method)
-            // stackTrace[2] = the method that called getComponent ← this is what we want
-            StackTraceElement caller = stackTrace.length > 2 ? stackTrace[2] : null;
-
-            String location = caller != null
-                ? caller.getFileName() + "." + caller.getMethodName() + " (line " + caller.getLineNumber() + ")"
-                : "Unknown location";
-
+            String location = ExceptionUtils.get_exception_location();
             throw new NoSuchLevelComponentException(
                 "Level " + this.getName() + " has no " + type.getSimpleName() +
                 ". Attempted to retrieve at " + location

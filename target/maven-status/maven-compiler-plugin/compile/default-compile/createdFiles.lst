@@ -1,13 +1,16 @@
 com\mycompany\gamev2\event_system\level_events\LevelSwitchEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IEventListener.class
+com\mycompany\gamev2\exceptions\ExceptionUtils.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTile.class
 com\mycompany\gamev2\input_system\InputActions\InputAction$ActionType.class
 com\mycompany\gamev2\component\object_components\ObjectComponent.class
 com\mycompany\gamev2\levels\TestLevel_01.class
 com\mycompany\gamev2\event_system\input_events\KeyReleaseEvent.class
+com\mycompany\gamev2\debug\DebugUtils.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
 com\mycompany\gamev2\input_system\InputBinding.class
 com\mycompany\gamev2\component\BaseComponent.class
+com\mycompany\gamev2\exceptions\NullOwnerTransformException.class
 com\mycompany\gamev2\component\level_components\LevelComponent.class
 com\mycompany\gamev2\Utils\GridMoveTimer.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridComponent.class

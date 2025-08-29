@@ -45,7 +45,7 @@ public class GridMoveTimer implements IGameUpdateListener{
         this.elapsed += delta;
         
         
-        if(!hasTriggeredComplete && this.getProgress() >= 0.85){
+        if(!hasTriggeredComplete && this.getProgress() >= 0.87){
             this.excess_delta = this.elapsed - this.duration;
             if(this.onComplete != null) this.onComplete.run();
             this.hasTriggeredComplete = true; //prevent repeated triggers 

@@ -6,7 +6,6 @@ package com.mycompany.gamev2.component.level_components.grid_component;
 
 import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -234,7 +233,7 @@ public class LevelGridComponent extends LevelComponent {
         
         //optional approach
         Optional<GridLevelCameraComponent> opt_cam = owning_level.tryGetComponent(GridLevelCameraComponent.class);
-        if(opt_cam.isPresent()){
+        if(opt_cam.isPresent() && this.camera_follow){
             GridLevelCameraComponent cam = opt_cam.get();
             Vector3 cam_offsets = cam.getCamOffsets();
             destX -= cam_offsets.getX();
@@ -258,6 +257,20 @@ public class LevelGridComponent extends LevelComponent {
         }
     }
     
+    public Vector3 ScreenLoc_to_GridCoords(Vector3 loc ){
+        int tile_size = getTileSize();
+        Vector3 grid_coords = new Vector3(loc.getX() / tile_size,
+                                          loc.getY() / tile_size, 0);
+        return grid_coords;
+    }
+    
+    
+    public Vector3 GridCoords_to_ScreenLoc(Vector3 grid_coords){
+        int tile_size = getTileSize();
+        Vector3 screen_loc = new Vector3(grid_coords.getX() * tile_size,
+                                         grid_coords.getY() * tile_size, 0);
+        return screen_loc;
+    }
     
     public Vector3 snapPositionToGrid(Vector3 location){
         Vector3 grid_location = new Vector3(location.getX() / tile_size, location.getY() / tile_size, 0);

@@ -115,7 +115,6 @@ public class LevelCameraComponent extends LevelComponent {
         try{
             compute_bounds();
             compute_cam_offsets();
-            System.out.println("calc");
         }
         catch(CameraNoTargetException ex){
             System.out.println(ex.getMessage());

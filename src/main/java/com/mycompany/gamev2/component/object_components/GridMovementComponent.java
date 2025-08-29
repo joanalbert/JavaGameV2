@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.gamev2.component.object_components;
 
@@ -8,13 +8,16 @@ import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
+import com.mycompany.gamev2.debug.DebugUtils;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.ExceptionUtils;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
+import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
@@ -26,11 +29,14 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
  *
  * @author J.A
  */
-public class GridMovementComponent extends MovementComponent implements IGameUpdateListener{
+public class GridMovementComponent extends MovementComponent implements IGameUpdateListener {
     
-    private boolean startedMoving = false;
-    private boolean wasMoving = false;
-    private boolean isMoving = false;
+    // Movement flags
+    private boolean started_moving = false;
+    private boolean stopped_moving = false;
+    public boolean was_moving = false;
+    public boolean is_moving = false;
+    
     private LevelGridComponent grid_component;
     
     private Vector3 prev_dir;
@@ -40,124 +46,94 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     
     public GridMoveTimer move_timer;
     
-    /*private double moveDuration = 0.225d;
-    private double moveTimer = 0f;*/
-    
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
-        super(owner); //call super constructor, sets a reference to the owner's transform component
+        super(owner); // Call super constructor, sets a reference to the owner's transform component
         
-        
+        // Subscribe to the GameUpdate bus
         EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
         
-        //get the current level's LevelGridComponent
+        // Get the current level's LevelGridComponent and cache it
         GridLevelBase current_level = LevelManager.getInstance().getCurrentGridLevel();
-        
-        //from the current map, get the grid component, and cache it
         LevelGridComponent grid = current_level.getComponent(LevelGridComponent.class);
-        if(grid != null) this.grid_component = grid; 
+        if (grid != null) this.grid_component = grid;
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
         
+        // Initialize timer
         this.move_timer = new GridMoveTimer(0.225d, this::timer_onComplete);
     }
 
     @Override
     public void onEventReceived(BaseEvent event) {
-        if(event instanceof TickEvent tevent) this.tick(tevent);
+        if (event instanceof TickEvent tevent) this.tick(tevent);
     }
    
-    
+    private void tick(TickEvent event) {
+        // Reset start-stop transitions
+        this.stopped_moving = false;
+        this.started_moving = false;
         
-    private Vector3 screenLoc_to_GridCoords(Vector3 loc ){
-        int tile_size = grid_component.getTileSize();
-        Vector3 grid_coords = new Vector3(loc.getX() / tile_size,
-                                          loc.getY() / tile_size, 0);
-        return grid_coords;
+        // Handle movement
+        if (this.is_moving) this.process_movement(event.getDeltaSeconds());
+        
+        // Detect start-stop transitions
+        if (!this.was_moving && this.is_moving) this.started_moving = true;
+        else if (this.was_moving && !this.is_moving) this.stopped_moving = true;
+        
+        // Log current state
+        System.out.println("was: " + was_moving + " is: " + is_moving + " started: " + this.started_moving + " stopped: " + this.stopped_moving);
+        
+        // Save is_moving as was_moving for the next frame
+        this.was_moving = this.is_moving;
+        
+        if (this.started_moving) {
+            DebugUtils.getInstance().draw_string("DEBUG: MOVING");
+        } else if (this.stopped_moving) {
+            DebugUtils.getInstance().draw_string("DEBUG: NOT MOVING");
+        }
     }
     
-    private Vector3 GridCoords_to_ScreenLoc(Vector3 grid_coords){
-        int tile_size = grid_component.getTileSize();
-        Vector3 screen_loc = new Vector3(grid_coords.getX() * tile_size,
-                                         grid_coords.getY() * tile_size, 0);
-        return screen_loc;
-    }
-
-    private void snapToGridCoords(Vector3 coords){
-        //catch exception
-        if(owner_transform == null){
-            System.out.println("GridMovementComponent can't snap owner to grid: owner transform is not set");
-            return;
-        } 
-        
-        Vector3 new_screen_loc = this.GridCoords_to_ScreenLoc(coords);
-        this.owner_transform.setLocation(new_screen_loc);
-        
-    }
-    
-   
-    public Vector3 ensure_grid_alignment(){
+    // <editor-fold desc="movement logic">
+    public void initiate_movement(Vector3 vel, double deltaTime) {
+        // Catch exception
         if (owner_transform == null) {
-            System.out.println("GridMovementComponent cannot ensure grid alignment: owner transform is not set");
-            return null;
-        }
-        
-        //calculate starting tile coordinates in the grid
-        Vector3 currentPos = owner_transform.getLocation();
-        
-        //we convert screen location to grid coordinates
-        Vector3 grid_coords = this.screenLoc_to_GridCoords(currentPos);
-       
-        //ensure the owner remains grid-aligned
-        if(!Utils.isInteger(grid_coords.getX()) || !Utils.isInteger(grid_coords.getY())){
-           System.out.println("GridMovementComponent snapping owner to grid");
-           Vector3 corrected_grid_coords = grid_coords.getRoundComponents();
-           this.snapToGridCoords(corrected_grid_coords);
-           
-           return corrected_grid_coords;
-        }
-        
-        return grid_coords;
-    }
-    
-    public void applyMovement(Vector3 vel, double deltaTime){
-        
-       //System.out.println("target coords 1");
-                        
-        //catch exception
-        if(owner_transform == null){
             System.out.println("Cant apply movement: owner transform is not set");
             return;
-        } 
+        }
         
-        //System.out.println("target coords 2");
+        // CHECK: if move direction isn't a cardinal one
+        if (!vel.isCardinalDirection()) return;
         
-        //if directions isn't a cardinal one
-        if(!vel.isCardinalDirection()) return;
-        
-        //System.out.println("target coords 3");
-        
-        //we only move or queue if we're not already moving
-        if (isMoving) {
+        // QUEUE: only queue a movement if it's inputed towards the end of the current one
+        /*if (is_moving) {
             double p = this.move_timer.getProgress();
-            if(p >= 0.89d && vel.isCardinalDirection()) this.queued_dir = vel; //only queue a movement if it's inputed towards the end of the current one
+            if (p >= 0.85d && vel.isCardinalDirection()) this.queued_dir = vel;
+            return;
+        }*/
+        if (is_moving) {
+            double p = this.move_timer.getProgress();
+            System.out.println("Movement requested while moving, progress: " + p);
+            if (p >= 0.85d && vel.isCardinalDirection()) {
+                this.queued_dir = vel;
+                System.out.println("Queued direction: " + vel);
+            } else {
+                System.out.println("Input ignored: progress too low or invalid direction");
+            }
             return;
         }
-     
-        //System.out.println("target coords 4");
-               
-        //obtain current grid coordinates while maintaining grid-alignment
-        Vector3 grid_coords = this.ensure_grid_alignment();
-        if(grid_coords == null){
-            System.out.println("Cant apply movement: owner transform is not set");
-            return;
-        } 
         
-        //System.out.println("target coords 5");
-       
-        //we only move 1 tile at a time
+        // Obtain current grid coordinates while maintaining grid-alignment
+        Vector3 grid_coords = Vector3.ZERO;
+        try {
+            grid_coords = this.try_ensure_grid_alignment();
+        } catch (NullOwnerTransformException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        
+        // We only move 1 tile at a time
         Vector3 dir = vel.normalize();
-                       
-        //calculatte target grid pos
-        //System.out.println("target coords 6");
+        
+        // Calculate target grid pos
         Vector3 target_grid_coords = grid_coords.plus(dir);
         
         // Check if target is within bounds
@@ -167,62 +143,95 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
             return;
         }
         
-        //COLISION CHECK
-        try{
-            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords); //this can throw an exception
-            
-            if(colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
-               colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)){
+        // COLLISION CHECK
+        try {
+            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords);
+            if (colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+                colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)) {
                 System.out.println("Movement blocked: world collision");
                 return;
             }
-        } catch (NoSuchGridTileException e){
+        } catch (NoSuchGridTileException e) {
             System.out.println(e.getMessage());
         }
         
+        // Prepare start and target positions for the movement
+        this.startPos = this.grid_component.GridCoords_to_ScreenLoc(grid_coords);
+        this.targetPos = this.grid_component.GridCoords_to_ScreenLoc(target_grid_coords);
         
+        // Update movement flag
+        is_moving = true;
         
-        //prepare start and target positions for the movement
-        this.startPos  = this.GridCoords_to_ScreenLoc(grid_coords); 
-        this.targetPos = this.GridCoords_to_ScreenLoc(target_grid_coords);
-        
-               
-        //set the flag and initiate the timer
-        isMoving = true;
-        System.out.println("PLAYER STAR MOVEMENT FRAME: "+GameLoopV2.getInstance().getFrames());
+        System.out.println("PLAYER START MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
         this.move_timer.start();
     }
     
-    private void tick(TickEvent event){
-        if(this.isMoving) this.processMovement(event.getDeltaSeconds());        
-    }
-    
-    private void processMovement(double deltsSeconds){
+    private void process_movement(double deltaSeconds) {
         double t = this.move_timer.getProgress();
         Vector3 newLocation = Utils.dlerp(this.startPos, this.targetPos, t);
         this.owner_transform.setLocation(newLocation);
-        //System.out.println("progress: "+t +" time: "+System.currentTimeMillis());
     }
-        
-    private void timer_onComplete(){
-        
+    
+    private void timer_onComplete() {
+        // Update location
         this.owner_transform.setLocation(this.targetPos);
-        this.isMoving = false;
         
-        
-        if(this.queued_dir != null){ //continuous movement
+        if (this.queued_dir != null) { // Continuous movement
+            System.out.println("PLAYER MAINTAINING MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
+            
             Vector3 q = this.queued_dir;
             this.queued_dir = null;
-            this.applyMovement(q, 0);
-        }
-        else { //single tap
+            this.initiate_movement(q, 0);
+        } else { // Single tap
+            System.out.println("PLAYER STOP MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
             
+            this.is_moving = false;
             this.move_timer.stop();
         }
-        
-        
     }
-
+    // </editor-fold>
+    
+    // <editor-fold desc="grid alignment logic">
+    private void snapToGridCoords(Vector3 coords) {
+        // Catch exception
+        if (owner_transform == null) {
+            System.out.println("GridMovementComponent can't snap owner to grid: owner transform is not set");
+            return;
+        }
+        
+        Vector3 new_screen_loc = this.grid_component.GridCoords_to_ScreenLoc(coords);
+        this.owner_transform.setLocation(new_screen_loc);
+    }
+    
+    public Vector3 try_ensure_grid_alignment() throws NullOwnerTransformException {
+        if (owner_transform == null) {
+            String location = ExceptionUtils.get_exception_location();
+            String owner_name = this.owner.getClass().getSimpleName();
+            String this_name = this.getClass().getSimpleName();
+            
+            throw new NullOwnerTransformException(
+                    owner_name + "'s " + this_name + " cannot ensure grid alignment at: " + location
+            );
+        }
+        
+        // Calculate starting tile coordinates in the grid
+        Vector3 currentPos = owner_transform.getLocation();
+        
+        // We convert screen location to grid coordinates
+        Vector3 grid_coords = this.grid_component.ScreenLoc_to_GridCoords(currentPos);
+        
+        // Ensure the owner remains grid-aligned
+        if (!Utils.isInteger(grid_coords.getX()) || !Utils.isInteger(grid_coords.getY())) {
+            System.out.println("GridMovementComponent snapping owner to grid");
+            Vector3 corrected_grid_coords = grid_coords.getRoundComponents();
+            this.snapToGridCoords(corrected_grid_coords);
+            return corrected_grid_coords;
+        }
+        
+        return grid_coords;
+    }
+    // </editor-fold>
+    
     public Vector3 getPrev_dir() {
         return prev_dir;
     }
@@ -262,7 +271,24 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     public void setMove_timer(GridMoveTimer move_timer) {
         this.move_timer = move_timer;
     }
+
+    public boolean getStarted_moving() {
+        return started_moving;
+    }
+
+    public boolean getStopped_moving() {
+        return stopped_moving;
+    }
+
+    public boolean getWas_moving() {
+        return was_moving;
+    }
+
+    public boolean getIs_moving() {
+        return is_moving;
+    }
     
-    
-    public boolean getIsMoving(){return this.isMoving;}
+    public boolean getIsMoving() {
+        return this.is_moving;
+    }
 }

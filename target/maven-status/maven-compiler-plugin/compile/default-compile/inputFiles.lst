@@ -11,6 +11,7 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\ObjectComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\TransformComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\debug\DebugFlags.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\debug\DebugUtils.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\EventBus.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\EventManager.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\game_events\BaseEvent.java
@@ -24,10 +25,12 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\event_system\level_events\LevelWindupEvent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\CameraNoTargetException.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\ExceptionUtils.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\NonGridLevelException.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\NoSuchGridTileException.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\NoSuchLevelComponentException.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\NullLevelException.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\exceptions\NullOwnerTransformException.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\GameLoopV2.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gamemath\BoxBounds.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\gamemath\Transform.java

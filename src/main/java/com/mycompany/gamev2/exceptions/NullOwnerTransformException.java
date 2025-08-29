@@ -8,11 +8,8 @@ package com.mycompany.gamev2.exceptions;
  *
  * @author J.A
  */
-public class NoSuchLevelComponentException extends Exception{
-    
-    public NoSuchLevelComponentException(String message) {
-        super("NoSuchLevelComponentException: " + message);
+public class NullOwnerTransformException extends Exception {
+    public NullOwnerTransformException(String msg){
+        super("NullOwnerTransformException: "+msg);
     }
-    
-    
 }

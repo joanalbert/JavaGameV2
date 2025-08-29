@@ -38,6 +38,8 @@ public class GameLoopV2 implements Runnable {
     
     private static GameLoopV2 instance;
     
+    private Graphics2D g;
+    
     private GameLoopV2(){}
     
     public static GameLoopV2 getInstance(){
@@ -87,11 +89,11 @@ public class GameLoopV2 implements Runnable {
                 
                 //render
                 Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
+                this.g = g;
                 g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
                 
                 RenderEvent r_event = new RenderEvent(g);
                 EventManager.getInstance().post(r_event, IGameUpdateListener.class);
-                
                 render_debug_info(t_event, r_event);
                 
                 g.dispose();
@@ -103,7 +105,7 @@ public class GameLoopV2 implements Runnable {
                 //System.out.println("RUNNING");
             }
             
-                        
+            //waitTime = 200;            
             if (waitTime > 0) {
                 try {
                     this.thread.sleep(waitTime);
@@ -117,6 +119,10 @@ public class GameLoopV2 implements Runnable {
         
         System.out.println("STOPPING....");
         EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
+    }
+    
+    public Graphics2D requestGraphics(){
+        return this.g;
     }
     
     public void render_debug_info(TickEvent t, RenderEvent r){
@@ -136,6 +142,7 @@ public class GameLoopV2 implements Runnable {
             double fps = 1/delta;
             DecimalFormat df = new DecimalFormat("#.##");
             g.drawString("FPS: "+df.format(fps)  , 10, 30); 
+            g.drawString("FRAME Nº: "+getFrames(), 10, 60);
         }
         
     }

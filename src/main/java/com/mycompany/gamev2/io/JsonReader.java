@@ -68,7 +68,7 @@ public class JsonReader {
                 //to handle sthis case there are security checks both in "LevelGridTileV2.COLISION_TYPE.fromLabel" and in "ColisionTypeDeserializer.deserialize"
                 //but since these methods dont even run if a json propery/objet doesn't exists, we have to do the following here:
                 //fallback to COLISION_TYPE.BLOCK
-                if(tile.colision == null) tile.colision = LevelGridTileV2.COLISION_TYPE.BLOCK;
+                if(tile.colision == null) tile.colision = LevelGridTileV2.COLISION_TYPE.WALK;
                 
                 Vector3 grid_pos   = tile.getGridPosition();
                 Vector3 window_loc = grid_pos.getScaled(size);

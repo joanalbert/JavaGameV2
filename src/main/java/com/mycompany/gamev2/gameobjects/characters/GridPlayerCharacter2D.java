@@ -5,7 +5,6 @@
 package com.mycompany.gamev2.gameobjects.characters;
 
 import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
@@ -13,6 +12,7 @@ import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
+import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
@@ -48,9 +48,9 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             this.movement = new GridMovementComponent(this); //this line could throw an exception
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
-            this.movement.ensure_grid_alignment();
+            this.movement.try_ensure_grid_alignment();
         }
-        catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException e){
+        catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException | NullOwnerTransformException e){
             System.out.println(e.getMessage());
         }
         
@@ -86,7 +86,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         if(v.equals(Vector3.ZERO)) return; //no movement
         
         //delegate movement to MovementComponent
-        this.movement.applyMovement(v, walkAction.getDeltaTime());
+        this.movement.initiate_movement(v, walkAction.getDeltaTime());
     }
 
     
@@ -94,7 +94,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     @Override
     public void setObjectLocation(Vector3 newLocation) {
         super.setObjectLocation(newLocation);
-        this.movement.ensure_grid_alignment();
+        try{this.movement.try_ensure_grid_alignment();}
+        catch(NullOwnerTransformException e){System.out.println(e.getMessage());}
     }
     
     
@@ -102,6 +103,10 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     @Override
     protected void tick(TickEvent event) {
         //we do nothing here (we override super behavior)
+        boolean is  = this.movement.getIsMoving();
+        boolean was = this.movement.was_moving;
+        
+        
     }
 
     

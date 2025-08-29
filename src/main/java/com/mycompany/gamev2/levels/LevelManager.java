@@ -37,9 +37,9 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         EventManager.getInstance().subscribe(this, IInputListener.class);
         EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
         
-        levels.add(new TestLevel_01());
-        levels.add(new TestLevel_02());
         levels.add(new GridLevel_01());
+        //levels.add(new TestLevel_01());
+        //levels.add(new TestLevel_02());
         levels.add(new GridLevel_02());
     }
     

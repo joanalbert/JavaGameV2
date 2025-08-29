@@ -37,7 +37,7 @@ public class MovementComponent<T extends GameObject> extends ObjectComponent {
     }
     
     
-    public void applyMovement(Vector3 vel, double deltaTime){
+    public void initiate_movement(Vector3 vel, double deltaTime){
         Vector3 location    = this.owner_transform.getLocation();
         Vector3 newLocation = location.plus(vel.getScaled(this.walk_speed * deltaTime));
         owner_transform.setLocation(newLocation);

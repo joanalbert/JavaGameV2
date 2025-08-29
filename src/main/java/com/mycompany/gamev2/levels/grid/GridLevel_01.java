@@ -5,7 +5,6 @@
 package com.mycompany.gamev2.levels.grid;
 
 import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.camera_component.LevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -19,7 +18,7 @@ import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 public class GridLevel_01 extends GridLevelBase{
         
     public GridLevel_01(){
-        super("GridLevel_01_docks", "map_layouts/map_collisions.json");
+        super("GridLevel_01_docks", "map_layouts/map_fail.json");
         ComponentSetup();
     }
 
@@ -93,7 +92,9 @@ public class GridLevel_01 extends GridLevelBase{
             //render cam if active
             GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
             if(cam != null) cam.render(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
+        } catch (NoSuchLevelComponentException ex){
+            System.out.println(ex.getMessage());
+        }
     }
      
      

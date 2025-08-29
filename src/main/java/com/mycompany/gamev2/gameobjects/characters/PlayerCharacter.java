@@ -108,7 +108,7 @@ public class PlayerCharacter extends Character implements IInputListener {
                 if(v.equals(Vector3.ZERO)) return; //no movement
 
                 //delegate movement to MovementComponent
-                this.movement.applyMovement(v, walkAction.getDeltaTime());
+                this.movement.initiate_movement(v, walkAction.getDeltaTime());
             }
         });
         

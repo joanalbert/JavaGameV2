@@ -4,7 +4,6 @@
  */
 package com.mycompany.gamev2.component.level_components.camera_component;
 
-import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -22,7 +21,6 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
     
     //possible candidates for subclass
     private boolean cam_is_moving = false;
-    private boolean target_was_moving = false;
     private GridMoveTimer timer;
     private Vector3 target_destination_position;
     private Vector3 target_current_position;
@@ -57,21 +55,17 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
     
     @Override
     protected void track(){
+            
         if(target == null) return;
         
         //System.out.println("CAM POS: "+this.position.toString()+" TARGET POS: "+target.getObjectLocation().toString());
         if(target instanceof GridPlayerCharacter2D grid_player){
             GridMovementComponent target_movement = grid_player.getComponent(GridMovementComponent.class);
             if(target_movement == null) return;
-            boolean is_moving = target_movement.getIsMoving();
-            
-            
-            if(!this.target_was_moving && is_moving) {
-                System.out.println("GRID CAM STAR MOVEMENT FRAME: "+GameLoopV2.getInstance().getFrames());
-            }
-            
+                          
             //target has started moving this frame
-            if( (!this.target_was_moving && is_moving) ) {
+            if( target_movement.getStarted_moving() ) {
+                //System.out.println("MOVE");
                 this.target_current_position = target_movement.getStartPos(); 
                 this.target_destination_position = target_movement.getTargetPos();
                 this.cam_is_moving = true;
@@ -79,17 +73,16 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
             }
             
             //target has stopped moving this frame
-            if(this.target_was_moving && !is_moving) {
-                System.out.println("STOP");
+            if(target_movement.getStopped_moving()) {
+                //System.out.println("STOP");
                 this.cam_is_moving = false;
                 this.timer.stop();
             }
             
-            
-            this.target_was_moving = is_moving;
         }
         
         this.position = target.getObjectLocation();
+        
     }
     
     private void process_cam_movement(){
