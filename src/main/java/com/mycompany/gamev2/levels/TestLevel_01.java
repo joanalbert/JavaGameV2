@@ -29,21 +29,6 @@ public class TestLevel_01 extends BaseLevel {
 
     
     @Override
-    public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event);                
-        if(!this.isActive()) return;
-        
-        
-              
-        if (event instanceof TickEvent){
-            tick((TickEvent) event);
-        }
-        else if (event instanceof RenderEvent){
-            render((RenderEvent) event);
-        }
-    }
-
-    @Override
     public void ComponentSetup() {
         System.out.println("TESTLEVEL 1 COMPONENT SETUP");
         LevelCameraComponent level_camera = new LevelCameraComponent(this);
@@ -55,6 +40,8 @@ public class TestLevel_01 extends BaseLevel {
 
     @Override
     public void level_windup() {
+        super.level_windup();
+        
         //add in some random gameobjects to display
         int total_spheres = 3; 
         int radius = 45;
@@ -78,28 +65,8 @@ public class TestLevel_01 extends BaseLevel {
         } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
-    @Override
-    public void level_windown() {
-        super.level_windown(); //this super call ensures all gameobjects on this level are cleared
-        //any other windown logic
-    }
+       
     
-    
-    protected void tick(TickEvent e) {
-        try{
-            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-            if(cam != null) cam.tick(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
-    }
-
-    
-    protected void render(RenderEvent e) {
-        try{
-            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-            if(cam != null) cam.render(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
-    }
-
     @Override
     public String toString() {
         return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody

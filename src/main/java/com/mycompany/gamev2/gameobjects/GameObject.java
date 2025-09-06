@@ -6,17 +6,19 @@ package com.mycompany.gamev2.gameobjects;
 
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
 import com.mycompany.gamev2.component.object_components.TransformComponent;
-import com.mycompany.gamev2.event_system.EventManager;
-import com.mycompany.gamev2.event_system.game_events.BaseEvent;
+import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
-import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
  * @author J.A
  */
-public class GameObject implements IGameUpdateListener  {
+public class GameObject {
     
     protected HashMap<Class<? extends ObjectComponent>, ObjectComponent> components = new HashMap<>();
     protected boolean isActive = true;
@@ -24,7 +26,6 @@ public class GameObject implements IGameUpdateListener  {
     
     public GameObject(){
         ComponentSetup();
-        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
     
     
@@ -77,14 +78,36 @@ public class GameObject implements IGameUpdateListener  {
      
     
     public void destroy() {
-        EventManager.getInstance().unsubscribeAll(this);
         this.isActive = false;
         this.components.clear(); // Optional: clear components
     }
     
-    @Override
-    public void onEventReceived(BaseEvent event) {
-        if (!isActive) return;
-        // Default does nothing, subclasses override if they need to listen
+        
+    public void tick(TickEvent e){
+        this.tick_components(e);
     }
+    
+    public void render(RenderEvent e){
+        this.render_components(e);
+    }
+    
+    //<editor-fold desc="components updating">
+    public void tick_components(TickEvent e){
+        Set<Entry<Class<? extends ObjectComponent>, ObjectComponent>> entries = this.components.entrySet();
+        Iterator<Entry<Class<? extends ObjectComponent>, ObjectComponent>> i = entries.iterator();
+        while(i.hasNext()){
+            ObjectComponent component = i.next().getValue();
+            component.tick(e);
+        }
+    }
+    
+    public void render_components(RenderEvent e){
+        Set<Entry<Class<? extends ObjectComponent>, ObjectComponent>> entries = this.components.entrySet();
+        Iterator<Entry<Class<? extends ObjectComponent>, ObjectComponent>> i = entries.iterator();
+        while(i.hasNext()){
+            ObjectComponent component = i.next().getValue();
+            component.render(e);
+        }
+    }
+    //</editor-fold>
 }

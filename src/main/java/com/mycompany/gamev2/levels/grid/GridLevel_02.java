@@ -53,7 +53,8 @@ public class GridLevel_02 extends GridLevelBase{
      
     @Override
     public void level_windup() {
-        System.out.println("GRID WINDUP");
+        super.level_windup();
+        System.out.println(this.getName()+" WINDUP");
         this.configure_grid_component();
         
         PlayerCharacter player = new PlayerCharacter();
@@ -66,25 +67,9 @@ public class GridLevel_02 extends GridLevelBase{
     }
 
     @Override
-    protected void tick(TickEvent e) {
-        try{
-            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-            if(cam != null) cam.tick(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
-    }
+    protected void tick(TickEvent e) {}
 
     @Override
-    protected void render(RenderEvent e) {
-        
-        try{
-            LevelGridComponent grid = getComponent(LevelGridComponent.class);
-            if(grid == null) return;
-            grid.render(e);
-
-
-            LevelCameraComponent cam = getComponent(LevelCameraComponent.class);
-            if(cam != null) cam.render(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
-    }
+    protected void render(RenderEvent e) {}
 
 }

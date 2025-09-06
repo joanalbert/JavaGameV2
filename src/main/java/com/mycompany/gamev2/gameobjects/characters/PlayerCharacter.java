@@ -143,22 +143,15 @@ public class PlayerCharacter extends Character implements IInputListener {
             }
         });
 
-        EventManager.getInstance().subscribe(this, IInputListener.class);
     }
    
     
     @Override
     public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event);
- 
+         
         if(!this.isActive) return;
         
-        if (event instanceof TickEvent){
-            tick((TickEvent) event);
-        }
-        else if (event instanceof RenderEvent){
-            render((RenderEvent) event);
-        }
+        
         else if (event instanceof KeyPressEvent){
             
         }
@@ -166,7 +159,8 @@ public class PlayerCharacter extends Character implements IInputListener {
 
     
    
-    protected void render(RenderEvent event){
+    public void render(RenderEvent event){
+        super.render(event);
         if(!this.isActive) return;
         
         //System.out.println("render sphere");
@@ -181,7 +175,7 @@ public class PlayerCharacter extends Character implements IInputListener {
         g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
     }
     
-    protected void tick(TickEvent event){
-       
+    public void tick(TickEvent event){
+       super.tick(event);
     }
 }

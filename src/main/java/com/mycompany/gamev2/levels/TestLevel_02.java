@@ -19,14 +19,10 @@ public class TestLevel_02 extends BaseLevel {
         super("TestLevel_02");
     }
     
-    @Override
-    public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event); 
-        
-    }
-    
+       
     @Override
     public void level_windup() {
+        super.level_windup();
         //add in some random gameobjects to display
         int total_spheres = 2; 
         int radius = 45;

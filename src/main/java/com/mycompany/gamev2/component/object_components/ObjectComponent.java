@@ -5,6 +5,8 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.component.BaseComponent;
+import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.gameobjects.GameObject;
 
 /**
@@ -24,4 +26,7 @@ public class ObjectComponent<T extends GameObject> extends BaseComponent {
     }
     
     public T getOwner(){return this.owner;}
+    
+    public void tick(TickEvent e){}
+    public void render(RenderEvent e){}
 }

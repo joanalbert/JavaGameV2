@@ -64,7 +64,54 @@ public class GameLoopV2 implements Runnable {
         }
     }
     
-    @Override
+    public void run() {
+        long lastTime = System.nanoTime();
+        double deltaTimeAccumulator = 0.0;
+        final double TARGET_TIME_SECONDS = 1.0 / FPS; // 1/60 ≈ 0.01667 seconds
+
+        EventManager.getInstance().post(new GameStartEvent(), IGameUpdateListener.class);
+
+        while (this.running) {
+            long now = System.nanoTime();
+            long elapsedTime = now - lastTime;
+            deltaTimeAccumulator += elapsedTime / 1_000_000_000.0; // Convert to seconds
+            lastTime = now;
+
+            // Process as many fixed-timestep updates as needed
+            while (deltaTimeAccumulator >= TARGET_TIME_SECONDS) {
+                // Update
+                TickEvent t_event = new TickEvent(TARGET_TIME_SECONDS, frames);
+                EventManager.getInstance().post(t_event, IGameUpdateListener.class);
+
+                // Render
+                Graphics2D g = (Graphics2D) MyWindow.BUFFER_STRATEGY.getDrawGraphics();
+                this.g = g;
+                g.clearRect(0, 0, MyWindow.DIMENSIONS.width, MyWindow.DIMENSIONS.height);
+
+                RenderEvent r_event = new RenderEvent(g);
+                EventManager.getInstance().post(r_event, IGameUpdateListener.class);
+                render_debug_info(t_event, r_event);
+
+                g.dispose();
+                MyWindow.BUFFER_STRATEGY.show();
+
+                // Update loop vars
+                deltaTimeAccumulator -= TARGET_TIME_SECONDS;
+                frames++;
+            }
+
+            // Sleep to yield CPU, but only briefly to check timing frequently
+            try {
+                Thread.sleep(1); // Short sleep to avoid busy-waiting
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("STOPPING....");
+        EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
+    }
+    /*@Override
     public void run() {
         
         long lastTime = System.nanoTime();
@@ -119,7 +166,7 @@ public class GameLoopV2 implements Runnable {
         
         System.out.println("STOPPING....");
         EventManager.getInstance().post(new GameFinishedEvent(), IGameUpdateListener.class);
-    }
+    }*/
     
     public Graphics2D requestGraphics(){
         return this.g;

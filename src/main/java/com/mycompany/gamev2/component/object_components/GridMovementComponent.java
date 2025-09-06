@@ -9,8 +9,6 @@ import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.debug.DebugUtils;
-import com.mycompany.gamev2.event_system.EventManager;
-import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.ExceptionUtils;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
@@ -21,7 +19,6 @@ import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
-import com.mycompany.gamev2.interfaces.event_listeners.IGameUpdateListener;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 
@@ -29,13 +26,16 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
  *
  * @author J.A
  */
-public class GridMovementComponent extends MovementComponent implements IGameUpdateListener {
+public class GridMovementComponent extends MovementComponent {
     
     // Movement flags
     private boolean started_moving = false;
     private boolean stopped_moving = false;
-    public boolean was_moving = false;
-    public boolean is_moving = false;
+    private boolean was_moving = false;
+    private boolean is_moving = false;
+    private boolean is_move_completed = false;
+
+    
     
     private LevelGridComponent grid_component;
     
@@ -49,9 +49,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
         super(owner); // Call super constructor, sets a reference to the owner's transform component
         
-        // Subscribe to the GameUpdate bus
-        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
-        
+       
         // Get the current level's LevelGridComponent and cache it
         GridLevelBase current_level = LevelManager.getInstance().getCurrentGridLevel();
         LevelGridComponent grid = current_level.getComponent(LevelGridComponent.class);
@@ -63,27 +61,29 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     }
 
     @Override
-    public void onEventReceived(BaseEvent event) {
-        if (event instanceof TickEvent tevent) this.tick(tevent);
-    }
-   
-    private void tick(TickEvent event) {
+    public void tick(TickEvent event) {
+        
+                       
         // Reset start-stop transitions
         this.stopped_moving = false;
         this.started_moving = false;
-        
+                
         // Handle movement
         if (this.is_moving) this.process_movement(event.getDeltaSeconds());
         
-        // Detect start-stop transitions
+        
         if (!this.was_moving && this.is_moving) this.started_moving = true;
         else if (this.was_moving && !this.is_moving) this.stopped_moving = true;
         
+            
         // Log current state
-        System.out.println("was: " + was_moving + " is: " + is_moving + " started: " + this.started_moving + " stopped: " + this.stopped_moving);
+        double frames = GameLoopV2.getInstance().getFrames();
+        System.out.println(frames+" movement tick");
+        //System.out.println("frame: "+frames+" was: " + was_moving + " is: " + is_moving + " started: " + this.started_moving + " stopped: " + this.stopped_moving+" finished: "+this.is_move_completed);
         
         // Save is_moving as was_moving for the next frame
         this.was_moving = this.is_moving;
+        this.is_move_completed = false;
         
         if (this.started_moving) {
             DebugUtils.getInstance().draw_string("DEBUG: MOVING");
@@ -109,7 +109,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
             if (p >= 0.85d && vel.isCardinalDirection()) this.queued_dir = vel;
             return;
         }*/
-        if (is_moving) {
+        /*if (is_moving) {
             double p = this.move_timer.getProgress();
             System.out.println("Movement requested while moving, progress: " + p);
             if (p >= 0.85d && vel.isCardinalDirection()) {
@@ -119,7 +119,8 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
                 System.out.println("Input ignored: progress too low or invalid direction");
             }
             return;
-        }
+        }*/
+        if(is_moving) return;
         
         // Obtain current grid coordinates while maintaining grid-alignment
         Vector3 grid_coords = Vector3.ZERO;
@@ -162,7 +163,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         // Update movement flag
         is_moving = true;
         
-        System.out.println("PLAYER START MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
+        System.out.println("pos: "+this.owner_transform.getLocation().toString()+"PLAYER START MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
         this.move_timer.start();
     }
     
@@ -176,7 +177,13 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
         // Update location
         this.owner_transform.setLocation(this.targetPos);
         
-        if (this.queued_dir != null) { // Continuous movement
+        System.out.println("PLAYER STOP MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
+            
+        this.is_moving = false;
+        this.is_move_completed = true;
+        this.move_timer.stop();
+        
+        /*if (this.queued_dir != null) { // Continuous movement
             System.out.println("PLAYER MAINTAINING MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
             
             Vector3 q = this.queued_dir;
@@ -187,7 +194,7 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
             
             this.is_moving = false;
             this.move_timer.stop();
-        }
+        }*/
     }
     // </editor-fold>
     
@@ -290,5 +297,9 @@ public class GridMovementComponent extends MovementComponent implements IGameUpd
     
     public boolean getIsMoving() {
         return this.is_moving;
+    }
+    
+    public boolean is_move_completed() {
+        return is_move_completed;
     }
 }

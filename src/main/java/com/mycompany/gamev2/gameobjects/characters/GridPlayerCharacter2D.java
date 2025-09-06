@@ -101,19 +101,19 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     
 
     @Override
-    protected void tick(TickEvent event) {
+    public void tick(TickEvent event) {
+        super.tick(event);
         //we do nothing here (we override super behavior)
-        boolean is  = this.movement.getIsMoving();
-        boolean was = this.movement.was_moving;
-        
         
     }
 
     
     
     @Override
-    protected void render(RenderEvent event) {
+    public void render(RenderEvent event) {
+        super.render(event);
         if(!this.isActive) return;
+        
         
         try {
             Graphics2D g = event.getGraphics();
@@ -133,7 +133,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             else g.setColor(Color.BLUE);
 
             g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
-            
+                        
         } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
     

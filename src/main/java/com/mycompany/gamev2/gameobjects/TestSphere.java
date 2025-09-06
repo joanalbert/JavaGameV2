@@ -50,25 +50,9 @@ public class TestSphere extends GameObject {
     }
 
     
-    @Override
-    public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event);
- 
-        if(!this.isActive) return;
-        
-        if (event instanceof TickEvent){
-            tick((TickEvent) event);
-        }
-        else if (event instanceof RenderEvent){
-            render((RenderEvent) event);
-        }
-        else if (event instanceof KeyPressEvent){
-            return;            
-        }
-    }
+    
 
-
-    private void render(RenderEvent event){
+    public void render(RenderEvent event){
         if(!this.isActive) return;
         
         //System.out.println("render sphere");
@@ -83,7 +67,7 @@ public class TestSphere extends GameObject {
         g.fill(new Ellipse2D.Double(drawing_coordinates.getX(), drawing_coordinates.getY(), this.radius, this.radius));
     }
     
-    private void tick(TickEvent event){
+    public void tick(TickEvent event){
         //System.out.println("tick sphere");
         Vector3 location = getObjectLocation();
         

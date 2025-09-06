@@ -50,18 +50,18 @@ public class GridLevel_01 extends GridLevelBase{
      
     @Override
     public void level_windup() {
-        System.out.println("GRID WINDUP");
+        super.level_windup();
+        System.out.println(this.getName()+" WINDUP");
+        
+        //initialize grid component config
         this.configure_grid_component();
         
-        //GAME OBJECTS
-        
-        //PlayerCharacter player = new PlayerCharacter();
+        //GAME OBJECT
         GridPlayerCharacter2D player = new GridPlayerCharacter2D();
         addGameObject(player);
         
         
         //LEVEL COMPONENTS
- 
         try{
             GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
             if(cam != null){
@@ -72,30 +72,10 @@ public class GridLevel_01 extends GridLevelBase{
     
 
     @Override
-    protected void tick(TickEvent e) {
-        
-        try{
-            //tick cam if active
-            GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
-            if(cam != null) cam.tick(e);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
-    }
+    protected void tick(TickEvent e){}
 
     @Override
-    protected void render(RenderEvent e) {
-        
-        try{
-            //render grid if active
-            LevelGridComponent grid = getComponent(LevelGridComponent.class);
-            if(grid != null) grid.render(e);
-           
-            //render cam if active
-            GridLevelCameraComponent cam = getComponent(GridLevelCameraComponent.class);
-            if(cam != null) cam.render(e);
-        } catch (NoSuchLevelComponentException ex){
-            System.out.println(ex.getMessage());
-        }
-    }
+    protected void render(RenderEvent e){}
      
      
          

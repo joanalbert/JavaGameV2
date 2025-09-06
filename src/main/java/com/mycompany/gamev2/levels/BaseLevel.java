@@ -7,6 +7,8 @@ package com.mycompany.gamev2.levels;
 import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
+import com.mycompany.gamev2.event_system.game_events.RenderEvent;
+import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.level_events.LevelSwitchEvent;
 import com.mycompany.gamev2.exceptions.ExceptionUtils;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -18,7 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  *
@@ -38,7 +42,6 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     public BaseLevel(String name){
         this.name = name;
         EventManager.getInstance().subscribe(this, IWorldListener.class);
-        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
     
     @Override
@@ -48,10 +51,23 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
             if(lse.getNewLevel().equals(this)) level_windup();
             if(lse.getOldLevel() != null && lse.getOldLevel().equals(this)) level_windown();
         }
+        
+        if(event instanceof TickEvent t_event){
+            tick_game_objects(t_event);
+            tick_level_components(t_event);
+        }
+        
+        if(event instanceof RenderEvent r_event){
+            render_game_objects(r_event);
+            render_level_components(r_event);
+        }
     }
 
     @Override
     public void level_windown(){
+        
+        EventManager.getInstance().unsubscribe(this, IGameUpdateListener.class);
+        
         for (Map.Entry<Class<? extends GameObject>, ArrayList<GameObject>> entry : LevelObjects.entrySet()) {
             ArrayList<GameObject> game_objects = entry.getValue();
             for(GameObject obj : game_objects) obj.destroy();
@@ -63,8 +79,58 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
     }
 
     @Override
-    public abstract void level_windup();
+    public void level_windup(){
+        EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
+    }
     
+    
+    //<editor-fold desc="child elements update and render">
+    // update game objects and components //
+    public void tick_level_components(TickEvent e){
+        Set<Entry<Class<? extends LevelComponent>,LevelComponent>> entries = LevelComponents.entrySet();
+        Iterator<Entry<Class<? extends LevelComponent>,LevelComponent>> i = entries.iterator();
+        while(i.hasNext()){
+            Entry<Class<? extends LevelComponent>,LevelComponent> entry = i.next();
+            LevelComponent l_component = entry.getValue();
+            if(l_component.isActive()) l_component.tick(e);
+        }
+    }
+    
+    public void render_level_components(RenderEvent e){
+        Set<Entry<Class<? extends LevelComponent>,LevelComponent>> entries = LevelComponents.entrySet();
+        Iterator<Entry<Class<? extends LevelComponent>,LevelComponent>> i = entries.iterator();
+        while(i.hasNext()){
+            Entry<Class<? extends LevelComponent>,LevelComponent> entry = i.next();
+            LevelComponent l_component = entry.getValue();
+            if(l_component.isActive()) l_component.render(e);
+        }
+    }
+    
+    public void tick_game_objects(TickEvent e){
+        Set<Entry<Class<? extends GameObject>,ArrayList<GameObject>>> entries = LevelObjects.entrySet();
+        Iterator<Entry<Class<? extends GameObject>,ArrayList<GameObject>>> i = entries.iterator();
+        while(i.hasNext()){
+            Entry<Class<? extends GameObject>,ArrayList<GameObject>> entry = i.next();
+            ArrayList<GameObject> g_objects = entry.getValue();
+            for(GameObject g_object : g_objects){
+                if(g_object.isActive()) g_object.tick(e);
+            }
+        }
+    }
+    
+    public void render_game_objects(RenderEvent e){
+        Set<Entry<Class<? extends GameObject>,ArrayList<GameObject>>> entries = LevelObjects.entrySet();
+        Iterator<Entry<Class<? extends GameObject>,ArrayList<GameObject>>> i = entries.iterator();
+        while(i.hasNext()){
+            Entry<Class<? extends GameObject>,ArrayList<GameObject>> entry = i.next();
+            ArrayList<GameObject> g_objects = entry.getValue();
+            for(GameObject g_object : g_objects){
+                if(g_object.isActive()) g_object.render(e);
+            }
+        }
+    }    
+    ////
+    //</editor-fold>
     
             
     ///////////////////////////////////////////////////////// gameobjects management ///////////////////////
