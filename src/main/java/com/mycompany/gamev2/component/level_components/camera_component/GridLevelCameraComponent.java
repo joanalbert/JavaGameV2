@@ -44,8 +44,8 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
         //System.out.println(this.timer.getProgress());
         //track the target's position
         
-        double frames = GameLoopV2.getInstance().getFrames();
-        System.out.println(frames+" cam tick");
+        //double frames = GameLoopV2.getInstance().getFrames();
+        //System.out.println(frames+" cam tick");
         
         track();
         
@@ -100,8 +100,8 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
                 this.cam_is_moving = false;
                 this.timer.stop();
                 
-                //System.out.println("____END____");
-                //System.out.println(this.target.getObjectLocation().toString()+" "+this.position.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
+                System.out.println("____END____");
+                System.out.println(this.target.getObjectLocation().toString()+" "+this.position.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
             }
             
             
@@ -124,6 +124,6 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
         this.position = newLocation;
         
         
-        //System.out.println("t: "+t+" "+this.target.getObjectLocation().toString()+" "+newLocation.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
+        System.out.println("t: "+t+" "+this.target.getObjectLocation().toString()+" "+newLocation.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
     }
 }

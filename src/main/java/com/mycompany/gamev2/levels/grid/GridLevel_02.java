@@ -66,10 +66,4 @@ public class GridLevel_02 extends GridLevelBase{
         } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
     }
 
-    @Override
-    protected void tick(TickEvent e) {}
-
-    @Override
-    protected void render(RenderEvent e) {}
-
 }

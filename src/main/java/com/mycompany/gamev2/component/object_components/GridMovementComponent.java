@@ -63,7 +63,7 @@ public class GridMovementComponent extends MovementComponent {
     @Override
     public void tick(TickEvent event) {
         
-                       
+                               
         // Reset start-stop transitions
         this.stopped_moving = false;
         this.started_moving = false;
@@ -77,8 +77,8 @@ public class GridMovementComponent extends MovementComponent {
         
             
         // Log current state
-        double frames = GameLoopV2.getInstance().getFrames();
-        System.out.println(frames+" movement tick");
+        //double frames = GameLoopV2.getInstance().getFrames();
+        //System.out.println(frames+" movement tick");
         //System.out.println("frame: "+frames+" was: " + was_moving + " is: " + is_moving + " started: " + this.started_moving + " stopped: " + this.stopped_moving+" finished: "+this.is_move_completed);
         
         // Save is_moving as was_moving for the next frame

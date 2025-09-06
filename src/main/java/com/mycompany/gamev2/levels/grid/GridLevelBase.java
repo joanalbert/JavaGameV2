@@ -16,7 +16,7 @@ import com.mycompany.gamev2.levels.BaseLevel;
  *
  * @author J.A
  */
-public abstract class GridLevelBase extends BaseLevel implements IGameUpdateListener {
+public abstract class GridLevelBase extends BaseLevel {
     
     private String json_name;
     
@@ -35,26 +35,7 @@ public abstract class GridLevelBase extends BaseLevel implements IGameUpdateList
         addComponent(grid.getClass(), grid);
     }
 
-    
-    
-    @Override
-    public void onEventReceived(BaseEvent event) {
-        super.onEventReceived(event); 
-        
-        if(!this.isActive()) return;
-        
-              
-        if (event instanceof TickEvent){
-            tick((TickEvent) event);
-        }
-        else if (event instanceof RenderEvent){
-            render((RenderEvent) event);
-        }
-    }
    
     public String getJsonName(){return this.json_name;}
-    
-    protected abstract void tick(TickEvent e);
-    protected abstract void render(RenderEvent e);
     protected abstract void configure_grid_component();
 }

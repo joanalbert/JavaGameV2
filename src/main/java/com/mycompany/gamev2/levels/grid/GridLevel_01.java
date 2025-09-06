@@ -71,12 +71,6 @@ public class GridLevel_01 extends GridLevelBase{
     }
     
 
-    @Override
-    protected void tick(TickEvent e){}
-
-    @Override
-    protected void render(RenderEvent e){}
-     
-     
+    
          
 }

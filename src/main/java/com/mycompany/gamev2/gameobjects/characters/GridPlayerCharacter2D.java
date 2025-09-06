@@ -111,7 +111,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     
     @Override
     public void render(RenderEvent event) {
-        super.render(event);
+        //super.render(event);
         if(!this.isActive) return;
         
         
