@@ -15,6 +15,7 @@ import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.io.GridAndDimensionsWrapper;
 import com.mycompany.gamev2.io.JsonReader;
+import com.mycompany.gamev2.io.image.ImageMaker;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -107,16 +108,11 @@ public class LevelGridComponent extends LevelComponent {
         
         this.atlases = new HashMap<Integer, BufferedImage>();
         
-        try{
-            BufferedImage atlas1 = ImageIO.read(ClassLoader.getSystemResource("textures/tilesets/1_interior.png"));
-            BufferedImage atlas2 = ImageIO.read(ClassLoader.getSystemResource("textures/tilesets/2_exterior.png"));
-            
-            atlases.put(0, atlas1);
-            atlases.put(1, atlas2);
-           
-        } catch(IOException e){
-            e.printStackTrace();
-        }
+        BufferedImage atlas1 = ImageMaker.BufferedImageFromSource("textures/tilesets/1_interior.png");
+        BufferedImage atlas2 = ImageMaker.BufferedImageFromSource("textures/tilesets/2_exterior.png");
+
+        atlases.put(0, atlas1);
+        atlases.put(1, atlas2);
     }
 
     @Override

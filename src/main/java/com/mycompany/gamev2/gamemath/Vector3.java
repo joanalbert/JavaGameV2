@@ -119,6 +119,8 @@ public class Vector3 {
                            this.z = Math.rint(this.z));
     }
     
+   
+    
     @Override
     public String toString() {
         return String.format("Vector3(%.3f, %.3f, %.3f)", x, y, z);

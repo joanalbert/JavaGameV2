@@ -7,6 +7,8 @@ package com.mycompany.gamev2.gameobjects.characters;
 import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
+import com.mycompany.gamev2.component.object_components.SpriteComponent.GridCharacterSpriteComponent;
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -18,6 +20,7 @@ import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
+import com.mycompany.gamev2.interfaces.characters.ECharacter;
 import com.mycompany.gamev2.levels.LevelManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -31,6 +34,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     private IA_Walk ia_walk;
     
     private GridMovementComponent movement;
+    private GridCharacterSpriteComponent sprite;
     
     public GridPlayerCharacter2D(){
         this.color = Color.YELLOW;
@@ -49,6 +53,10 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
             this.movement.try_ensure_grid_alignment();
+            
+            this.sprite = new GridCharacterSpriteComponent(this);
+            this.sprite.configure(ECharacter.BRENDAN);
+            this.addComponent(GridCharacterSpriteComponent.class, this.sprite);
         }
         catch(NoSuchLevelComponentException | NonGridLevelException | NullLevelException | NullOwnerTransformException e){
             System.out.println(e.getMessage());
@@ -114,12 +122,16 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         //super.render(event);
         if(!this.isActive) return;
         
+        this.sprite.render(event);
         
-        try {
+        /*try {
+            
+            if(!DebugFlags.getInstance().getShow_level_grids()) return;
+                        
             Graphics2D g = event.getGraphics();
             Vector3 location = getObjectLocation();
-
             LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
+            
             if(grid != null && grid.getIsCameraFollow()){
                 GridLevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(GridLevelCameraComponent.class);
                 Vector3 offset = cam.getCamOffsets();
@@ -133,8 +145,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             else g.setColor(Color.BLUE);
 
             g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
-                        
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
+        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}*/
     }
     
 }

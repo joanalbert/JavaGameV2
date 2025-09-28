@@ -9,6 +9,9 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\GridMovementComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\MovementComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\ObjectComponent.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\SpriteComponent\GridCharacterSpriteComponent.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\SpriteComponent\SpriteComponent.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\SpriteComponent\SpriteImage.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\component\object_components\TransformComponent.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\debug\DebugFlags.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\debug\DebugUtils.java
@@ -53,6 +56,7 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\InputManager.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\input_system\KeyInput.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\characters\ECharacter.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IEventListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.java
@@ -61,6 +65,7 @@ C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\interfaces\ILevel.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\io\GridAndDimensionsWrapper.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\io\gson_deserializers\ColisionTypeDeserializer.java
+C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\io\image\ImageMaker.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\io\JsonReader.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\BaseLevel.java
 C:\Users\J.A\Documents\NetBeansProjects\GameV2\src\main\java\com\mycompany\gamev2\levels\grid\GridLevel_01.java

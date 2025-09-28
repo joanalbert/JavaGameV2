@@ -43,6 +43,9 @@ public class GridMovementComponent extends MovementComponent {
     private Vector3 queued_dir;
     private Vector3 startPos;
     private Vector3 targetPos;
+    private Vector3 facing = Vector3.ZERO;
+
+    
     
     public GridMoveTimer move_timer;
     
@@ -101,27 +104,9 @@ public class GridMovementComponent extends MovementComponent {
         }
         
         // CHECK: if move direction isn't a cardinal one
-        if (!vel.isCardinalDirection()) return;
+        if (!vel.isCardinalDirection() || is_moving) return;
         
-        // QUEUE: only queue a movement if it's inputed towards the end of the current one
-        /*if (is_moving) {
-            double p = this.move_timer.getProgress();
-            if (p >= 0.85d && vel.isCardinalDirection()) this.queued_dir = vel;
-            return;
-        }*/
-        /*if (is_moving) {
-            double p = this.move_timer.getProgress();
-            System.out.println("Movement requested while moving, progress: " + p);
-            if (p >= 0.85d && vel.isCardinalDirection()) {
-                this.queued_dir = vel;
-                System.out.println("Queued direction: " + vel);
-            } else {
-                System.out.println("Input ignored: progress too low or invalid direction");
-            }
-            return;
-        }*/
-        if(is_moving) return;
-        
+                
         // Obtain current grid coordinates while maintaining grid-alignment
         Vector3 grid_coords = Vector3.ZERO;
         try {
@@ -133,6 +118,7 @@ public class GridMovementComponent extends MovementComponent {
         
         // We only move 1 tile at a time
         Vector3 dir = vel.normalize();
+        this.facing = dir;
         
         // Calculate target grid pos
         Vector3 target_grid_coords = grid_coords.plus(dir);
@@ -182,21 +168,7 @@ public class GridMovementComponent extends MovementComponent {
         this.is_moving = false;
         this.is_move_completed = true;
         this.move_timer.stop();
-        
-        /*if (this.queued_dir != null) { // Continuous movement
-            System.out.println("PLAYER MAINTAINING MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
-            
-            Vector3 q = this.queued_dir;
-            this.queued_dir = null;
-            this.initiate_movement(q, 0);
-        } else { // Single tap
-            System.out.println("PLAYER STOP MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
-            
-            this.is_moving = false;
-            this.move_timer.stop();
-        }*/
     }
-    // </editor-fold>
     
     // <editor-fold desc="grid alignment logic">
     private void snapToGridCoords(Vector3 coords) {
@@ -237,7 +209,6 @@ public class GridMovementComponent extends MovementComponent {
         
         return grid_coords;
     }
-    // </editor-fold>
     
     public Vector3 getPrev_dir() {
         return prev_dir;
@@ -301,5 +272,9 @@ public class GridMovementComponent extends MovementComponent {
     
     public boolean is_move_completed() {
         return is_move_completed;
+    }
+    
+    public Vector3 getFacing() {
+        return facing;
     }
 }

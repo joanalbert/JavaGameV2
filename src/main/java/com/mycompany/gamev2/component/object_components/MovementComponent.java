@@ -16,6 +16,7 @@ public class MovementComponent<T extends GameObject> extends ObjectComponent {
     protected TransformComponent owner_transform;
     protected double walk_speed = 0;
     protected Vector3 direction;
+    protected Vector3 facing;
     
     public MovementComponent(T owner){
         super(owner);

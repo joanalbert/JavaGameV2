@@ -52,15 +52,18 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
             if(lse.getOldLevel() != null && lse.getOldLevel().equals(this)) level_windown();
         }
         
-        if(event instanceof TickEvent t_event){
-            tick_level_components(t_event);
-            tick_game_objects(t_event);
-        }
         
         if(event instanceof RenderEvent r_event){
             render_level_components(r_event);
             render_game_objects(r_event);
         }
+        
+        if(event instanceof TickEvent t_event){
+            tick_level_components(t_event);    
+            tick_game_objects(t_event);            
+        }
+        
+        
     }
 
     @Override

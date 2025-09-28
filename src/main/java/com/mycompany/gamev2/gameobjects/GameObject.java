@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.gameobjects;
 
+import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
 import com.mycompany.gamev2.component.object_components.TransformComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
@@ -12,6 +13,7 @@ import com.mycompany.gamev2.gamemath.Vector3;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -53,6 +55,13 @@ public class GameObject {
         else return null;
     }
     
+    public <T extends ObjectComponent> Optional<T> tryGetComponent(Class<T> type) {
+        ObjectComponent comp = this.components.get(type);
+        if (comp == null || !type.isInstance(comp)) return Optional.empty();
+        return Optional.of(type.cast(comp));
+    }
+    
+       
     protected <T extends ObjectComponent> void removeComponent(ObjectComponent comp){
         this.components.remove(comp);
     }
