@@ -38,7 +38,7 @@ public class LevelGridComponent extends LevelComponent {
     //grid config fields
     private int tile_width = 0;
     private int tile_height = 0;
-    private int tile_size = 32;
+    private int tile_size = 64;
     private boolean viewpoert_culling;
     private boolean override_json_grid_dimensions = true;
     private boolean camera_follow = false;
@@ -90,7 +90,7 @@ public class LevelGridComponent extends LevelComponent {
         JsonReader reader = JsonReader.getInstance();
         
         if(this.override_json_grid_dimensions){
-            tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); //pass in user defined widht and height
+            tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); //pass in user defined width and height
         }
         else{
             GridAndDimensionsWrapper wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); // ignore user defined width and height, the ones in the json will be used
@@ -239,7 +239,7 @@ public class LevelGridComponent extends LevelComponent {
        
         // Draw the specific region of the atlas
         g.drawImage(atlas, 
-            destX, destY, destX + tile_size, destY + tile_size, // Destination rectangle
+            destX, destY, destX+tile_size, destY+tile_size, // Destination rectangle
             srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
             null);
         

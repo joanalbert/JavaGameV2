@@ -131,7 +131,7 @@ public class InputManager implements IGameUpdateListener {
                 //is discrete
                 } else{
                     // Handle trigger inputs
-                    // no discreen input actions exist as of yet
+                    // no discrete input actions exist as of yet
                     
                     if(!ShouldSkip(binding)){
                         if(binding.getIsOneShot()){

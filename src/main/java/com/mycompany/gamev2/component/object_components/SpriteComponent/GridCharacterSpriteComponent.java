@@ -75,6 +75,10 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
            
       //get the location to draw to, taking into account camera offsets
       Vector3 location = this.owner.getObjectLocation();
+      if(location == null) {
+          System.out.println("spire null owner location");
+          return;
+      }
           
       //change location based on camera
       try{
@@ -100,8 +104,8 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       int r_height = 40;
       
       //offsets to center the final render to the tile (vertically and horizontally)
-      int x_offset = 1;
-      int y_offset = -9;;
+      int x_offset = 2;
+      int y_offset = -11;
       
       //apply offsets
       int x = dest_x + x_offset;

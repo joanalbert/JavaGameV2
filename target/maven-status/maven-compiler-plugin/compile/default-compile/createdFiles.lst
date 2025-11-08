@@ -21,6 +21,7 @@ com\mycompany\gamev2\event_system\EventManager.class
 com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
 com\mycompany\gamev2\input_system\InputManager$2.class
 com\mycompany\gamev2\input_system\BindKey$Axis.class
+com\mycompany\gamev2\Utils\BasicTimer.class
 com\mycompany\gamev2\interfaces\event_listeners\IWorldListener.class
 com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\component\level_components\camera_component\GridLevelCameraComponent.class

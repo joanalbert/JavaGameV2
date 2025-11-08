@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.input_system.InputActions;
 
+import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.input_system.BindKey;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -32,6 +33,7 @@ public abstract class InputAction {
     
     protected Consumer<InputAction> onTrigger; //callback for handling
     
+    public double heldTime = 0d;
     
     public InputAction(String name, ActionType type){
         this.name = name;
@@ -45,6 +47,8 @@ public abstract class InputAction {
         }
     }
     
+    
+        
     public void setValue(float value){
         this.value = value;
         if(onTrigger != null){
@@ -77,9 +81,21 @@ public abstract class InputAction {
         for(BindKey k : y_keys){
             y_scale = Math.clamp(y_scale + k.getAxisScale(), -1, 1);
         }
+    
+        this.compute_held_time(new Vector3(x_scale, y_scale, 0), deltaTime);
         
         this.setAxisValues(x_scale, y_scale);
         this.deltaTime = deltaTime;
+    }
+    
+    private void compute_held_time(Vector3 axis_scales, double delta){
+        boolean isZero = axis_scales.equals(Vector3.ZERO);
+        
+        if(!isZero){
+            this.heldTime += delta;
+        }
+        else this.heldTime = 0d;
+        
     }
     
     public void trigger(){

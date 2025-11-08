@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.component.object_components;
 
 import com.mycompany.gamev2.GameLoopV2;
+import com.mycompany.gamev2.Utils.BasicTimer;
 import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
@@ -35,18 +36,20 @@ public class GridMovementComponent extends MovementComponent {
     private boolean is_moving = false;
     private boolean is_move_completed = false;
 
-    
+    //tap detection stuff
+    private BasicTimer tap_timer;
+    private double tap_threshold = .225d;
+    public boolean tap = false;
     
     private LevelGridComponent grid_component;
     
     private Vector3 prev_dir;
-    private Vector3 queued_dir;
+    private Vector3 vel = Vector3.ZERO;
     private Vector3 startPos;
     private Vector3 targetPos;
     private Vector3 facing = Vector3.ZERO;
 
-    
-    
+        
     public GridMoveTimer move_timer;
     
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
@@ -61,12 +64,13 @@ public class GridMovementComponent extends MovementComponent {
         
         // Initialize timer
         this.move_timer = new GridMoveTimer(0.225d, this::timer_onComplete);
+        this.tap_timer = new BasicTimer(tap_threshold/2);
     }
 
     @Override
     public void tick(TickEvent event) {
         
-                               
+        //this.tap = false;
         // Reset start-stop transitions
         this.stopped_moving = false;
         this.started_moving = false;
@@ -95,18 +99,93 @@ public class GridMovementComponent extends MovementComponent {
         }
     }
     
-    // <editor-fold desc="movement logic">
-    public void initiate_movement(Vector3 vel, double deltaTime) {
-        // Catch exception
-        if (owner_transform == null) {
-            System.out.println("Cant apply movement: owner transform is not set");
-            return;
+    
+    private void is_tap_v2(Vector3 _vel){
+        double f = GameLoopV2.getInstance().getFrames();    
+        boolean zero = _vel.equals(Vector3.ZERO);
+       
+        if(!zero && !this.was_moving){
+            //new movement has just been initiated (i think) so we start the "tap" timer
+            System.out.println("START: "+f);
+            this.tap_timer.start();
+        }
+       
+        if(this.was_moving && !this.is_moving) {
+            System.out.println("STOP "+f);
+            
+            //once movement is over we bring the 'tap' flag back to normal
+            this.tap = false;
         }
         
-        // CHECK: if move direction isn't a cardinal one
-        if (!vel.isCardinalDirection() || is_moving) return;
+        if(this.is_moving){
+            //if(this.tap_timer.isRunning()) System.out.println("timer on: "+f);
+            //else System.out.println("timer off: "+f);
+        }
         
-                
+        if(this.was_moving && this.is_moving && !this.is_move_completed && zero) {
+            //movement is still not complete, but key is released...
+            //System.out.println("END: "+f);
+            
+            //if this happens while the tap-timer is running, we've got a tap!
+            if(this.tap_timer.isRunning()) {
+                System.out.println("TAP: "+f);
+                this.tap = true;
+                this.tap_timer.stop();
+                this.tap_timer.reset();
+            }
+        }
+    }
+    
+    
+    private void cancelMovement(){
+        if (is_moving) {
+            owner_transform.setLocation(startPos);
+            is_moving = false;
+            move_timer.stop();
+            if (move_timer instanceof GridMoveTimer gt) gt.reset();
+        }
+        this.tap = false;
+    }
+    
+    double heldTime = 0d;
+        
+    // <editor-fold desc="movement logic">
+    public void initiate_movement(Vector3 _vel, double deltaTime) {
+        // Catch exception
+        if (owner_transform == null) {
+            //System.out.println("Cant apply movement: owner transform is not set");
+            return;
+        }
+      
+        boolean inputActive = !_vel.equals(Vector3.ZERO);
+        boolean isCardinal  = _vel.isCardinalDirection();
+        /*double f = GameLoopV2.getInstance().getFrames();                          
+        
+        if(inputActive){
+            this.heldTime += deltaTime;
+            this.tap = false;
+        }
+        else {
+            if(this.heldTime > 0 && this.heldTime < this.tap_threshold) {
+                this.tap = true;
+                System.out.println("TAP: "+f);
+            }
+            this.heldTime = 0d;
+        }
+        
+        if(this.tap){
+            Vector3 new_facing = _vel.normalize();
+            if(!new_facing.equals(this.facing)){
+                this.cancelMovement();
+                this.facing = _vel.normalize();
+                return;
+            }
+        }*/
+        
+        // CHECK: if move direction isn't a cardinal one
+        if (!isCardinal || is_moving) return;
+        
+                        
         // Obtain current grid coordinates while maintaining grid-alignment
         Vector3 grid_coords = Vector3.ZERO;
         try {
@@ -117,7 +196,8 @@ public class GridMovementComponent extends MovementComponent {
         }
         
         // We only move 1 tile at a time
-        Vector3 dir = vel.normalize();
+        Vector3 dir = _vel.normalize();
+        this.vel = _vel;
         this.facing = dir;
         
         // Calculate target grid pos
@@ -149,7 +229,7 @@ public class GridMovementComponent extends MovementComponent {
         // Update movement flag
         is_moving = true;
         
-        System.out.println("pos: "+this.owner_transform.getLocation().toString()+"PLAYER START MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
+        //System.out.println("pos: "+this.owner_transform.getLocation().toString()+"PLAYER START MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
         this.move_timer.start();
     }
     
@@ -163,7 +243,7 @@ public class GridMovementComponent extends MovementComponent {
         // Update location
         this.owner_transform.setLocation(this.targetPos);
         
-        System.out.println("PLAYER STOP MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
+        //System.out.println("PLAYER STOP MOVEMENT FRAME: " + GameLoopV2.getInstance().getFrames());
             
         this.is_moving = false;
         this.is_move_completed = true;
@@ -174,7 +254,7 @@ public class GridMovementComponent extends MovementComponent {
     private void snapToGridCoords(Vector3 coords) {
         // Catch exception
         if (owner_transform == null) {
-            System.out.println("GridMovementComponent can't snap owner to grid: owner transform is not set");
+            //System.out.println("GridMovementComponent can't snap owner to grid: owner transform is not set");
             return;
         }
         
@@ -201,7 +281,7 @@ public class GridMovementComponent extends MovementComponent {
         
         // Ensure the owner remains grid-aligned
         if (!Utils.isInteger(grid_coords.getX()) || !Utils.isInteger(grid_coords.getY())) {
-            System.out.println("GridMovementComponent snapping owner to grid");
+            //System.out.println("GridMovementComponent snapping owner to grid");
             Vector3 corrected_grid_coords = grid_coords.getRoundComponents();
             this.snapToGridCoords(corrected_grid_coords);
             return corrected_grid_coords;
@@ -218,14 +298,7 @@ public class GridMovementComponent extends MovementComponent {
         this.prev_dir = prev_dir;
     }
 
-    public Vector3 getQueued_dir() {
-        return queued_dir;
-    }
-
-    public void setQueued_dir(Vector3 queued_dir) {
-        this.queued_dir = queued_dir;
-    }
-
+   
     public Vector3 getStartPos() {
         return startPos;
     }
@@ -276,5 +349,9 @@ public class GridMovementComponent extends MovementComponent {
     
     public Vector3 getFacing() {
         return facing;
+    }
+    
+    public void setFacing(Vector3 v){
+        if(v.isCardinalDirection() && !v.equals(Vector3.ZERO)) this.facing = v;
     }
 }

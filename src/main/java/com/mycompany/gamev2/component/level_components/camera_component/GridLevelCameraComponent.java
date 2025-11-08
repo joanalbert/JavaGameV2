@@ -83,7 +83,7 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
             //if( target_movement.getStarted_moving() || target_movement.is_move_completed() ) {
             if(target_movement.getStarted_moving() || (target_movement.is_move_completed() && target_movement.getIsMoving())){    
                 double frames = GameLoopV2.getInstance().getFrames();
-                System.out.println("frame: "+frames+" CAM MOVE");
+                //System.out.println("frame: "+frames+" CAM MOVE");
                 this.target_current_position = target_movement.getStartPos(); //this.target.getObjectLocation();  
                 this.target_destination_position = target_movement.getTargetPos();
                 this.cam_is_moving = true;
@@ -94,14 +94,14 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
             //target has stopped moving this frame
             if(target_movement.getStopped_moving()) {
                 double frames = GameLoopV2.getInstance().getFrames();
-                System.out.println("frame: "+frames+" CAM STOP - " +target_movement.is_move_completed());
+                //System.out.println("frame: "+frames+" CAM STOP - " +target_movement.is_move_completed());
                 
                 this.position = this.target.getObjectLocation(); //target_movement.getTargetPos();
                 this.cam_is_moving = false;
                 this.timer.stop();
                 
-                System.out.println("____END____");
-                System.out.println(this.target.getObjectLocation().toString()+" "+this.position.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
+                //System.out.println("____END____");
+                //System.out.println(this.target.getObjectLocation().toString()+" "+this.position.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
             }
             
             
@@ -124,6 +124,6 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
         this.position = newLocation;
         
         
-        System.out.println("t: "+t+" "+this.target.getObjectLocation().toString()+" "+newLocation.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
+        //System.out.println("t: "+t+" "+this.target.getObjectLocation().toString()+" "+newLocation.toString()+" "+this.target_current_position.toString()+" "+this.target_destination_position);
     }
 }

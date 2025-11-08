@@ -21,9 +21,7 @@ import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
-import com.mycompany.gamev2.levels.LevelManager;
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -47,7 +45,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         
         //initialize character specific components
         
-        //movement
+        //components
         try{
             this.movement = new GridMovementComponent(this); //this line could throw an exception
             this.addComponent(GridMovementComponent.class, this.movement);
@@ -80,21 +78,40 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
 
         ia_walk.setOnTriggered(action -> {
             if (action instanceof IA_Walk walkAction) {
-                this.move(walkAction);
+                this.process_IA_Walk(ia_walk);
             }
         });
     }
     
-    private void move(IA_Walk walkAction){
-        Vector3 v = new Vector3(walkAction.getAxisValues()[0],
-                                walkAction.getAxisValues()[1], 0); 
+    private void process_IA_Walk(IA_Walk walkAction){
+        Vector3 v = new Vector3(walkAction.getAxisValues()[0], walkAction.getAxisValues()[1], 0);
+       
+        double tap_threshold = 0.225/2.5;
         
+        if(walkAction.heldTime > 0d &&
+           walkAction.heldTime < tap_threshold) {
+            
+            Vector3 new_facing = v.normalize();
+            Vector3 old_facing = this.movement.getFacing().normalize();
+            boolean same = new_facing.equals(old_facing);
+            
+            if(!same) this.face(new_facing);
+            else this.move(v, walkAction.getDeltaTime());
+        }
+        else this.move(v, walkAction.getDeltaTime());
+        
+    }
+    
+    private void face(Vector3 v){ 
+        if(this.movement == null) return;
+        this.movement.setFacing(v);
+    }
+    
+    private void move(Vector3 v, double deltaTime){        
         if(this.movement == null) return; //movement component not initialized
-        
-        if(v.equals(Vector3.ZERO)) return; //no movement
-        
+             
         //delegate movement to MovementComponent
-        this.movement.initiate_movement(v, walkAction.getDeltaTime());
+        this.movement.initiate_movement(v, deltaTime);
     }
 
     
@@ -112,6 +129,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     public void tick(TickEvent event) {
         super.tick(event);
         //we do nothing here (we override super behavior)
+        
+        
         
     }
 
