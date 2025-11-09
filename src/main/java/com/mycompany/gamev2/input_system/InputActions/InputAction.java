@@ -33,8 +33,12 @@ public abstract class InputAction {
     
     protected Consumer<InputAction> onTrigger; //callback for handling
     
-    public double heldTime = 0d;
-    
+    protected double heldTime = 0d;
+    protected double last_heldTime = 0d;
+
+    protected Vector3 last_nonzero_axis2d_input;
+
+       
     public InputAction(String name, ActionType type){
         this.name = name;
         this.type = type;
@@ -91,10 +95,14 @@ public abstract class InputAction {
     private void compute_held_time(Vector3 axis_scales, double delta){
         boolean isZero = axis_scales.equals(Vector3.ZERO);
         
-        if(!isZero){
-            this.heldTime += delta;
+        if(isZero){
+            this.last_heldTime = this.heldTime;
+            this.heldTime = 0d;
         }
-        else this.heldTime = 0d;
+        else {
+            this.heldTime += delta;
+            this.last_nonzero_axis2d_input = axis_scales;
+        }
         
     }
     
@@ -133,4 +141,21 @@ public abstract class InputAction {
     public double getDeltaTime(){
         return deltaTime;
     }
+    
+    public double getLast_heldTime() {
+        return last_heldTime;
+    }
+
+       
+    public double getHeldTime() {
+        return heldTime;
+    }
+
+    
+    public Vector3 getLast_nonzero_axis2d_input() {
+        if(this.last_nonzero_axis2d_input != null)return last_nonzero_axis2d_input;
+        else return new Vector3(0,0,0);
+    }
+
+    
 }

@@ -47,7 +47,7 @@ public class GridMovementComponent extends MovementComponent {
     private Vector3 vel = Vector3.ZERO;
     private Vector3 startPos;
     private Vector3 targetPos;
-    private Vector3 facing = Vector3.ZERO;
+    private Vector3 facing = Vector3.DOWN;
 
         
     public GridMoveTimer move_timer;

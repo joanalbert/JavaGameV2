@@ -4,11 +4,9 @@
  */
 package com.mycompany.gamev2.gameobjects.characters;
 
-import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
+import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.SpriteComponent.GridCharacterSpriteComponent;
-import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -83,27 +81,49 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         });
     }
     
+    
+   
     private void process_IA_Walk(IA_Walk walkAction){
         Vector3 v = new Vector3(walkAction.getAxisValues()[0], walkAction.getAxisValues()[1], 0);
        
-        double tap_threshold = 0.225/2.5;
-        
-        if(walkAction.heldTime > 0d &&
-           walkAction.heldTime < tap_threshold) {
+        double tap_threshold = 0.225d * 0.48d;
+        double f = GameLoopV2.getInstance().getFrames();
+        double last_heldTime = walkAction.getLast_heldTime();
+        double heldTime = walkAction.getHeldTime();
+                
+        //we use previous held time, because we can only infer a 'tap' happened, AFTER it's happened, i.e after the input is 'released'
+        if(last_heldTime > 0d && last_heldTime < tap_threshold) {
             
-            Vector3 new_facing = v.normalize();
+                        
+            Vector3 new_facing = walkAction.getLast_nonzero_axis2d_input().normalize();
             Vector3 old_facing = this.movement.getFacing().normalize();
             boolean same = new_facing.equals(old_facing);
             
-            if(!same) this.face(new_facing);
-            else this.move(v, walkAction.getDeltaTime());
+            //System.out.println("new: "+new_facing.toString());
+            //System.out.println("old: "+old_facing.toString());
+            
+            if(same) {
+                this.move(old_facing, walkAction.getDeltaTime());
+                System.out.println("TAP: move "+f);
+            }
+            else {
+                this.face(new_facing);
+                System.out.println("TAP: face "+f);
+            }
+            
+          
         }
-        else this.move(v, walkAction.getDeltaTime());
         
+        
+        if(heldTime > tap_threshold){
+            System.out.println("no tap "+f);
+            this.move(v, walkAction.getDeltaTime());
+        }
+            
     }
     
     private void face(Vector3 v){ 
-        if(this.movement == null) return;
+        if(this.movement == null || this.movement.getIs_moving()) return;
         this.movement.setFacing(v);
     }
     
