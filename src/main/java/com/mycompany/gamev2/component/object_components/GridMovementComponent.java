@@ -4,13 +4,16 @@
  */
 package com.mycompany.gamev2.component.object_components;
 
+
 import com.mycompany.gamev2.GameLoopV2;
-import com.mycompany.gamev2.Utils.BasicTimer;
 import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.debug.DebugUtils;
+import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent;
+import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent.ECharacterStepSide;
 import com.mycompany.gamev2.exceptions.ExceptionUtils;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -20,9 +23,10 @@ import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
-
+import com.mycompany.gamev2.gameobjects.characters.Character;
 /**
  *
  * @author J.A
@@ -36,10 +40,7 @@ public class GridMovementComponent extends MovementComponent {
     private boolean is_moving = false;
     private boolean is_move_completed = false;
 
-    //tap detection stuff
-    private BasicTimer tap_timer;
-    private double tap_threshold = .225d;
-    public boolean tap = false;
+    
     
     private LevelGridComponent grid_component;
     
@@ -64,7 +65,6 @@ public class GridMovementComponent extends MovementComponent {
         
         // Initialize timer
         this.move_timer = new GridMoveTimer(0.225d, this::timer_onComplete);
-        this.tap_timer = new BasicTimer(tap_threshold/2);
     }
 
     @Override
@@ -99,7 +99,11 @@ public class GridMovementComponent extends MovementComponent {
         }
     }
     
-    
+    //<editor-fold desc="old code">
+    //UNUSED: but i dont remove it because it was a good learnin experience (TAP IS NO LONGER DETECTED HERE)
+    /*private BasicTimer tap_timer;
+    private double tap_threshold = .225d;
+    public boolean tap = false;
     private void is_tap_v2(Vector3 _vel){
         double f = GameLoopV2.getInstance().getFrames();    
         boolean zero = _vel.equals(Vector3.ZERO);
@@ -134,9 +138,10 @@ public class GridMovementComponent extends MovementComponent {
                 this.tap_timer.reset();
             }
         }
-    }
+    }*/
+    //</editor-fold>
     
-    
+    //UNUSED FOR NOW: but i leave it, because to be able to cancel a movement feels like a needed core function
     private void cancelMovement(){
         if (is_moving) {
             owner_transform.setLocation(startPos);
@@ -144,48 +149,30 @@ public class GridMovementComponent extends MovementComponent {
             move_timer.stop();
             if (move_timer instanceof GridMoveTimer gt) gt.reset();
         }
-        this.tap = false;
     }
     
-    double heldTime = 0d;
-        
+            
     // <editor-fold desc="movement logic">
     public void initiate_movement(Vector3 _vel, double deltaTime) {
         // Catch exception
         if (owner_transform == null) {
-            //System.out.println("Cant apply movement: owner transform is not set");
+            System.out.println("Cant apply movement: owner transform is not set");
             return;
         }
       
-        boolean inputActive = !_vel.equals(Vector3.ZERO);
-        boolean isCardinal  = _vel.isCardinalDirection();
-        /*double f = GameLoopV2.getInstance().getFrames();                          
-        
-        if(inputActive){
-            this.heldTime += deltaTime;
-            this.tap = false;
-        }
-        else {
-            if(this.heldTime > 0 && this.heldTime < this.tap_threshold) {
-                this.tap = true;
-                System.out.println("TAP: "+f);
-            }
-            this.heldTime = 0d;
-        }
-        
-        if(this.tap){
-            Vector3 new_facing = _vel.normalize();
-            if(!new_facing.equals(this.facing)){
-                this.cancelMovement();
-                this.facing = _vel.normalize();
-                return;
-            }
-        }*/
         
         // CHECK: if move direction isn't a cardinal one
+        boolean isCardinal  = _vel.isCardinalDirection();
         if (!isCardinal || is_moving) return;
         
-                        
+        // We only move 1 tile at a time so we normalize the input
+        Vector3 dir = _vel.normalize();
+        this.vel = _vel;
+        
+        //update our facing direction to the movement direction
+        this.facing = dir;
+           
+                
         // Obtain current grid coordinates while maintaining grid-alignment
         Vector3 grid_coords = Vector3.ZERO;
         try {
@@ -195,32 +182,21 @@ public class GridMovementComponent extends MovementComponent {
             return;
         }
         
-        // We only move 1 tile at a time
-        Vector3 dir = _vel.normalize();
-        this.vel = _vel;
-        this.facing = dir;
-        
         // Calculate target grid pos
         Vector3 target_grid_coords = grid_coords.plus(dir);
         
         // Check if target is within bounds
-        if (target_grid_coords.getX() < 0 || target_grid_coords.getX() >= grid_component.getTileWidth() ||
-            target_grid_coords.getY() < 0 || target_grid_coords.getY() >= grid_component.getTileHeight()) {
+        if (!this.target_check_within_bounds(target_grid_coords)) {
             System.out.println("Movement blocked: Target tile out of bounds");
             return;
         }
         
         // COLLISION CHECK
-        try {
-            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords);
-            if (colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
-                colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)) {
-                System.out.println("Movement blocked: world collision");
-                return;
-            }
-        } catch (NoSuchGridTileException e) {
-            System.out.println(e.getMessage());
+        if(this.target_check_is_blocked(target_grid_coords)){
+            System.out.println("Movement blocked: world collision");
+            return;
         }
+          
         
         // Prepare start and target positions for the movement
         this.startPos = this.grid_component.GridCoords_to_ScreenLoc(grid_coords);
@@ -233,12 +209,41 @@ public class GridMovementComponent extends MovementComponent {
         this.move_timer.start();
     }
     
+    private boolean target_check_within_bounds(Vector3 target_grid_coords){
+        // Check if target is within bounds
+        if (target_grid_coords.getX() < 0 || target_grid_coords.getX() >= grid_component.getTileWidth() ||
+            target_grid_coords.getY() < 0 || target_grid_coords.getY() >= grid_component.getTileHeight()) {
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean target_check_is_blocked(Vector3 target_grid_coords){
+        try {
+            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords);
+            if (colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+                colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)) {
+                return true;
+            }
+        } catch (NoSuchGridTileException e) {
+            System.out.println(e.getMessage());
+        }
+         
+        return false;
+    }
+    
     private void process_movement(double deltaSeconds) {
         double t = this.move_timer.getProgress();
         Vector3 newLocation = Utils.dlerp(this.startPos, this.targetPos, t);
+    
+        //we post step events for anyonw whos interested (eg: animation)
+        this.post_step_events(t);
+        
+               
         this.owner_transform.setLocation(newLocation);
     }
     
+        
     private void timer_onComplete() {
         // Update location
         this.owner_transform.setLocation(this.targetPos);
@@ -288,6 +293,32 @@ public class GridMovementComponent extends MovementComponent {
         }
         
         return grid_coords;
+    }
+    
+    private void post_step_events(double t){
+        
+        double f = GameLoopV2.getInstance().getFrames();
+        System.out.println(f);
+                        
+        //at step_timer progress t=.3 & .7 which roughly correspond to frames 4-8 and 12-16 for left and right steps (arbitrarily chosen) 
+        if(this.owner instanceof Character char_owner){
+          ECharacterStepSide step = ECharacterStepSide.NEUTRAL;
+            
+          if(t >= 0.3d && t <= 0.37d){ 
+              //System.out.println("LEFT: "+f);
+              step = ECharacterStepSide.LEFT;
+              CharacterStepEvent stepEvent = new CharacterStepEvent(char_owner, step);            
+              EventManager.getInstance().post(stepEvent, IGameplayListener.class);
+          }
+          else if (t >= 0.7d && t <= 0.77) {
+              //System.out.println("RIGHT: "+f);
+              step = ECharacterStepSide.RIGHT;
+              CharacterStepEvent stepEvent = new CharacterStepEvent(char_owner, step);            
+              EventManager.getInstance().post(stepEvent, IGameplayListener.class);
+          }            
+          
+          
+        } 
     }
     
     public Vector3 getPrev_dir() {

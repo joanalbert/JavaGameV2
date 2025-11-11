@@ -86,7 +86,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
     private void process_IA_Walk(IA_Walk walkAction){
         Vector3 v = new Vector3(walkAction.getAxisValues()[0], walkAction.getAxisValues()[1], 0);
        
-        double tap_threshold = 0.225d * 0.48d;
+        //double tap_threshold = 0.225d * 0.48d;
+        double tap_threshold = 0.225d * 0.62d;
         double f = GameLoopV2.getInstance().getFrames();
         double last_heldTime = walkAction.getLast_heldTime();
         double heldTime = walkAction.getHeldTime();
@@ -104,11 +105,11 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
             
             if(same) {
                 this.move(old_facing, walkAction.getDeltaTime());
-                System.out.println("TAP: move "+f);
+                //System.out.println("TAP: move "+f);
             }
             else {
                 this.face(new_facing);
-                System.out.println("TAP: face "+f);
+                //System.out.println("TAP: face "+f);
             }
             
           
@@ -116,7 +117,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         
         
         if(heldTime > tap_threshold){
-            System.out.println("no tap "+f);
+            //System.out.println("no tap "+f);
             this.move(v, walkAction.getDeltaTime());
         }
             

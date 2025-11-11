@@ -8,12 +8,17 @@ import com.mycompany.gamev2.component.level_components.camera_component.GridLeve
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
+import com.mycompany.gamev2.event_system.EventManager;
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent;
+import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent.ECharacterStepSide;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
+import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
 import com.mycompany.gamev2.io.image.ImageMaker;
 import com.mycompany.gamev2.levels.LevelManager;
 import java.awt.Graphics2D;
@@ -25,7 +30,7 @@ import java.util.Optional;
  *
  * @author J.A
  */
-public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> extends ObjectComponent {
+public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> extends ObjectComponent implements IGameplayListener {
     
     //owner info
     protected GridMovementComponent owner_movement;
@@ -40,13 +45,32 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
     protected SpriteImage active_image;
     
     int walk_index = 0;
+    private ECharacterStepSide current_step;
     
         
     public GridCharacterSpriteComponent(T owner){
          super(owner);
          Optional<GridMovementComponent> op = owner.tryGetComponent(GridMovementComponent.class);
          this.owner_movement = op.isPresent() ? op.get() : null;
+         
+         EventManager.getInstance().subscribe(this, IGameplayListener.class);
     }
+
+    @Override
+    public void onEventReceived(BaseEvent event) {
+        if(event instanceof CharacterStepEvent step_event){
+            
+            //we only react for step events of this component's owner
+            if(step_event.getCharacter().equals(this.owner)){
+                System.out.println("EVENT RECEIVED: "+step_event.getStep());
+                this.current_step = step_event.getStep();
+            }
+            
+            
+        }
+    }
+    
+    
     
     public void configure(ECharacter character){
         this.character = character;
@@ -101,11 +125,11 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       
       //and these are the dimensions the rendered image should be
       int r_width  = 30;
-      int r_height = 40;
+      int r_height = 41;
       
       //offsets to center the final render to the tile (vertically and horizontally)
       int x_offset = 2;
-      int y_offset = -11;
+      int y_offset = -12;
       
       //apply offsets
       int x = dest_x + x_offset;
@@ -116,7 +140,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       
       g.drawImage(img, 
             x, y, w, h, // Destination rectangle
-            0, this.walk_index, width, height, // Source rectangle
+            0, this.walk_index*height+this.walk_index, width, this.walk_index*height+height+this.walk_index, // Source rectangle
             null);
     }
 
@@ -128,6 +152,12 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
         this.owner_is_moving = this.owner_movement.getIsMoving();
         
         if(!this.owner_is_moving) this.walk_index = 0;
+        
+        if(this.owner_is_moving){
+            if(this.current_step == ECharacterStepSide.LEFT) this.walk_index = 1;
+            else if(this.current_step == ECharacterStepSide.RIGHT) this.walk_index = 2;                        
+            else this.walk_index = 0;
+        }
         
         if(this.owner_facing_direction.equals(Vector3.UP)){
             this.active_image = this.images.get("up");
