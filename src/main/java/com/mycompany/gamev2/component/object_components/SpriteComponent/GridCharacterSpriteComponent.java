@@ -70,8 +70,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
         }
     }
     
-    
-    
+       
     public void configure(ECharacter character){
         this.character = character;
         String chara = this.character.getName();
@@ -131,16 +130,19 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       int x_offset = 2;
       int y_offset = -12;
       
+      int step_y_wobble = this.walk_index == 1 ? 1 : -1;
+      if(this.walk_index == 0) step_y_wobble = 0;
+      
       //apply offsets
       int x = dest_x + x_offset;
-      int y = dest_y + y_offset;
+      int y = dest_y + y_offset + step_y_wobble;
       int w = dest_x + r_width  + x_offset;
-      int h = dest_y + r_height + y_offset;
+      int h = dest_y + r_height + y_offset + step_y_wobble;
       
       
       g.drawImage(img, 
-            x, y, w, h, // Destination rectangle
-            0, this.walk_index*height+this.walk_index, width, this.walk_index*height+height+this.walk_index, // Source rectangle
+            x, y, w, h, // top-left and bottom-right corners of destination rectangle
+            0, this.walk_index*height+this.walk_index, width, this.walk_index*height+height+this.walk_index, // top-left and bottom-right corners of origin rectangle
             null);
     }
 

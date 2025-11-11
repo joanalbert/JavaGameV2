@@ -29,7 +29,7 @@ public class GridLevelCameraComponent extends LevelCameraComponent {
     
     public GridLevelCameraComponent(BaseLevel level){
         super(level);
-        this.timer = new GridMoveTimer(0.225d, null);
+        this.timer = new GridMoveTimer(0.268d, null);
         //this.position = this.target.getObjectLocation();
     }
     

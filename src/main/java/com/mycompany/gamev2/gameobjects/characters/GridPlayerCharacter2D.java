@@ -87,7 +87,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         Vector3 v = new Vector3(walkAction.getAxisValues()[0], walkAction.getAxisValues()[1], 0);
        
         //double tap_threshold = 0.225d * 0.48d;
-        double tap_threshold = 0.225d * 0.62d;
+        //double tap_threshold = 0.225d * 0.62d;
+        double tap_threshold = this.movement.move_duration * 0.62d;
         double f = GameLoopV2.getInstance().getFrames();
         double last_heldTime = walkAction.getLast_heldTime();
         double heldTime = walkAction.getHeldTime();

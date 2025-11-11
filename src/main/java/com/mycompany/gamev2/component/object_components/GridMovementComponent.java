@@ -40,6 +40,9 @@ public class GridMovementComponent extends MovementComponent {
     private boolean is_moving = false;
     private boolean is_move_completed = false;
 
+    //step flags
+    private boolean leftFired = false;
+    private boolean rightFired = false;
     
     
     private LevelGridComponent grid_component;
@@ -52,6 +55,7 @@ public class GridMovementComponent extends MovementComponent {
 
         
     public GridMoveTimer move_timer;
+    public double move_duration = 0.268d;
     
     public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
         super(owner); // Call super constructor, sets a reference to the owner's transform component
@@ -63,8 +67,8 @@ public class GridMovementComponent extends MovementComponent {
         if (grid != null) this.grid_component = grid;
         else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
         
-        // Initialize timer
-        this.move_timer = new GridMoveTimer(0.225d, this::timer_onComplete);
+        // Initialize timer 0.225
+        this.move_timer = new GridMoveTimer(this.move_duration, this::timer_onComplete);
     }
 
     @Override
@@ -300,25 +304,29 @@ public class GridMovementComponent extends MovementComponent {
         double f = GameLoopV2.getInstance().getFrames();
         System.out.println(f);
                         
-        //at step_timer progress t=.3 & .7 which roughly correspond to frames 4-8 and 12-16 for left and right steps (arbitrarily chosen) 
-        if(this.owner instanceof Character char_owner){
-          ECharacterStepSide step = ECharacterStepSide.NEUTRAL;
-            
-          if(t >= 0.3d && t <= 0.37d){ 
-              //System.out.println("LEFT: "+f);
-              step = ECharacterStepSide.LEFT;
-              CharacterStepEvent stepEvent = new CharacterStepEvent(char_owner, step);            
-              EventManager.getInstance().post(stepEvent, IGameplayListener.class);
-          }
-          else if (t >= 0.7d && t <= 0.77) {
-              //System.out.println("RIGHT: "+f);
-              step = ECharacterStepSide.RIGHT;
-              CharacterStepEvent stepEvent = new CharacterStepEvent(char_owner, step);            
-              EventManager.getInstance().post(stepEvent, IGameplayListener.class);
-          }            
-          
-          
-        } 
+        //at step_timer progress t=.25-40 & .65-.85 which roughly correspond to frames 4-8 and 12-16 for left and right steps (arbitrarily chosen) 
+        
+        if(t >= 0.25d && t <= 0.40d && !leftFired){ 
+            System.out.println("LEFT: "+f);
+            postStepEvent(ECharacterStepSide.LEFT);
+        }
+        else if (t >= 0.65d && t <= 0.85 && !rightFired) {
+            System.out.println("RIGHT: "+f);
+            postStepEvent(ECharacterStepSide.RIGHT);
+        }  
+
+        if (t <= 0.01 || t >= 0.99) {
+            leftFired = rightFired = false;
+            postStepEvent(ECharacterStepSide.NEUTRAL);
+        }
+                    
+        
+    }
+    
+    private void postStepEvent(ECharacterStepSide step) {
+        if (owner instanceof Character char_owner) {
+            EventManager.getInstance().post(new CharacterStepEvent(char_owner, step), IGameplayListener.class);
+        }
     }
     
     public Vector3 getPrev_dir() {
