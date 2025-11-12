@@ -306,13 +306,15 @@ public class GridMovementComponent extends MovementComponent {
                         
         //at step_timer progress t=.25-40 & .65-.85 which roughly correspond to frames 4-8 and 12-16 for left and right steps (arbitrarily chosen) 
         
-        if(t >= 0.25d && t <= 0.40d && !leftFired){ 
+        if(t >= 0.20d && t <= 0.40d && !leftFired){ 
             System.out.println("LEFT: "+f);
             postStepEvent(ECharacterStepSide.LEFT);
+            leftFired = true;
         }
         else if (t >= 0.65d && t <= 0.85 && !rightFired) {
             System.out.println("RIGHT: "+f);
             postStepEvent(ECharacterStepSide.RIGHT);
+            rightFired = true;
         }  
 
         if (t <= 0.01 || t >= 0.99) {
@@ -320,7 +322,7 @@ public class GridMovementComponent extends MovementComponent {
             postStepEvent(ECharacterStepSide.NEUTRAL);
         }
                     
-        
+       
     }
     
     private void postStepEvent(ECharacterStepSide step) {

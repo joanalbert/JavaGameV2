@@ -130,7 +130,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       int x_offset = 2;
       int y_offset = -12;
       
-      int step_y_wobble = this.walk_index == 1 ? 1 : -1;
+      int step_y_wobble = this.walk_index == 1 ? -1 : 1;
       if(this.walk_index == 0) step_y_wobble = 0;
       
       //apply offsets
@@ -140,10 +140,31 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       int h = dest_y + r_height + y_offset + step_y_wobble;
       
       
+      
+      
+      //FINAL OPERATIONS BEFORE RENDERING
+      // (this needs clarification:
+      //  walk-index is both the frame index (in the atlas) as well as the 1 pixel-tall 'buffer' in between frames)
+      //  top-left and bottom-right corners of origin rectangle
+      int origin_x_top_left = 0;
+      int origin_y_top_left = this.walk_index*height+this.walk_index;
+      
+      int origin_x_bottom_right = width;
+      int origin_y_bottom_right = this.walk_index*height+height+this.walk_index;
+      
       g.drawImage(img, 
-            x, y, w, h, // top-left and bottom-right corners of destination rectangle
-            0, this.walk_index*height+this.walk_index, width, this.walk_index*height+height+this.walk_index, // top-left and bottom-right corners of origin rectangle
+            x, y, // top-left     corner of destination rectangle
+            w, h, // bottom-right corner of destination rectangle
+            origin_x_top_left    , origin_y_top_left,
+            origin_x_bottom_right, origin_y_bottom_right, 
             null);
+      
+       
+      /*g.drawImage(img, 
+            x, y, w, h, // top-left and bottom-right corners of destination rectangle
+            0, this.walk_index*height+this.walk_index, width, this.walk_index*height+height+this.walk_index, 
+            null);*/
+      
     }
 
     @Override
