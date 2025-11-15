@@ -4,10 +4,13 @@
  */
 package com.mycompany.gamev2.event_system.game_events;
 
+import com.mycompany.gamev2.providers.base.ProviderBundle;
+
 /**
  *
  * @author J.A
  */
 public abstract class BaseEvent {
-    
+    protected ProviderBundle providers_bundle = new ProviderBundle();
+    protected ProviderBundle get_providers(){return this.providers_bundle;}
 }

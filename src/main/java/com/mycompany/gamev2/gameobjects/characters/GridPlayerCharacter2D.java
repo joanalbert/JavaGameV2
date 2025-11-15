@@ -19,6 +19,7 @@ import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
+import com.mycompany.gamev2.providers.LevelGridProvider;
 import java.awt.Color;
 
 /**
@@ -45,7 +46,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         
         //components
         try{
-            this.movement = new GridMovementComponent(this); //this line could throw an exception
+            this.movement = new GridMovementComponent(this, new LevelGridProvider()); //this line could throw an exception
             this.addComponent(GridMovementComponent.class, this.movement);
             this.movement.setWalkSpeed(200);
             this.movement.try_ensure_grid_alignment();

@@ -4,8 +4,6 @@
  */
 package com.mycompany.gamev2.component.object_components.SpriteComponent;
 
-import com.mycompany.gamev2.component.level_components.camera_component.GridLevelCameraComponent;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
 import com.mycompany.gamev2.event_system.EventManager;
@@ -14,13 +12,12 @@ import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent;
 import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent.ECharacterStepSide;
-import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
 import com.mycompany.gamev2.io.image.ImageMaker;
-import com.mycompany.gamev2.levels.LevelManager;
+import com.mycompany.gamev2.providers.CameraProvider;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -103,16 +100,13 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
           return;
       }
           
-      //change location based on camera
-      try{
-        LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
-        if(grid != null && grid.getIsCameraFollow()){
-          GridLevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(GridLevelCameraComponent.class);
-          Vector3 offset = cam.getCamOffsets();
-          location = location.minus(offset);
-        }
-      } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}
+      //apply camera offsets for correct render
+      Vector3 offsets = Vector3.ZERO;
+      CameraProvider provider = e.getCameraProvider();
+      if(provider != null) offsets = provider.getCameraOffsets();
+      location = location.minus(offsets);
       
+            
       
       int dest_x = (int) location.getX();
       int dest_y = (int) location.getY();

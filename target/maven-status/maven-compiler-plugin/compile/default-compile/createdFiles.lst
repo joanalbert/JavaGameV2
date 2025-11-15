@@ -30,6 +30,7 @@ com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.class
 com\mycompany\gamev2\io\JsonReader.class
 com\mycompany\gamev2\gamemath\Vector3.class
+com\mycompany\gamev2\interfaces\providers\IGridProvider.class
 com\mycompany\gamev2\levels\grid\GridLevelBase.class
 com\mycompany\gamev2\exceptions\NonGridLevelException.class
 com\mycompany\gamev2\event_system\gameplay_events\CharacterStepEvent.class
@@ -39,12 +40,14 @@ com\mycompany\gamev2\component\ComponentEventListener.class
 com\mycompany\gamev2\gameobjects\characters\Character.class
 com\mycompany\gamev2\debug\DebugFlags.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
+com\mycompany\gamev2\interfaces\providers\ICameraProvider.class
 com\mycompany\gamev2\component\object_components\TransformComponent.class
 com\mycompany\gamev2\input_system\InputContexts\InputContext.class
 com\mycompany\gamev2\exceptions\NoSuchGridTileException.class
 com\mycompany\gamev2\event_system\input_events\KeyPressEvent.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
 com\mycompany\gamev2\input_system\InputActions\IA_Shoot.class
+com\mycompany\gamev2\providers\base\BaseProvider.class
 com\mycompany\gamev2\gamemath\Transform.class
 com\mycompany\gamev2\io\image\ImageMaker.class
 com\mycompany\gamev2\input_system\InputManager.class
@@ -68,6 +71,7 @@ com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\levels\LevelManager.class
 com\mycompany\gamev2\GameV2.class
 com\mycompany\gamev2\input_system\InputManager$3.class
+com\mycompany\gamev2\providers\base\ProviderBundle.class
 com\mycompany\gamev2\event_system\game_events\GameFinishedEvent.class
 com\mycompany\gamev2\interfaces\ILevel.class
 com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.class
@@ -79,8 +83,10 @@ com\mycompany\gamev2\component\object_components\MovementComponent.class
 com\mycompany\gamev2\levels\BaseLevel.class
 com\mycompany\gamev2\event_system\EventBus.class
 com\mycompany\gamev2\event_system\game_events\GameStartEvent.class
+com\mycompany\gamev2\providers\LevelGridProvider.class
 com\mycompany\gamev2\component\object_components\GridMovementComponent.class
 com\mycompany\gamev2\input_system\InputContexts\GridPlayerCharacter_InputContext.class
+com\mycompany\gamev2\providers\CameraProvider.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2.class
 com\mycompany\gamev2\io\GridAndDimensionsWrapper.class
 com\mycompany\gamev2\component\level_components\grid_component\LevelGridTileV2$COLISION_TYPE.class

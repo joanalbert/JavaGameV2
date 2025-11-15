@@ -27,6 +27,8 @@ import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import com.mycompany.gamev2.gameobjects.characters.Character;
+import com.mycompany.gamev2.interfaces.providers.IGridProvider;
+import com.mycompany.gamev2.providers.LevelGridProvider;
 /**
  *
  * @author J.A
@@ -45,7 +47,7 @@ public class GridMovementComponent extends MovementComponent {
     private boolean rightFired = false;
     
     
-    private LevelGridComponent grid_component;
+    private IGridProvider grid_provider;
     
     private Vector3 prev_dir;
     private Vector3 vel = Vector3.ZERO;
@@ -57,15 +59,11 @@ public class GridMovementComponent extends MovementComponent {
     public GridMoveTimer move_timer;
     public double move_duration = 0.268d;
     
-    public GridMovementComponent(GameObject owner) throws NonGridLevelException, NoSuchLevelComponentException, NullLevelException {
+    public GridMovementComponent(GameObject owner, IGridProvider grid_provider) {
         super(owner); // Call super constructor, sets a reference to the owner's transform component
         
+        this.grid_provider = grid_provider;
        
-        // Get the current level's LevelGridComponent and cache it
-        GridLevelBase current_level = LevelManager.getInstance().getCurrentGridLevel();
-        LevelGridComponent grid = current_level.getComponent(LevelGridComponent.class);
-        if (grid != null) this.grid_component = grid;
-        else throw new NoSuchLevelComponentException("Couldn't retrieve the following component: LevelGridComponent from GridLevelBase");
         
         // Initialize timer 0.225
         this.move_timer = new GridMoveTimer(this.move_duration, this::timer_onComplete);
@@ -203,8 +201,8 @@ public class GridMovementComponent extends MovementComponent {
           
         
         // Prepare start and target positions for the movement
-        this.startPos = this.grid_component.GridCoords_to_ScreenLoc(grid_coords);
-        this.targetPos = this.grid_component.GridCoords_to_ScreenLoc(target_grid_coords);
+        this.startPos = this.grid_provider.grid_to_screen(grid_coords);
+        this.targetPos = this.grid_provider.grid_to_screen(target_grid_coords);
         
         // Update movement flag
         is_moving = true;
@@ -215,24 +213,19 @@ public class GridMovementComponent extends MovementComponent {
     
     private boolean target_check_within_bounds(Vector3 target_grid_coords){
         // Check if target is within bounds
-        if (target_grid_coords.getX() < 0 || target_grid_coords.getX() >= grid_component.getTileWidth() ||
-            target_grid_coords.getY() < 0 || target_grid_coords.getY() >= grid_component.getTileHeight()) {
+        if (target_grid_coords.getX() < 0 || target_grid_coords.getX() >= grid_provider.width_in_tiles() ||
+            target_grid_coords.getY() < 0 || target_grid_coords.getY() >= grid_provider.height_in_tiles()) {
             return false;
         }
         return true;
     }
     
     private boolean target_check_is_blocked(Vector3 target_grid_coords){
-        try {
-            LevelGridTileV2.COLISION_TYPE colision_type = this.grid_component.getColisionForTile(target_grid_coords);
-            if (colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
-                colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)) {
-                return true;
-            }
-        } catch (NoSuchGridTileException e) {
-            System.out.println(e.getMessage());
-        }
-         
+        LevelGridTileV2.COLISION_TYPE colision_type = this.grid_provider.colision_at_tile(target_grid_coords);
+        if (colision_type.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+            colision_type.equals(LevelGridTileV2.COLISION_TYPE.SURF)) {
+            return true;
+        } 
         return false;
     }
     
@@ -267,7 +260,7 @@ public class GridMovementComponent extends MovementComponent {
             return;
         }
         
-        Vector3 new_screen_loc = this.grid_component.GridCoords_to_ScreenLoc(coords);
+        Vector3 new_screen_loc = this.grid_provider.grid_to_screen(coords);
         this.owner_transform.setLocation(new_screen_loc);
     }
     
@@ -286,7 +279,7 @@ public class GridMovementComponent extends MovementComponent {
         Vector3 currentPos = owner_transform.getLocation();
         
         // We convert screen location to grid coordinates
-        Vector3 grid_coords = this.grid_component.ScreenLoc_to_GridCoords(currentPos);
+        Vector3 grid_coords = this.grid_provider.screen_to_grid(currentPos);
         
         // Ensure the owner remains grid-aligned
         if (!Utils.isInteger(grid_coords.getX()) || !Utils.isInteger(grid_coords.getY())) {

@@ -131,9 +131,10 @@ public class LevelCameraComponent extends LevelComponent {
                 Graphics2D g = e.getGraphics();
                 LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
 
-                g.setColor(Color.red);
+                
 
                 if(grid.getIsCameraFollow()){
+                    g.setColor(Color.blue);
                     int w = MyWindow.DIMENSIONS.width;
                     int h = MyWindow.DIMENSIONS.height;
                     int x = w / 2 - w / 2; // Screen center - half width
@@ -141,6 +142,7 @@ public class LevelCameraComponent extends LevelComponent {
                     g.drawRect(x, y, w, h); // Draw at screen coordinates
                 }
                 else{
+                    g.setColor(Color.red); 
                     int x = (int) this.bounds.getLeft();
                     int y = (int) this.bounds.getTop();
                     int w = (int) (this.bounds.getRight() - this.bounds.getLeft()); // Width
