@@ -4,6 +4,7 @@
  */
 package com.mycompany.gamev2.component.object_components.SpriteComponent;
 
+import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
 import com.mycompany.gamev2.event_system.EventManager;
@@ -42,8 +43,12 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
     protected SpriteImage active_image;
     
     int walk_index = 0;
-    private ECharacterStepSide current_step;
-    
+    private ECharacterStepSide current_step = ECharacterStepSide.NEUTRAL;
+       
+    //step flags
+    /*private boolean leftFired = false;
+    private boolean rightFired = false;
+    private boolean neutralFired = false;*/
         
     public GridCharacterSpriteComponent(T owner){
          super(owner);
@@ -59,13 +64,14 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
             
             //we only react for step events of this component's owner
             if(step_event.getCharacter().equals(this.owner)){
-                System.out.println("EVENT RECEIVED: "+step_event.getStep());
-                this.current_step = step_event.getStep();
+                //System.out.println("EVENT RECEIVED: "+step_event.getProgress());
+                double t = step_event.getProgress();    
+                this.animate(t);
             }
-            
             
         }
     }
+    
     
        
     public void configure(ECharacter character){
@@ -83,6 +89,32 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
         
         this.active_image = this.images.get("down");
     }
+    
+    private boolean state = true;
+    private boolean state_changed = false;
+    public void animate(double t){
+        double f = GameLoopV2.getInstance().getFrames();
+        
+        
+        
+        if(t > 0.5d && !state_changed){ 
+            //this.current_step = ECharacterStepSide.LEFT;
+            state = !state;
+            state_changed = true;
+            System.out.println(state+" "+f);
+        }
+        
+        if(state) this.current_step = ECharacterStepSide.LEFT;
+        else this.current_step = ECharacterStepSide.RIGHT;
+        
+        if(t >= .6d) this.current_step = ECharacterStepSide.NEUTRAL;
+        
+        if(state_changed && t >= .99d){
+            state_changed = false;
+        }
+
+    }
+    
 
     @Override
     public void render(RenderEvent e) {
@@ -96,7 +128,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       //get the location to draw to, taking into account camera offsets
       Vector3 location = this.owner.getObjectLocation();
       if(location == null) {
-          System.out.println("spire null owner location");
+          System.out.println("sprite null owner location");
           return;
       }
           
@@ -124,8 +156,8 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       int x_offset = 2;
       int y_offset = -12;
       
-      int step_y_wobble = this.walk_index == 1 ? -1 : 1;
-      if(this.walk_index == 0) step_y_wobble = 0;
+      int step_y_wobble = (this.walk_index == 0) ? 0 : 2;
+      
       
       //apply offsets
       int x = dest_x + x_offset;
@@ -168,13 +200,28 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
         this.owner_facing_direction = this.owner_movement.getFacing();
         this.owner_is_moving = this.owner_movement.getIsMoving();
         
-        if(!this.owner_is_moving) this.walk_index = 0;
+        //if(!this.owner_is_moving) this.walk_index = 0;
         
         if(this.owner_is_moving){
-            if(this.current_step == ECharacterStepSide.LEFT) this.walk_index = 1;
-            else if(this.current_step == ECharacterStepSide.RIGHT) this.walk_index = 2;                        
-            else this.walk_index = 0;
+            //if(this.current_step == ECharacterStepSide.LEFT) this.walk_index = 1;
+           // else if(this.current_step == ECharacterStepSide.RIGHT) this.walk_index = 2;                        
+            //else this.walk_index = 0;
+            
+            
         }
+        
+        switch(this.current_step){
+                case ECharacterStepSide.LEFT:
+                    this.walk_index = 1;
+                    break;
+                case ECharacterStepSide.RIGHT:
+                    this.walk_index = 2; 
+                    break;
+                case ECharacterStepSide.NEUTRAL:
+                    this.walk_index = 0;
+                    break;
+                    
+            }
         
         if(this.owner_facing_direction.equals(Vector3.UP)){
             this.active_image = this.images.get("up");

@@ -30,6 +30,12 @@ public class GridPlayerCharacter_InputContext extends InputContext {
         walk_keys.add(new BindKey(KeyEvent.VK_LEFT, -1.0f, BindKey.Axis.X));
         walk_keys.add(new BindKey(KeyEvent.VK_RIGHT, 1.0f, BindKey.Axis.X));
         
+        //WASD
+        walk_keys.add(new BindKey(KeyEvent.VK_W, -1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_S, 1.0f, BindKey.Axis.Y));
+        walk_keys.add(new BindKey(KeyEvent.VK_A, -1.0f, BindKey.Axis.X));
+        walk_keys.add(new BindKey(KeyEvent.VK_D, 1.0f, BindKey.Axis.X));
+        
         addBinding(new InputBinding(walkAction, walk_keys, null, true, true, true));
     }
 }

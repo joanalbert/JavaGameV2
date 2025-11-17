@@ -56,6 +56,7 @@ com\mycompany\gamev2\levels\grid\GridLevel_01.class
 com\mycompany\gamev2\input_system\InputManager$1.class
 com\mycompany\gamev2\input_system\InputActions\InputAction.class
 com\mycompany\gamev2\io\gson_deserializers\ColisionTypeDeserializer.class
+com\mycompany\gamev2\component\object_components\SpriteComponent\GridCharacterSpriteComponent$1.class
 com\mycompany\gamev2\window\MyWindow.class
 com\mycompany\gamev2\input_system\InputActions\IA_Look.class
 com\mycompany\gamev2\exceptions\NoSuchLevelComponentException.class

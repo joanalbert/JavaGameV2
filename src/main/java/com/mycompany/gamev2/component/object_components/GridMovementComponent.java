@@ -5,30 +5,20 @@
 package com.mycompany.gamev2.component.object_components;
 
 
-import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.Utils.GridMoveTimer;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
 import com.mycompany.gamev2.debug.DebugUtils;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent;
-import com.mycompany.gamev2.event_system.gameplay_events.CharacterStepEvent.ECharacterStepSide;
 import com.mycompany.gamev2.exceptions.ExceptionUtils;
-import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
-import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
-import com.mycompany.gamev2.exceptions.NonGridLevelException;
-import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Utils;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
-import com.mycompany.gamev2.levels.LevelManager;
-import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import com.mycompany.gamev2.gameobjects.characters.Character;
 import com.mycompany.gamev2.interfaces.providers.IGridProvider;
-import com.mycompany.gamev2.providers.LevelGridProvider;
 /**
  *
  * @author J.A
@@ -42,10 +32,7 @@ public class GridMovementComponent extends MovementComponent {
     private boolean is_moving = false;
     private boolean is_move_completed = false;
 
-    //step flags
-    private boolean leftFired = false;
-    private boolean rightFired = false;
-    
+     
     
     private IGridProvider grid_provider;
     
@@ -234,8 +221,9 @@ public class GridMovementComponent extends MovementComponent {
         Vector3 newLocation = Utils.dlerp(this.startPos, this.targetPos, t);
     
         //we post step events for anyonw whos interested (eg: animation)
-        this.post_step_events(t);
-        
+        if(this.owner instanceof Character char_owner){
+            EventManager.getInstance().post(new CharacterStepEvent(char_owner, t), IGameplayListener.class);
+        }
                
         this.owner_transform.setLocation(newLocation);
     }
@@ -290,38 +278,6 @@ public class GridMovementComponent extends MovementComponent {
         }
         
         return grid_coords;
-    }
-    
-    private void post_step_events(double t){
-        
-        double f = GameLoopV2.getInstance().getFrames();
-        System.out.println(f);
-                        
-        //at step_timer progress t=.25-40 & .65-.85 which roughly correspond to frames 4-8 and 12-16 for left and right steps (arbitrarily chosen) 
-        
-        if(t >= 0.20d && t <= 0.40d && !leftFired){ 
-            System.out.println("LEFT: "+f);
-            postStepEvent(ECharacterStepSide.LEFT);
-            leftFired = true;
-        }
-        else if (t >= 0.65d && t <= 0.85 && !rightFired) {
-            System.out.println("RIGHT: "+f);
-            postStepEvent(ECharacterStepSide.RIGHT);
-            rightFired = true;
-        }  
-
-        if (t <= 0.01 || t >= 0.99) {
-            leftFired = rightFired = false;
-            postStepEvent(ECharacterStepSide.NEUTRAL);
-        }
-                    
-       
-    }
-    
-    private void postStepEvent(ECharacterStepSide step) {
-        if (owner instanceof Character char_owner) {
-            EventManager.getInstance().post(new CharacterStepEvent(char_owner, step), IGameplayListener.class);
-        }
     }
     
     public Vector3 getPrev_dir() {

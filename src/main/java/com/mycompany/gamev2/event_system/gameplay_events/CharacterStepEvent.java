@@ -22,11 +22,11 @@ public class CharacterStepEvent extends BaseEvent {
     }
     
     private Character character;
-    private ECharacterStepSide step;
+    private double step_progress;
     
-    public CharacterStepEvent(Character character, ECharacterStepSide step){
+    public CharacterStepEvent(Character character, double step_progress){
         this.character = character;
-        this.step = step;
+        this.step_progress = step_progress;
     }
 
     public Character getCharacter() {
@@ -37,13 +37,6 @@ public class CharacterStepEvent extends BaseEvent {
         this.character = character;
     }
 
-    public ECharacterStepSide getStep() {
-        return step;
-    }
-
-    public void setStep(ECharacterStepSide step) {
-        this.step = step;
-    }
-    
-    
+        
+    public double getProgress(){return this.step_progress;}
 }
