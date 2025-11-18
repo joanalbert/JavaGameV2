@@ -68,10 +68,9 @@ public class LevelCameraComponent extends LevelComponent {
     protected void compute_cam_offsets(){
         int w = MyWindow.DIMENSIONS.width;
         int h = MyWindow.DIMENSIONS.height;
-        double x = this.position.getX() - w/2;
-        double y = this.position.getY() - h/2;
         
-        this.cam_offset = new Vector3(x, y, 0 );
+        Vector3 offset = this.position.minus(new Vector3(w/2, h/2, 0));
+        this.cam_offset = offset;
     }
     
     protected void compute_bounds() throws CameraNoTargetException{

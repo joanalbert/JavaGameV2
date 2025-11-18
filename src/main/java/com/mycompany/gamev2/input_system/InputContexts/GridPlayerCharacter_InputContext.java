@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.input_system.InputContexts;
 
 import com.mycompany.gamev2.input_system.BindKey;
+import com.mycompany.gamev2.input_system.InputActions.IA_May2Brendan;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import java.awt.event.KeyEvent;
@@ -37,5 +38,15 @@ public class GridPlayerCharacter_InputContext extends InputContext {
         walk_keys.add(new BindKey(KeyEvent.VK_D, 1.0f, BindKey.Axis.X));
         
         addBinding(new InputBinding(walkAction, walk_keys, null, true, true, true));
+        
+        
+        //SWITCH SPRITE
+        IA_May2Brendan switch_sprite = new IA_May2Brendan();
+        Set<BindKey> switch_keys = new HashSet<>();
+        
+        //K
+        switch_keys.add(new BindKey(KeyEvent.VK_K, 0, BindKey.Axis.NONE));
+        
+        addBinding(new InputBinding(switch_sprite, switch_keys, null, false, false, true));
     }
 }

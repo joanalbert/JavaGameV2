@@ -7,6 +7,7 @@ package com.mycompany.gamev2.gameobjects.characters;
 import com.mycompany.gamev2.GameLoopV2;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.SpriteComponent.GridCharacterSpriteComponent;
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -14,13 +15,16 @@ import com.mycompany.gamev2.exceptions.NonGridLevelException;
 import com.mycompany.gamev2.exceptions.NullLevelException;
 import com.mycompany.gamev2.exceptions.NullOwnerTransformException;
 import com.mycompany.gamev2.gamemath.Vector3;
+import com.mycompany.gamev2.input_system.InputActions.IA_May2Brendan;
 import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
+import com.mycompany.gamev2.providers.CameraProvider;
 import com.mycompany.gamev2.providers.LevelGridProvider;
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  *
@@ -29,6 +33,7 @@ import java.awt.Color;
 public class GridPlayerCharacter2D extends PlayerCharacter {
  
     private IA_Walk ia_walk;
+    private IA_May2Brendan ia_switch_sprite;
     
     private GridMovementComponent movement;
     private GridCharacterSpriteComponent sprite;
@@ -78,6 +83,20 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         ia_walk.setOnTriggered(action -> {
             if (action instanceof IA_Walk walkAction) {
                 this.process_IA_Walk(ia_walk);
+            }
+        });
+        
+        
+        //switch sprite action
+        ia_switch_sprite = (IA_May2Brendan) context.getBindings().stream()
+                           .map(InputBinding::getAction)
+                           .filter(action -> action instanceof IA_May2Brendan)
+                           .findFirst()
+                           .orElse(new IA_May2Brendan());
+        
+        ia_switch_sprite.setOnTriggered(action -> {
+            if (action instanceof IA_May2Brendan IA_May2Brendan) {
+               this.sprite.switch_sprites();
             }
         });
     }
@@ -164,30 +183,24 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         //super.render(event);
         if(!this.isActive) return;
         
-        this.sprite.render(event);
-        
-        /*try {
-            
-            if(!DebugFlags.getInstance().getShow_level_grids()) return;
-                        
+        if(DebugFlags.getInstance().getShow_level_grids()){              
             Graphics2D g = event.getGraphics();
-            Vector3 location = getObjectLocation();
-            LevelGridComponent grid = LevelManager.getInstance().getCurrentLevel().getComponent(LevelGridComponent.class);
-            
-            if(grid != null && grid.getIsCameraFollow()){
-                GridLevelCameraComponent cam  = LevelManager.getInstance().getCurrentLevel().getComponent(GridLevelCameraComponent.class);
-                Vector3 offset = cam.getCamOffsets();
-                location = location.minus(offset);
-            }
-
             GridMovementComponent movement = this.getComponent(GridMovementComponent.class);
+
+            Vector3 cam_offsets = Vector3.ZERO;
+            CameraProvider prov = event.getCameraProvider();
+            if(prov != null) cam_offsets = prov.getCameraOffsets();
+
+            Vector3 location = getObjectLocation().minus(cam_offsets);
 
             //g.setColor(this.color);
             if(movement.getIsMoving()) g.setColor(this.color);
             else g.setColor(Color.BLUE);
 
             g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);
-        } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}*/
+        }       
+        
+        this.sprite.render(event);
     }
     
 }

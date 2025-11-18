@@ -46,9 +46,10 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
     private ECharacterStepSide current_step = ECharacterStepSide.NEUTRAL;
        
     //step flags
-    /*private boolean leftFired = false;
-    private boolean rightFired = false;
-    private boolean neutralFired = false;*/
+    private boolean step_state = true;
+    private boolean step_state_changed = false;
+    
+    private boolean sprite_state = false;
         
     public GridCharacterSpriteComponent(T owner){
          super(owner);
@@ -90,31 +91,38 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
         this.active_image = this.images.get("down");
     }
     
-    private boolean state = true;
-    private boolean state_changed = false;
+    
     public void animate(double t){
         double f = GameLoopV2.getInstance().getFrames();
         
         
         
-        if(t > 0.5d && !state_changed){ 
+        if(t > 0.5d && !step_state_changed){ 
             //this.current_step = ECharacterStepSide.LEFT;
-            state = !state;
-            state_changed = true;
-            System.out.println(state+" "+f);
+            step_state = !step_state;
+            step_state_changed = true;
+            System.out.println(step_state+" "+f);
         }
         
-        if(state) this.current_step = ECharacterStepSide.LEFT;
+        if(step_state) this.current_step = ECharacterStepSide.LEFT;
         else this.current_step = ECharacterStepSide.RIGHT;
         
         if(t >= .6d) this.current_step = ECharacterStepSide.NEUTRAL;
         
-        if(state_changed && t >= .99d){
-            state_changed = false;
+        if(step_state_changed && t >= .99d){
+            step_state_changed = false;
         }
 
     }
     
+    public void switch_sprites(){
+        this.sprite_state = !this.sprite_state;
+        
+        if(this.sprite_state) this.configure(ECharacter.MAY);
+        else this.configure(ECharacter.BRENDAN);
+        
+        System.out.println("SWITCH");
+    }
 
     @Override
     public void render(RenderEvent e) {
