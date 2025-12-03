@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Browser + Canvas</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        .canvas-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        canvas {
+            background: #161b22;
+            box-shadow: 0 0 50px rgba(13, 110, 253, 0.5);
+            border: 2px solid #0d6efd;
+        }
+        
+        .hint {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #58a6ff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            background: rgba(1, 4, 9, 0.8);
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: 1px solid #30363d;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .nav-tabs .nav-link {
+            color: #8b949e;
+            border: none;
+            padding: 12px 20px;
+        }
+        .nav-tabs .nav-link:hover {
+            color: #fff;
+            background-color: #21262d;
+        }
+        .nav-tabs .nav-link.active {
+            color: #fff;
+            background-color: #161b22;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+        .nav-pills .nav-link {
+            color: #8b949e;
+            background-color: transparent;
+            text-align: left;
+            border-radius: 8px;
+            margin: 3px 8px;
+            padding: 10px 16px;
+        }
+        .nav-pills .nav-link:hover {
+            color: #fff;
+            background-color: #21262d;
+        }
+        .nav-pills .nav-link.active {
+            color: #fff;
+            background-color: #0d6efd;
+            font-weight: 500;
+        }
+
+        .image-area {
+            background: #161b22;
+            padding: 20px;
+            overflow: auto;
+            display: flex;
+            justify-content: flex-start;   
+            align-items: flex-start;       
+        }
+
+        .asset-img {
+            transform: scale(1.5);
+            transform-origin: top left;
+            image-rendering: pixelated;
+            border-radius: 3px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            
+            /*max-height: 80vh;*/   /* 80vh × 1.5 */
+            /*max-width: 100%;*/     /* 100% × 1.5 */
+            /*object-fit: contain;*/
+   
+            /*margin-top: 17%;*/
+            /*margin-left: 10%;*/
+        }
+
+        .wide-offcanvas {
+            --bs-offcanvas-width: min(1200px, 94vw);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hint">Press SPACEBAR to open/close asset menu</div>
+
+    <div class="canvas-container">
+        <canvas id="myCanvas" width="1200" height="800"></canvas>
+    </div>
+
+    <!-- Wide Offcanvas Asset Menu -->
+    <div class="offcanvas offcanvas-start text-bg-dark wide-offcanvas" tabindex="-1" id="spaceMenu">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title">ASSET BROWSER</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        
+        <div class="offcanvas-body d-flex flex-column h-100 p-0">
+            <!-- Main Tabs -->
+            <ul class="nav nav-tabs flex-shrink-0 px-3 pt-3" id="mainAssetTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-buildings" type="button">Buildings</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-mountain" type="button">Mountain</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-plants" type="button">Plants</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-props" type="button">Props</button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content flex-grow-1 overflow-hidden">
+
+                <!-- ====================== BUILDINGS TAB ====================== -->
+                <div class="tab-pane fade show active h-100" id="tab-buildings">
+                    <div class="d-flex h-100">
+                        <!-- Level 1 -->
+                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 220px;">
+                            <ul class="nav nav-pills flex-column pt-3">
+                                <li class="nav-item"><button class="nav-link active w-100 text-start" data-bs-toggle="pill" data-bs-target="#buildings-houses">Houses</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#buildings-buildings">Buildings</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#buildings-trainer">Trainer</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#buildings-various">Various</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#buildings-bfrontier">B.Frontier</button></li>
+                            </ul>
+                        </div>
+
+                        <!-- Level 2 + 3 Container -->
+                        <div class="flex-grow-1">
+                            <div class="tab-content h-100">
+
+                                <!-- Houses -->
+                                <div class="tab-pane fade show active h-100" id="buildings-houses">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-basic-house-1">Basic House 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-basic-house-2">Basic House 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-beach-house">Beach House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-big-house">Big House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-big-house-chimney">Big House Chimney</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-classic-house">Classic House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-coast-house">Coast House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-exotic-house">Exotic House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-field-house">Field House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-happy-house">Happy House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-island-house">Island House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-modern-house">Modern House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-modern-house-2">Modern House 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-old-house">Old House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-sea-house">Sea House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bhouses-treehouse">Treehouse</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-bhouses-basic-house-1"><img src="usable_assets/tile_atlases/city/buildings/houses/basic_house_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-basic-house-2"><img src="usable_assets/tile_atlases/city/buildings/houses/basic_house_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-beach-house"><img src="usable_assets/tile_atlases/city/buildings/houses/beach_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-big-house"><img src="usable_assets/tile_atlases/city/buildings/houses/big_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-big-house-chimney"><img src="usable_assets/tile_atlases/city/buildings/houses/big_house_chimney.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-classic-house"><img src="usable_assets/tile_atlases/city/buildings/houses/classic_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-coast-house"><img src="usable_assets/tile_atlases/city/buildings/houses/coast_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-exotic-house"><img src="usable_assets/tile_atlases/city/buildings/houses/exotic_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-field-house"><img src="usable_assets/tile_atlases/city/buildings/houses/field_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-happy-house"><img src="usable_assets/tile_atlases/city/buildings/houses/happy_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-island-house"><img src="usable_assets/tile_atlases/city/buildings/houses/island_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-modern-house"><img src="usable_assets/tile_atlases/city/buildings/houses/modern_house_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-modern-house-2"><img src="usable_assets/tile_atlases/city/buildings/houses/modern_house_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-old-house"><img src="usable_assets/tile_atlases/city/buildings/houses/old_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-sea-house"><img src="usable_assets/tile_atlases/city/buildings/houses/sea_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bhouses-treehouse"><img src="usable_assets/tile_atlases/city/buildings/houses/treehouse.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Buildings (the subitem) -->
+                                <div class="tab-pane fade h-100" id="buildings-buildings">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-another-harbor">Another Harbor</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-big-building">Big Building</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-casino">Casino</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-city-building-1">City Building 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-city-building-2">City Building 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-city-building-3">City Building 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-cool-buildings">Cool Buildings</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-harbor">Harbor</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-harbor-building">Harbor Building</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-hill-tower">Hill Tower</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-mall">Mall</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-mountain-shack">Mountain Shack</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-museum">Museum</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-safari-entrance">Safari Entrance</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-sea-museum">Sea Museum</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-teleferic-stations">Teleferic Stations</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-weather-institute">Weather Institute</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bbuildings-wide-building">Wide Building</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-bbuildings-another-harbor"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/another_harbor.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-big-building"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/big_building.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-casino"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/casino.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-city-building-1"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/city_building_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-city-building-2"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/city_building_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-city-building-3"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/city_building_03.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-cool-buildings"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/cool_buildings.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-harbor"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/harbor.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-harbor-building"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/harbor_building.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-hill-tower"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/hill_tower.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-mall"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/mall.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-mountain-shack"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/mountain_shack.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-museum"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/museum.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-safari-entrance"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/safari_entrance.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-sea-museum"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/sea_museum.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-teleferic-stations"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/teleferic_station.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-weather-institute"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/weather_institute.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bbuildings-wide-building"><img src="usable_assets/tile_atlases/city/buildings/big_buildings/wide_building.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trainer -->
+                                <div class="tab-pane fade h-100" id="buildings-trainer">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-btrainer-battle-house">Battle House</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-btrainer-contest-hall">Contest Hall</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-btrainer-trainer-buildings">Trainer Buildings</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-btrainer-battle-house"><img src="usable_assets/tile_atlases/city/buildings/trainer/battle_house.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-btrainer-contest-hall"><img src="usable_assets/tile_atlases/city/buildings/trainer/contest_hall.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-btrainer-trainer-buildings"><img src="usable_assets/tile_atlases/city/buildings/trainer/trainer_buildings.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Various -->
+                                <div class="tab-pane fade h-100" id="buildings-various">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bvarious-beach-shack">Beach Shack</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-bvarious-field-shop">Field Shop</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-bvarious-beach-shack"><img src="usable_assets/tile_atlases/city/buildings/various/beach_shack.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-bvarious-field-shop"><img src="usable_assets/tile_atlases/city/buildings/various/field_shop.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- B.Frontier (no subitems2) -->
+                                <div class="tab-pane fade h-100" id="buildings-bfrontier">
+                                    <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                        <img src="https://via.placeholder.com/1000x800/222222/888888?text=Battle+Frontier+%28no+assets+yet%29" class="asset-img" alt="Battle Frontier">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====================== MOUNTAIN TAB ====================== -->
+                <div class="tab-pane fade h-100" id="tab-mountain">
+                    <div class="d-flex h-100">
+                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 220px;">
+                            <ul class="nav nav-pills flex-column pt-3">
+                                <li class="nav-item"><button class="nav-link active w-100 text-start" data-bs-toggle="pill" data-bs-target="#mountain-cave">Cave</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#mountain-ground">Ground</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#mountain-puddles">Puddles</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#mountain-rocks">Rocks</button></li>
+                            </ul>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="tab-content h-100">
+
+                                <!-- Cave -->
+                                <div class="tab-pane fade show active h-100" id="mountain-cave">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mcave-entrances">Entrances</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mcave-inside">Inside</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-mcave-entrances"><img src="usable_assets/tile_atlases/mountain/cave/entries.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mcave-inside"><img src="usable_assets/tile_atlases/mountain/cave/inside.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ground -->
+                                <div class="tab-pane fade h-100" id="mountain-ground">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-earth-patch">Earth Patch</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-meteor-site">Meteor Site</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-planted-terrain">Planted Terrain</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-tall-grass">Tall Grass</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrain-path-1">Terrain Path 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrain-path-2">Terrain Path 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrain-path-3">Terrain Path 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrain-path-4">Terrain Path 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrain-path-5">Terrain Path 5</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrains">Terrains</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mground-terrains-2">Terrains 2</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-mground-earth-patch"><img src="usable_assets/tile_atlases/mountain/ground/earth_patch.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-meteor-site"><img src="usable_assets/tile_atlases/mountain/ground/meteor_site.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-planted-terrain"><img src="usable_assets/tile_atlases/mountain/ground/planted_terrain.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-tall-grass"><img src="usable_assets/tile_atlases/mountain/ground/tall_grass.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrain-path-1"><img src="usable_assets/tile_atlases/mountain/ground/terrain_path_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrain-path-2"><img src="usable_assets/tile_atlases/mountain/ground/terrain_path_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrain-path-3"><img src="usable_assets/tile_atlases/mountain/ground/terrain_path_03.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrain-path-4"><img src="usable_assets/tile_atlases/mountain/ground/terrain_path_04.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrain-path-5"><img src="usable_assets/tile_atlases/mountain/ground/terrain_path_05.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrains"><img src="usable_assets/tile_atlases/mountain/ground/terrains.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mground-terrains-2"><img src="usable_assets/tile_atlases/mountain/ground/terrains_2.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Puddles -->
+                                <div class="tab-pane fade h-100" id="mountain-puddles">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-ground-puddle-1">Ground Puddle 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-ground-puddle-2">Ground Puddle 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-ground-puddle-3">Ground Puddle 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-ground-puddle-4">Ground Puddle 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-ground-puddle-5">Ground Puddle 5</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-lava-pool">Lava Pool</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mpuddles-puddle-water">Puddle Water</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-mpuddles-ground-puddle-1"><img src="usable_assets/tile_atlases/mountain/puddles/geo_puddle_1.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-ground-puddle-2"><img src="usable_assets/tile_atlases/mountain/puddles/geo_puddle_2.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-ground-puddle-3"><img src="usable_assets/tile_atlases/mountain/puddles/geo_puddle_3.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-ground-puddle-4"><img src="usable_assets/tile_atlases/mountain/puddles/geo_puddle_4.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-ground-puddle-5"><img src="usable_assets/tile_atlases/mountain/puddles/geo_puddle_5.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-lava-pool"><img src="usable_assets/tile_atlases/mountain/puddles/lava_pool.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mpuddles-puddle-water"><img src="usable_assets/tile_atlases/mountain/puddles/puddle_water.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Rocks -->
+                                <div class="tab-pane fade h-100" id="mountain-rocks">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-edges">Edges</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-geo-1">Geo 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-geo-2">Geo 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-geo-3">Geo 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-geo-4">Geo 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-mrocks-geo-5">Geo 5</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-mrocks-edges"><img src="usable_assets/tile_atlases/mountain/rocks/edges.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mrocks-geo-1"><img src="usable_assets/tile_atlases/mountain/rocks/geo_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mrocks-geo-2"><img src="usable_assets/tile_atlases/mountain/rocks/geo_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mrocks-geo-3"><img src="usable_assets/tile_atlases/mountain/rocks/geo_03.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mrocks-geo-4"><img src="usable_assets/tile_atlases/mountain/rocks/geo_04.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-mrocks-geo-5"><img src="usable_assets/tile_atlases/mountain/rocks/geo_05.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====================== PLANTS TAB ====================== -->
+                <div class="tab-pane fade h-100" id="tab-plants">
+                    <div class="d-flex h-100">
+                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 220px;">
+                            <ul class="nav nav-pills flex-column pt-3">
+                                <li class="nav-item"><button class="nav-link active w-100 text-start" data-bs-toggle="pill" data-bs-target="#plants-grass">Grass</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#plants-puddles">Puddles</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#plants-trees">Trees</button></li>
+                            </ul>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="tab-content h-100">
+
+                                <!-- Grass -->
+                                <div class="tab-pane fade show active h-100" id="plants-grass">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-1">Grass Path 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-2">Grass Path 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-3">Grass Path 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-4">Grass Path 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-5">Grass Path 5</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grass-path-6">Grass Path 6</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-grasses">Grasses</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-park-path-1">Park Path 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-park-path-2">Park Path 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-park-path-3">Park Path 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-park-path-4">Park Path 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-shadowed-grass">Shadowed Grass</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-pgrass-tall-grass">Tall Grass</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-start">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-pgrass-grass-path-1"><img src="usable_assets/tile_atlases/plants/grass/grass_path_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grass-path-2"><img src="usable_assets/tile_atlases/plants/grass/grass_path_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grass-path-3"><img src="usable_assets/tile_atlases/plants/grass/grass_path_03.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grass-path-4"><img src="usable_assets/tile_atlases/plants/grass/grass_path_04.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grass-path-5"><img src="usable_assets/tile_atlases/plants/grass/grass_path_05.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grass-path-6"><img src="usable_assets/tile_atlases/plants/grass/grass_path_06.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-grasses"><img src="usable_assets/tile_atlases/plants/grass/grasses.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-park-path-1"><img src="usable_assets/tile_atlases/plants/grass/park_path_01.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-park-path-2"><img src="usable_assets/tile_atlases/plants/grass/park_path_02.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-park-path-3"><img src="usable_assets/tile_atlases/plants/grass/park_path_03.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-park-path-4"><img src="usable_assets/tile_atlases/plants/grass/park_path_04.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-shadowed-grass"><img src="usable_assets/tile_atlases/plants/grass/shadowed_grass.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-pgrass-tall-grass"><img src="usable_assets/tile_atlases/plants/grass/tall_grass.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Puddles (Plants) -->
+                                <div class="tab-pane fade h-100" id="plants-puddles">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-1">Grass Puddle 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-2">Grass Puddle 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-3">Grass Puddle 3</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-4">Grass Puddle 4</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-5">Grass Puddle 5</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-grass-puddle-6">Grass Puddle 6</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ppuddles-puddle-water">Puddle Water</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-ppuddles-grass-puddle-1"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_1.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-grass-puddle-2"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_2.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-grass-puddle-3"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_3.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-grass-puddle-4"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_4.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-grass-puddle-5"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_5.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-grass-puddle-6"><img src="usable_assets/tile_atlases/plants/puddles/grass_puddle_6.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ppuddles-puddle-water"><img src="usable_assets/tile_atlases/plants/puddles/puddle_water.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trees -->
+                                <div class="tab-pane fade h-100" id="plants-trees">
+                                    <div class="d-flex h-100">
+                                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 260px;">
+                                            <ul class="nav nav-pills flex-column pt-3">
+                                                <li><button class="nav-link active text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-base-bush">Base Bush</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-base-tree">Base Tree</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-greater-trees">Greater Trees</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-jungle-trees">Jungle Trees</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-medium-trees">Medium Trees</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-minor-trees">Minor Trees</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-shadowed-trees-1">Shadowed Trees 1</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-shadowed-trees-2">Shadowed Trees 2</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-sturdy-tree">Sturdy Tree</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-sturdy-tree-tiling">Sturdy Tree Tiling</button></li>
+                                                <li><button class="nav-link text-start w-100" data-bs-toggle="pill" data-bs-target="#img-ptrees-warm-tree-tiling">Warm Tree Tiling</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                                            <div class="tab-content h-100 w-100">
+                                                <div class="tab-pane fade show active" id="img-ptrees-base-bush"><img src="usable_assets/tile_atlases/plants/trees/base_bush.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-base-tree"><img src="usable_assets/tile_atlases/plants/trees/base_tree.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-greater-trees"><img src="usable_assets/tile_atlases/plants/trees/greater_trees.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-jungle-trees"><img src="usable_assets/tile_atlases/plants/trees/jungle_trees.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-medium-trees"><img src="usable_assets/tile_atlases/plants/trees/medium_trees.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-minor-trees"><img src="usable_assets/tile_atlases/plants/trees/minor_trees.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-shadowed-trees-1"><img src="usable_assets/tile_atlases/plants/trees/shadowed_trees.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-shadowed-trees-2"><img src="usable_assets/tile_atlases/plants/trees/shadowed_trees_2.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-sturdy-tree"><img src="usable_assets/tile_atlases/plants/trees/sturdy_tree.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-sturdy-tree-tiling"><img src="usable_assets/tile_atlases/plants/trees/sturdy_tree_tiling.png" class="asset-img" alt=""></div>
+                                                <div class="tab-pane fade" id="img-ptrees-warm-tree-tiling"><img src="usable_assets/tile_atlases/plants/trees/warm_tree_tiling.png" class="asset-img" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====================== PROPS TAB ====================== -->
+                <div class="tab-pane fade h-100" id="tab-props">
+                    <div class="d-flex h-100">
+                        <!-- Left menu (Level 2) -->
+                        <div class="flex-shrink-0 bg-black bg-opacity-50 overflow-auto" style="width: 220px;">
+                            <ul class="nav nav-pills flex-column pt-3">
+                                <li class="nav-item"><button class="nav-link active w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-beach">Beach</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-bicycle-path">Bicycle Path</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-fences">Fences</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-walls">Walls</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-harbord">Harbord</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-machines">Machines</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-teleferic">Teleferic</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-thermals">Thermals</button></li>
+                                <li class="nav-item"><button class="nav-link w-100 text-start" data-bs-toggle="pill" data-bs-target="#props-town-props">Town Props</button></li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side - image preview (always has background/padding/centering) -->
+                        <div class="flex-grow-1 image-area d-flex justify-content-center align-items-center">
+                            <div class="tab-content h-100 w-100">
+                                <div class="tab-pane fade show active" id="props-beach">
+                                    <img src="usable_assets/tile_atlases/props/beach.png" class="asset-img" alt="Beach Props">
+                                </div>
+                                <div class="tab-pane fade" id="props-bicycle-path">
+                                    <img src="usable_assets/tile_atlases/props/bicycle_path.png" class="asset-img" alt="Bicycle Path">
+                                </div>
+                                <div class="tab-pane fade" id="props-fences">
+                                    <img src="usable_assets/tile_atlases/props/fences.png" class="asset-img" alt="Fences">
+                                </div>
+                                <div class="tab-pane fade" id="props-walls">
+                                    <img src="usable_assets/tile_atlases/props/walls.png" class="asset-img" alt="Walls">
+                                </div>
+                                <div class="tab-pane fade" id="props-harbord">
+                                    <img src="usable_assets/tile_atlases/props/harbors.png" class="asset-img" alt="Harbord"> <!-- fixed double slash + filename -->
+                                </div>
+                                <div class="tab-pane fade" id="props-machines">
+                                    <img src="usable_assets/tile_atlases/props/machines.png" class="asset-img" alt="Machines">
+                                </div>
+                                <div class="tab-pane fade" id="props-teleferic">
+                                    <img src="usable_assets/tile_atlases/props/teleferic.png" class="asset-img" alt="Teleferic">
+                                </div>
+                                <div class="tab-pane fade" id="props-thermals">
+                                    <img src="usable_assets/tile_atlases/props/thermals.png" class="asset-img" alt="Thermals">
+                                </div>
+                                <div class="tab-pane fade" id="props-town-props">
+                                    <img src="usable_assets/tile_atlases/props/town_props.png" class="asset-img" alt="Town Props">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const menu = new bootstrap.Offcanvas(document.getElementById('spaceMenu'));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                menu.toggle();
+            }
+            if (e.key === 'Escape') {
+                menu.hide();
+            }
+        });
+    </script>
+</body>
+</html>

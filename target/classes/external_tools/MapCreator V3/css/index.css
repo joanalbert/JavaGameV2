@@ -1,0 +1,133 @@
+#wtf{
+    border: 1px solid red;
+    height: 300px;
+    width: 300px;
+    
+    position: absolute;
+    width: 1200px;
+    height: 400px;
+    top: 20%;
+    left: 10%;
+}
+
+
+#atlas_menu {
+    border: 1px solid black;
+    position: absolute;
+    width: 1350px;
+    height: 600px;
+    top: 0%;
+    left: 5%;
+    background: white;
+}
+
+.subsection-btn{
+    font-size: 13px !important;
+    text-align: center !important;
+}
+
+.sub_content{
+    height: 600px;
+}
+
+.atls_cnvs{
+    border: 1px solid red;
+    background: tomato;
+}
+
+.atls_container{
+    background: white;
+    display: flex;
+    justify-content: center;
+    
+}
+
+
+
+.atlas_image{
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
