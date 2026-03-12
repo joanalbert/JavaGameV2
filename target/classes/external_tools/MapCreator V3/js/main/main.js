@@ -1,97 +1,29 @@
-/*let canvas = document.getElementById("wtf");
+import { TileMap } from './modules/map/TileMap.js';
+import { Vector2 } from './Vector2.js'; 
+import { FormInput } from './modules/input/FormInput.js';
 
 
-let clicked = false;
-
-canvas.addEventListener("mousedown", (i) => clicked = true);
-canvas.addEventListener("mouseup", (i) => clicked = false);
-
-canvas.addEventListener("mousemove", (e)=> {
-    if(clicked) {
-        let x = e.clientX;
-        let y = e.clientY;
-        console.log(`x:${x} y:${y}`)
-    }
-})*/
 
 
-/*window.requestAnimationFrame(loop);
-function loop(){
-    console.log(clicked);
-    window.requestAnimationFrame(loop);
-}*/
+let mapDimensions = new Vector2(5, 5);
+let tileRenderSize = 128;
 
-let menu      = document.getElementById("atlas_menu");
-let menu_open = false;
 
-document.addEventListener("keydown", (e)=>{
-    if(e.keyCode == 32) { //spacebar
-     menu_open = !menu_open;   
-    }
+let map = new TileMap(mapDimensions, tileRenderSize);
+map.initialize();
+
+const i = FormInput.getInstance(map);
+
+
+/*function update() {
     
-    if(menu_open) menu.style.display = "block";
-    else menu.style.display = "none";
-        
+    const clicked  = map.canvas_wrapper.clicked;
+    const dragging = map.canvas_wrapper.dragging;
+    const moving   = map.canvas_wrapper.is_mouse_moving;
     
-})
-
-
-let i = {
-    tabs: {
-        
-    }
+    console.log(`clicked ${clicked}, moving: ${moving}, dragging: ${dragging}`);
+       
+    requestAnimationFrame(update);
 }
 
-
-initialize_atlases();
-function initialize_atlases(){
-
-    let atls_containers = Array.from(document.getElementsByClassName("atls_container"));
-    
-    atls_containers.forEach(container =>{
-        let id = container.getAttribute("id");
-        
-        switch(id){
-                case "houses":
-                //init_houses_canvases(container);
-                break;
-                case "buildings":
-                //
-                break;
-                case "trainer":
-                //
-                break;
-                case "various":
-                //
-                break;
-                case "bfrontier":
-                //
-                break;
-                
-        }
-                
-        console.log(c);
-    });
-}
-
-
-function init_houses_canvases(container){
-        
-    let img = document.createElement("img");
-    img.setAttribute("src", "usable_assets/tile_atlases/city/buildings/houses/basic_house_01.png");
-    img.setAttribute("id", "basic_house_01");    
-    img.classList.add("atlas_image");
-    container.appendChild(img);
-    
-    img = document.createElement("img");
-    img.setAttribute("src", "usable_assets/tile_atlases/city/buildings/houses/basic_house_02.png");
-    img.setAttribute("id", "basic_house_02");  
-    img.classList.add("atlas_image");
-    container.appendChild(img);
-}
-    
-
-
-
-
-
+update();*/

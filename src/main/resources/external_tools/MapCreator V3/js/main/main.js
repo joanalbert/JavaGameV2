@@ -1,20 +1,21 @@
-import { TileSelector } from './modules/TileSelector.js';
 import { TileMap } from './modules/map/TileMap.js';
 import { Vector2 } from './Vector2.js'; 
+import { FormInput } from './modules/input/FormInput.js';
 
 
-let tile_selector = new TileSelector();
-tile_selector.init();
 
 
 let mapDimensions = new Vector2(5, 5);
 let tileRenderSize = 128;
+
+
 let map = new TileMap(mapDimensions, tileRenderSize);
 map.initialize();
 
+const i = FormInput.getInstance(map);
 
 
-function update() {
+/*function update() {
     
     const clicked  = map.canvas_wrapper.clicked;
     const dragging = map.canvas_wrapper.dragging;
@@ -25,4 +26,4 @@ function update() {
     requestAnimationFrame(update);
 }
 
-update();
+update();*/
