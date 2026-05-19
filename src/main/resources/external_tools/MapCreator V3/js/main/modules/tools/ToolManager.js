@@ -3,6 +3,7 @@ import { CanvasWrapper } from "../map/CanvasWrapper.js";
 import { BaseTool } from "./BaseTool.js";
 import { BrushTool } from "./BrushTool.js";
 import { BucketTool} from "./BucketTool.js";
+import { EraserTool} from "./EraserTool.js";
 import { Vector2 } from "../../Vector2.js";
 
 
@@ -36,13 +37,13 @@ export class ToolManager{
         //get buttons
         this.pen_btn = document.getElementById("pen_btn");
         this.bucket_btn = document.getElementById("bucket_btn");
-        this.drop_btn = document.getElementById("drop_btn");
+        this.eraser_btn = document.getElementById("drop_btn");
         
         //set tools array
         this.tools = [];
-        this.tools.push(new BrushTool("brush", pen_btn, this));
-        this.tools.push(new BucketTool("bucket", bucket_btn, this));
-        this.tools.push(new BaseTool("drop", drop_btn, this));
+        this.tools.push(new BrushTool("brush", this.pen_btn, this));
+        this.tools.push(new BucketTool("bucket", this.bucket_btn, this));
+        this.tools.push(new EraserTool("eraser", this.eraser_btn, this));
         
         
         

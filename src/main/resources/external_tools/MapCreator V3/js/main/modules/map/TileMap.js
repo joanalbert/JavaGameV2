@@ -68,13 +68,16 @@ export class TileMap{
                 
                 const logical_pos = new Vector2(x, y);
                 const key = logical_pos.toString();
+                
                 if(copy.has(key)){
                     const i = copy.get(key);
                     
-                    if(i.parent_atlas_id){
+                                        
+                    //if(i.parent_atlas_id){
+                        console.log("HELLO");
                         this.map.set(key, i);
                         this.canvas_wrapper.fill_tile(i, "blue");    
-                    }
+                    //}
                     
                 }
                 else {
@@ -84,6 +87,21 @@ export class TileMap{
                     this.canvas_wrapper.fill_tile(tileInfo, "blue");    
                 }
             }    
+        }
+        
+        
+        console.log(this.map);
+    }
+
+
+    printmap(){
+        
+        for(let x = 0; x < this.dimensionsTiles.x; x++){
+            for(let y = 0; y < this.dimensionsTiles.y; y++){
+                
+                
+                
+            }
         }
         
         

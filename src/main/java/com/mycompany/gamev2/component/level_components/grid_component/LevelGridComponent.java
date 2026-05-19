@@ -20,10 +20,8 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -31,7 +29,7 @@ import javax.imageio.ImageIO;
  */
 public class LevelGridComponent extends LevelComponent {
     
-    private LevelGridTileV2[][] tile_matrix;
+    private LevelGridTileV3[][] tile_matrix;
     private GridLevelBase owning_level;
     private HashMap<Integer, BufferedImage> atlases;
     
@@ -86,14 +84,18 @@ public class LevelGridComponent extends LevelComponent {
         return this;
     }
     
+    
     public LevelGridComponent construct_fromJSON(String json_path){
         JsonReader reader = JsonReader.getInstance();
         
         if(this.override_json_grid_dimensions){
-            tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size); //pass in user defined width and height
+            //pass in user defined width and height
+            //tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size);
+            System.out.println("NOT SUPPORTED YET");
         }
         else{
-            GridAndDimensionsWrapper wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); // ignore user defined width and height, the ones in the json will be used
+            // ignore user defined width and height, the ones in the json will be used
+            GridAndDimensionsWrapper wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); 
             tile_matrix = wrapper.getGrid();
             
             //update width & height based on what was read in the JSON

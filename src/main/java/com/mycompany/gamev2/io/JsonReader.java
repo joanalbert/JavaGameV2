@@ -7,13 +7,17 @@ package com.mycompany.gamev2.io;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV2;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
 import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.io.gson_deserializers.ColisionTypeDeserializer;
+import com.mycompany.gamev2.io.gson_deserializers.Vector3TypeDeserializer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Iterator;
 
 /**
  *
@@ -36,29 +40,46 @@ public class JsonReader {
     public GridAndDimensionsWrapper getTileMatrixFromJSON(String json_path, int size){
         //we use GsonBuilder in order to register our deserializer fro LevelGridTileV2.COLISION_TYPE
         Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(LevelGridTileV2.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .registerTypeAdapter(LevelGridTileV3.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .registerTypeAdapter(Vector3.class, new Vector3TypeDeserializer())
                         .create();
-        
-        LevelGridTileV2[][] grid = null;
-        int w = 0;
-        int h = 0;
-        
+
+        //define the grid srtucture and it's dimensions before the try-catch block
+        Vector3 map_dimensions = Vector3.ZERO;
+        LevelGridTileV3[][] grid = null;
+
         try {
+            //file
             String full_path = ClassLoader.getSystemResource(json_path).getPath();
             FileReader reader = new FileReader(full_path);
           
+            //get main json elements (map and layers)
             JsonObject map = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonArray layers = map.getAsJsonArray("layers");
             
-            //get the tiles array
-            JsonArray tiles = map.getAsJsonArray("tiles");
+            //initialize grid with it's dimensions as specified in the json
+            map_dimensions = gson.fromJson(map.getAsJsonObject("size"), Vector3.class);
+            grid = new LevelGridTileV3[(int)map_dimensions.getX()][(int)map_dimensions.getY()];
             
-            //get the map dimensions
-            w = map.getAsJsonPrimitive("width").getAsInt();
-            h = map.getAsJsonPrimitive("height").getAsInt();
-            
-            grid = new LevelGridTileV2[w][h];
+            //iterate layers and deserialize individual tiles for each layer
+            Iterator<JsonElement> iterator = layers.iterator();
+            while (iterator.hasNext()) {
                 
-            int length = tiles.size();
+                //get the current layer and all its tiles
+                JsonObject layer = iterator.next().getAsJsonObject();
+                JsonArray tiles = layer.getAsJsonArray("tiles");
+                    
+                //iterate through this layer's tiles and deserialize them
+                for(JsonElement json_tile : tiles){
+                    LevelGridTileV3 tile = gson.fromJson(json_tile.getAsJsonObject(), LevelGridTileV3.class);
+                    Vector3 tile_pos = tile.tile_pos;
+                    
+                    //FINALLY: set the tile within the grid datastructure
+                    grid[(int)tile_pos.getX()][(int)tile_pos.getY()] = tile;
+                }
+            }
+            
+            /*int length = tiles.size();
             for(int i = 0; i < length; i++){
                 JsonObject obj = tiles.get(i).getAsJsonObject();
                 LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
@@ -76,7 +97,7 @@ public class JsonReader {
                 tile.setWindowLocation(window_loc);
                 
                 grid[(int)grid_pos.getX()][(int)grid_pos.getY()] = tile;
-            }
+            }*/
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
@@ -85,15 +106,16 @@ public class JsonReader {
             e.printStackTrace();
         }
         finally{
-            return new GridAndDimensionsWrapper(grid, new Vector3(w,h,0));
+            return new GridAndDimensionsWrapper(grid, map_dimensions);
         }
     }
     
     public LevelGridTileV2[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
         
-        //we use GsonBuilder in order to register our deserializer fro LevelGridTileV2.COLISION_TYPE
+        //we use GsonBuilder in order to register our deserializers for LevelGridTileV2.COLISION_TYPE and Vector3
         Gson gson = new GsonBuilder()
                         .registerTypeAdapter(LevelGridTileV2.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .registerTypeAdapter(Vector3.class, new Vector3TypeDeserializer())
                         .create();
         
         LevelGridTileV2[][] grid = new LevelGridTileV2[w][h];
@@ -103,6 +125,7 @@ public class JsonReader {
             FileReader reader = new FileReader(full_path);
           
             JsonObject map = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonArray layers = map.getAsJsonArray("layers");
             JsonArray tiles = map.getAsJsonArray("tiles");
                 
             int length = tiles.size();

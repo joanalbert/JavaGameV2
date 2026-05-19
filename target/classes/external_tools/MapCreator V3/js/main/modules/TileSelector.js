@@ -4,8 +4,15 @@ import { Vector2 } from "../vector2.js";
 export class TileSelector{
     
     static tile_dimensions = 32;
+    
     static tile_scale = 2;
     static tile_threshold = TileSelector.tile_dimensions * TileSelector.tile_scale;
+
+    static clicked  = false;
+    static mouse_moving = false;
+    static dragging = false;
+
+    static mousemove_timeout;
     
     constructor(owner){
         
@@ -20,6 +27,13 @@ export class TileSelector{
         //marker div and all atlasses
         this.tile_selector  = document.getElementsByClassName("tile_selector")[0];
         this.atlases = Array.from(document.querySelectorAll("img.asset-img"));
+        
+        this.clicked_x = null;
+        this.clicked_y = null;
+        
+        this.mousestop_location = null;
+        this.drag_origin = null;
+        this.drag_end = null;
     }
     
     
@@ -28,12 +42,39 @@ export class TileSelector{
             
             this.set_atlas_id(atlas);
             
-            atlas.addEventListener("mousemove", (e)=>this.atlas_mousemove(e));
+            
+            atlas.addEventListener("mouseup", (e)=>{
+               TileSelector.clicked = false; 
+               TileSelector.dragging = false;
+            });
+            
+            atlas.addEventListener("mousedown", (e)=>{
+               TileSelector.clicked = true; 
+            });
+            
+            atlas.addEventListener("mousemove", (e)=>{
+                this.compute_mousestop();
+                this.atlas_mousemove(e)
+            });
+            
+            
             atlas.addEventListener("click", (e)=>this.atlas_click(e));
         });
         
+        /*function loop() {
+          console.log(
+            `clicked: ${TileSelector.clicked} | moving: ${TileSelector.mouse_moving} | dragging: ${TileSelector.dragging}`
+          );
+
+          requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);*/
         
-        
+        this.warn_duplicated();
+    }
+
+    warn_duplicated(){
         //check for atlas with duplicated ids in the selection area
         const imagesWithDuplicateIds = (() => {
           const idCount = {};
@@ -57,6 +98,7 @@ export class TileSelector{
         const last_chunk = src_chunks[src_chunks.length-1];
         const id = last_chunk.split(".")[0];
         atlas.setAttribute("id", id);
+        atlas.setAttribute("draggable",false);
     }
 
     atlas_click(event){
@@ -107,29 +149,71 @@ export class TileSelector{
    
 
     atlas_mousemove(event) {
+        
         const rect = event.target.getBoundingClientRect();
 
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-
         
-
-        const tile_remainder_x = x % TileSelector.tile_threshold;
-        const tile_remainder_y = y % TileSelector.tile_threshold;
-
-
-        const snappedX = event.clientX - tile_remainder_x;
-        const snappedY = event.clientY - tile_remainder_y;
-        
-        
+        //update position
         this.clicked_x = Math.floor(x/TileSelector.tile_threshold);
         this.clicked_y = Math.floor(y/TileSelector.tile_threshold);
-                       
         
+        //update dragging flag and set dragstart location
+        if(TileSelector.clicked){
+            TileSelector.dragging = true;
+            if(this.drag_origin == null) this.drag_origin = new Vector2(this.clicked_x, this.clicked_y, 0);
+        }
+        
+        //if we change selection bounds, we dont update selection position
+        if(TileSelector.dragging && TileSelector.mouse_moving){
+            this.update_selection_bounds();
+            return;
+        }
+        
+        
+        //only update selector's position if we didnt start a drag
+        if(this.drag_origin == null){
+            const tile_remainder_x = x % TileSelector.tile_threshold;
+            const tile_remainder_y = y % TileSelector.tile_threshold;
 
-        this.tile_selector.style.left = snappedX + "px";
-        this.tile_selector.style.top  = snappedY + "px";
-        this.tile_selector.style.display = "block"; // make sure it's visible
+
+            const snappedX = event.clientX - tile_remainder_x;
+            const snappedY = event.clientY - tile_remainder_y;
+
+
+            this.tile_selector.style.left = snappedX + "px";
+            this.tile_selector.style.top  = snappedY + "px";
+            this.tile_selector.style.display = "block"; // make sure it's visible    
+        }
+              
+    }
+
+    update_selection_bounds(){
+        const v = this.mousestop_location.sub(this.drag_origin);
+        
+        console.log("____");
+        console.log("drag start at: "+this.drag_origin.toString());
+        console.log("drag pause at: "+this.mousestop_location.toString());
+        console.log("v: "+v.toString());
+        console.log("____");
+        
+        const w = 32 + 32*v.x;
+        const h = 32 + 32*v.y;
+        this.tile_selector.style.width = `${w}px` 
+        this.tile_selector.style.height = `${h}px` 
+        
+        
+    }
+
+    compute_mousestop(event){
+        
+        TileSelector.mouse_moving = true;
+        clearTimeout(TileSelector.mousemove_timeout);
+        TileSelector.mousemove_timeout = setTimeout(()=>{
+            this.mousestop_location = new Vector2(this.clicked_x, this.clicked_y, 0);
+            TileSelector.mouse_moving = false;
+        }, 5);
     }
 
 

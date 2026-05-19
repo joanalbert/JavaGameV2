@@ -42,6 +42,10 @@ export class BucketTool extends BaseTool {
         let counter = 0;
         const fill_tile = this.owner.tile_selection;
         
+        let key = _seed.map_xy.toString();
+        let visited = new Set();
+        visited.add(key);
+        
         queue.push(_seed);
         while(queue.length > 0){
             counter++;
@@ -54,7 +58,17 @@ export class BucketTool extends BaseTool {
             
             //unpainted tile, we don't run any checks and paint directly
             if((!current.atlas_id && !current.atlas_pos) /*&& (_seed.atlas_id && _seed.atlas_xy)*/) {
-                this.paint_and_expand(current, fill_tile, queue);
+                //this.paint_and_expand(current, fill_tile, queue);
+                
+                this.map.set_tile_at(current.map_xy, {
+                    "map_xy":    current.map_xy,
+                    "screen_xy": current.screen_xy,
+                    "atlas_id":  fill_tile.atlas_id,
+                    "atlas_xy":  fill_tile.atlas_pos
+                });
+                
+                this.expand_to_neighbors(queue, current.map_xy, current, visited);
+                
                 continue;
             }            
 
@@ -64,27 +78,50 @@ export class BucketTool extends BaseTool {
             if(current.atlas_id == _seed.atlas_id && !current.atlas_xy.equals(_seed.atlas_xy)) continue;
                         
             //do the thing
-            this.paint_and_expand(current, fill_tile, queue);
+            this.map.set_tile_at(current.map_xy, {
+                "map_xy":    current.map_xy,
+                "screen_xy": current.screen_xy,
+                "atlas_id":  fill_tile.atlas_id,
+                "atlas_xy":  fill_tile.atlas_pos
+            });
+            
+            this.expand_to_neighbors(queue, current.map_xy, current, visited);
         }
         
         console.log(`floodfill iterations: ${counter}`);
     }
     
-    paint_and_expand(current, fill_tile, queue){
-        console.log(`painting: ${current.map_xy.toString()}
-                         with: ${fill_tile.atlas_id}/${fill_tile.atlas_pos.toString()} `)
+       
+    expand_to_neighbors(queue, map_xy, current, visited){
         
-        this.map.set_tile_at(current.map_xy, {"map_xy":    current.map_xy,
-                                              "screen_xy": current.screen_xy,
-                                              "atlas_id":  fill_tile.atlas_id,
-                                              "atlas_xy":  fill_tile.atlas_pos
-                                             });
+        let dirs = [
+            Vector2.up,
+            Vector2.up.scale(-1),
+            Vector2.right.scale(-1),
+            Vector2.right
+        ];
+        
+        for(const dir of dirs){
+            const pos  = map_xy.add(dir);
+            const tile = this.map.get_tile_at(pos);
             
-        this.expand_to_neighbors(queue, current.map_xy, current);
-    }
-    
-    expand_to_neighbors(queue, map_xy, current){
+            if(tile){
+                const tile_info = {
+                    "atlas_id": tile.parent_atlas_id,
+                    "atlas_xy": tile.parent_atlas_pos,
+                    "map_xy": pos,
+                    "screen_xy": map_xy.add(dir).scale(this.map.tileRenderSize)
+                }
+                
+                const key = tile_info.map_xy.toString();
+                if(visited.has(key)) continue;
+                
+                visited.add(key);
+                queue.push(tile_info);
+            }
+        }
         
+        return;
         
         //north
         const north_pos  = map_xy.add(Vector2.up);
