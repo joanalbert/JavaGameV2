@@ -17,7 +17,8 @@ public class LevelGridTileV3 {
     public static enum COLISION_TYPE{
         WALK("WALK"),
         BLOCK("BLOCK"),
-        SURF("SURF");
+        SURF("SURF"),
+        NONE("NONE");
         
         private final String label;
 
@@ -80,4 +81,5 @@ public class LevelGridTileV3 {
     public Vector3 getGridPosition(){return this.tile_pos;}
     
     public COLISION_TYPE getColision(){return this.collision;}
+    public int getLayerIndex(){return this.layer_index;}
 }

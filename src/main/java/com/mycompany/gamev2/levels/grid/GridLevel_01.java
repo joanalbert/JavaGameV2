@@ -17,7 +17,7 @@ public class GridLevel_01 extends GridLevelBase{
         
     public GridLevel_01(){
         //super("GridLevel_01_docks", "map_layouts/map_fail.json");
-        super("GridLevel_01_docks", "map_layouts/TileTestingMap.json");
+        super("GridLevel_01_docks", "map_layouts/Tile_Testing_3.json");
         ComponentSetup();
     }
 

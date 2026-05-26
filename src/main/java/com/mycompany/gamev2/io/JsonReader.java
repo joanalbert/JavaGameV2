@@ -17,6 +17,8 @@ import com.mycompany.gamev2.io.gson_deserializers.ColisionTypeDeserializer;
 import com.mycompany.gamev2.io.gson_deserializers.Vector3TypeDeserializer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -46,7 +48,7 @@ public class JsonReader {
 
         //define the grid srtucture and it's dimensions before the try-catch block
         Vector3 map_dimensions = Vector3.ZERO;
-        LevelGridTileV3[][] grid = null;
+        ArrayList<LevelGridTileV3>[][] grid = null;
 
         try {
             //file
@@ -59,7 +61,10 @@ public class JsonReader {
             
             //initialize grid with it's dimensions as specified in the json
             map_dimensions = gson.fromJson(map.getAsJsonObject("size"), Vector3.class);
-            grid = new LevelGridTileV3[(int)map_dimensions.getX()][(int)map_dimensions.getY()];
+            int width = (int) map_dimensions.getX();
+            int height = (int) map_dimensions.getY();
+            
+            grid = (ArrayList<LevelGridTileV3>[][]) new ArrayList[width][height];
             
             //iterate layers and deserialize individual tiles for each layer
             Iterator<JsonElement> iterator = layers.iterator();
@@ -71,11 +76,26 @@ public class JsonReader {
                     
                 //iterate through this layer's tiles and deserialize them
                 for(JsonElement json_tile : tiles){
+                    //get the tile from json
                     LevelGridTileV3 tile = gson.fromJson(json_tile.getAsJsonObject(), LevelGridTileV3.class);
-                    Vector3 tile_pos = tile.tile_pos;
                     
-                    //FINALLY: set the tile within the grid datastructure
-                    grid[(int)tile_pos.getX()][(int)tile_pos.getY()] = tile;
+                    //compute what this tile's window render location should be
+                    Vector3 tile_pos = tile.tile_pos;
+                    tile.wndw_loc = tile.tile_pos.getScaled(size);
+                    
+                    int grid_x = (int)tile_pos.getX();
+                    int grid_y = (int)tile_pos.getY();
+                                        
+                    //FINALLY: add the tile to the tile_stack at this point in the grid
+                    ArrayList<LevelGridTileV3> tile_stack = grid[grid_x][grid_y];
+                    if(tile_stack == null){
+                        tile_stack = new ArrayList<LevelGridTileV3>();
+                        grid[grid_x][grid_y] = tile_stack;
+                    }
+                    
+                    //add to the tile stack and sort it by layer (ascending)
+                    tile_stack.add(tile);
+                    tile_stack.sort(Comparator.comparingInt(LevelGridTileV3::getLayerIndex));
                 }
             }
             

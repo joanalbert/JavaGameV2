@@ -32,6 +32,7 @@ public class GridLevel_02 extends GridLevelBase{
             .config_width(20)
             .config_tile_size(32)
             .config_viewport_culling(false)
+            .config_override_json_dimensions(false)
             .construct_fromJSON(this.getJsonName());
             
         } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}

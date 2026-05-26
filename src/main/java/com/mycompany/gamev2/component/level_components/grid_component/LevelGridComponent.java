@@ -9,6 +9,7 @@ import com.mycompany.gamev2.component.level_components.camera_component.GridLeve
 import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
+import com.mycompany.gamev2.exceptions.AtlasNotFoundException;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
@@ -20,6 +21,8 @@ import com.mycompany.gamev2.levels.grid.GridLevelBase;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -29,23 +32,25 @@ import java.util.Optional;
  */
 public class LevelGridComponent extends LevelComponent {
     
-    private LevelGridTileV3[][] tile_matrix;
+    private ArrayList<LevelGridTileV3>[][] tile_matrix;
     private GridLevelBase owning_level;
-    private HashMap<Integer, BufferedImage> atlases;
+    private HashMap<String, BufferedImage> atlases = new HashMap<String, BufferedImage>();
+    
+    
     
     //grid config fields
     private int tile_width = 0;
     private int tile_height = 0;
-    private int tile_size = 64;
-    private boolean viewpoert_culling;
+    private int tile_size = 32;
+    private boolean viewport_culling;
     private boolean override_json_grid_dimensions = true;
     private boolean camera_follow = false;
     
         
     public LevelGridComponent(GridLevelBase owning_level){
         this.owning_level = owning_level;
-        this.viewpoert_culling = true;
-        load_atlases();
+        this.viewport_culling = true;
+        //load_atlases();
     }
     
     public int getTileSize(){return this.tile_size;}
@@ -70,7 +75,7 @@ public class LevelGridComponent extends LevelComponent {
     }
     
     public LevelGridComponent config_viewport_culling(boolean setting){
-        this.viewpoert_culling = setting;
+        this.viewport_culling = setting;
         return this;
     }
     
@@ -106,7 +111,35 @@ public class LevelGridComponent extends LevelComponent {
     }
     ///////////////////
     
-    private void load_atlases(){
+    
+    //from a tile id, check the atlas and load it if new, returns true if a new entry is added
+    private boolean load_atlases_v2(String id) throws AtlasNotFoundException{
+        
+        String  base_path = "textures/pokemon_tilesets/overworld_outside/";
+        String atlas_path = base_path + (id.replace(".","/")) + ".png";
+        
+        //check whether the file actually exists or not first
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resource = classLoader.getResource(atlas_path);
+        if (resource == null) {
+            throw new AtlasNotFoundException("Atlas not found: "+id);
+        } 
+        
+        if(!this.atlases.containsKey(id)){
+            BufferedImage atlas = ImageMaker.BufferedImageFromSource(atlas_path);
+            this.atlases.put(id, atlas);
+            return true;
+        }
+                
+        return false;
+    }
+    
+    
+    //OLD, BAD AND UNUSED: but i leave it here because this is a learning project
+    /*private void load_atlases(){
+        
+        System.out.println("we do nothing lmao");
+        return;
         
         this.atlases = new HashMap<Integer, BufferedImage>();
         
@@ -115,7 +148,7 @@ public class LevelGridComponent extends LevelComponent {
 
         atlases.put(0, atlas1);
         atlases.put(1, atlas2);
-    }
+    }*/
 
     @Override
     public void tick(TickEvent e) {
@@ -128,7 +161,7 @@ public class LevelGridComponent extends LevelComponent {
         
         Graphics2D g = e.getGraphics();
         
-        if(viewpoert_culling){
+        if(viewport_culling){
             render_viewport_culling(g);
         }
         else render_naive(g);
@@ -139,11 +172,18 @@ public class LevelGridComponent extends LevelComponent {
         int draw_calls = 0;
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
-                LevelGridTileV2 tile = tile_matrix[x][y];
-                /*Vector3 pos = tile.getWindowLocation();
+                
                 g.setColor(Color.pink); 
-                g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); */
-                render_tile(g, tile);
+                
+                //iterate the sorted tile_stack and send to render
+                ArrayList<LevelGridTileV3> tile_stack = tile_matrix[x][y];
+                for(LevelGridTileV3 tile : tile_stack){
+                    //Vector3 pos = tile.getWindowLocation();
+                    //g.fillRect((int)pos.getX(), (int)pos.getY(), tile_size, tile_size); 
+                    render_tile(g, tile);
+                }
+
+                //render_tile(g, tile);
                 draw_calls++;
             }
         }
@@ -162,15 +202,18 @@ public class LevelGridComponent extends LevelComponent {
                 return;
             }
 
+            //just so we can compare how much more optimal this method is vs naive rendering
             int draw_calls = 0;
-            BoxBounds bounds = cam.getBounds(); 
-
             
+            //compute te bounds that contain visible tiles depending on cameralocation (from camera bounds)
+            BoxBounds bounds = cam.getBounds(); 
             int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
             int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
 
             int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
             int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
+            
+            
 
             for (int x = startX; x < endX; x++) {
                 for (int y = startY; y < endY; y++) {
@@ -181,9 +224,12 @@ public class LevelGridComponent extends LevelComponent {
                         continue;
                     }
 
-                    LevelGridTileV2 tile = tile_matrix[x][y];
-                    if(tile == null) continue;
-                    render_tile(g, tile);
+                    //get the tile stack at this location and render it (it's already ordered by layer index)
+                    ArrayList<LevelGridTileV3> tile_stack = tile_matrix[x][y];
+                    for(LevelGridTileV3 tile : tile_stack){
+                        render_tile(g, tile);
+                    }
+                                        
                     draw_calls++;
                 }
             }
@@ -197,10 +243,20 @@ public class LevelGridComponent extends LevelComponent {
         //System.out.println(draw_calls+" DRAW CALLS");
     }
     
-    private void render_tile(Graphics2D g, LevelGridTileV2 tile){
+    private void render_tile(Graphics2D g, LevelGridTileV3 tile){
         
         Vector3 pos = tile.getWindowLocation();
-        BufferedImage atlas = atlases.get(tile.atls_id-1);
+        
+        
+        try{
+            //attempt to load whichever atlas this tile draws from
+            this.load_atlases_v2(tile.atlas_id);
+        } catch(AtlasNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        
+        //old
+        BufferedImage atlas = this.atlases.get(tile.atlas_id); //atlases.get(tile.atlas_id-1);
         
         // Fallback to drawing a colored rectangle if atlas is missing
         if (atlas == null) {
@@ -210,8 +266,8 @@ public class LevelGridComponent extends LevelComponent {
         }
         
         // Source coordinates in the atlas
-        int srcX = (int) tile.atls_pos.getX();
-        int srcY = (int) tile.atls_pos.getY();
+        int srcX = (int) tile.atlas_pos.getX();
+        int srcY = (int) tile.atlas_pos.getY();
         
         // Destination coordinates on the screen
         int destX = (int) pos.getX();
@@ -242,13 +298,13 @@ public class LevelGridComponent extends LevelComponent {
         // Draw the specific region of the atlas
         g.drawImage(atlas, 
             destX, destY, destX+tile_size, destY+tile_size, // Destination rectangle
-            srcX, srcY, srcX + 16, srcY + 16,     // Source rectangle
+            srcX, srcY, srcX + 32, srcY + 32,     // Source rectangle
             null);
         
         //debug grid outline
         if(DebugFlags.getInstance().getShow_level_grids()){
-            if(tile.colision.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
-               tile.colision.equals(LevelGridTileV2.COLISION_TYPE.SURF)) g.setColor(Color.red);
+            if(tile.collision.equals(LevelGridTileV2.COLISION_TYPE.BLOCK) ||
+               tile.collision.equals(LevelGridTileV2.COLISION_TYPE.SURF)) g.setColor(Color.red);
             else g.setColor(Color.blue);
             g.drawRect(destX, destY, tile_size, tile_size);
             
@@ -276,20 +332,22 @@ public class LevelGridComponent extends LevelComponent {
         return grid_location;
     }
     
-    public LevelGridTileV2.COLISION_TYPE getColisionForTile(Vector3 tile_coords) throws NoSuchGridTileException{
+    public LevelGridTileV3.COLISION_TYPE getColisionForTile(Vector3 tile_coords) throws NoSuchGridTileException{
+        return LevelGridTileV3.COLISION_TYPE.BLOCK;
+        /*
         int x = ((int) tile_coords.getX());
         int y = ((int) tile_coords.getY());
-        LevelGridTileV2 tile = this.tile_matrix[x][y];
+        LevelGridTileV3 tile = this.tile_matrix[x][y];
         
         if(tile == null) throw new NoSuchGridTileException("The provided coordinates do not map to a GridTileV2 in this grid.");
         
-        LevelGridTileV2.COLISION_TYPE colision_type = tile.getColision();
+        LevelGridTileV3.COLISION_TYPE colision_type = tile.getColision();
         
         if(colision_type == null){
             System.out.println("no colision");
-            return LevelGridTileV2.COLISION_TYPE.BLOCK;
+            return LevelGridTileV3.COLISION_TYPE.BLOCK;
         }
         
-        return colision_type;
+        return colision_type;*/
     }
 }
