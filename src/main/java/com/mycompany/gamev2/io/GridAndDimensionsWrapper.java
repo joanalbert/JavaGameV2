@@ -7,22 +7,24 @@ package com.mycompany.gamev2.io;
 
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
 import com.mycompany.gamev2.gamemath.Vector3;
-import java.util.ArrayList;
+
 
 /**
  *
  * @author J.A
  */
 public class GridAndDimensionsWrapper {
-    private ArrayList<LevelGridTileV3>[][] grid;
+    private LevelGridTileV3[][][] grid;
     private Vector3 dimensions;
+    private int layer_count;
     
-    public GridAndDimensionsWrapper(ArrayList<LevelGridTileV3>[][] grid, Vector3 dimensions){
+    public GridAndDimensionsWrapper(LevelGridTileV3[][][] grid, Vector3 dimensions, int layer_count){
         this.grid = grid;
         this.dimensions = dimensions;
-        
+        this.layer_count = layer_count;
     }
     
-    public ArrayList<LevelGridTileV3>[][] getGrid(){return this.grid;}
+    public LevelGridTileV3[][][] getGrid(){return this.grid;}
     public Vector3 getDimensions(){return this.dimensions;}
+    public int getLayerCount(){return this.layer_count;}
 }

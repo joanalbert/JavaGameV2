@@ -17,7 +17,7 @@ public abstract class ImageMaker {
     public static BufferedImage BufferedImageFromSource(String src){
         
         try{
-            System.out.println(src);
+            //System.out.println(src);
             return ImageIO.read(ClassLoader.getSystemResource(src));
         } 
         catch(IOException e){

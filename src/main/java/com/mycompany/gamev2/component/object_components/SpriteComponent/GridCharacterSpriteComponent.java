@@ -101,7 +101,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
             //this.current_step = ECharacterStepSide.LEFT;
             step_state = !step_state;
             step_state_changed = true;
-            System.out.println(step_state+" "+f);
+            //System.out.println(step_state+" "+f);
         }
         
         if(step_state) this.current_step = ECharacterStepSide.LEFT;

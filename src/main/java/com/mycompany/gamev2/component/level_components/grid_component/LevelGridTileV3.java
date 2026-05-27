@@ -15,19 +15,28 @@ import com.mycompany.gamev2.gamemath.Vector3;
 public class LevelGridTileV3 {
     
     public static enum COLISION_TYPE{
-        WALK("WALK"),
-        BLOCK("BLOCK"),
-        SURF("SURF"),
-        NONE("NONE");
+        
+        NONE("NONE",0),
+        WALK("WALK",0),
+        SURF("SURF",1),
+        BLOCK("BLOCK",2);
+        
+    
         
         private final String label;
+        private final int priority;
 
-        COLISION_TYPE(String label) {
+        COLISION_TYPE(String label, int priority) {
             this.label = label;
+            this.priority = priority;
         }
 
         public String getLabel() {
             return label;
+        }
+        
+        public int getPriority(){
+            return priority;
         }
         
         public static COLISION_TYPE fromLabel(String label) {
