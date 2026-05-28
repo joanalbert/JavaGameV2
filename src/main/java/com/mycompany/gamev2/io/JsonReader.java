@@ -66,7 +66,7 @@ public class JsonReader {
             int width = (int) map_dimensions.getX();
             int height = (int) map_dimensions.getY();
             
-            grid = new LevelGridTileV3[width][height][10];
+            grid = new LevelGridTileV3[width][height][layer_count];
             
             //iterate layers and deserialize individual tiles for each layer
             Iterator<JsonElement> iterator = layers.iterator();

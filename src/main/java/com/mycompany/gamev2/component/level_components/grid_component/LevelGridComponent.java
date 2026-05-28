@@ -129,7 +129,7 @@ public class LevelGridComponent extends LevelComponent {
         
         for(int x = 0; x < tile_width; x++){
            for(int y = 0; y < tile_height; y++){
-               for(int z = 0; z < 3; z++){
+               for(int z = 0; z < total_layers; z++){
 
                    LevelGridTileV3 tile = tile_matrix[x][y][z];
                    if(tile == null || known_ids.contains(tile.atlas_id) || failed_ids.contains(tile.atlas_id) ) continue;
@@ -172,6 +172,7 @@ public class LevelGridComponent extends LevelComponent {
         if(!this.atlases.containsKey(id)){
             BufferedImage atlas = ImageMaker.BufferedImageFromSource(atlas_path);
             this.atlases.put(id, atlas);
+            System.out.println("atlas loaded -> "+id);
             return true;
         }
                 
@@ -216,7 +217,7 @@ public class LevelGridComponent extends LevelComponent {
         int draw_calls = 0;
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
-                for(int z = 0; z < 3; z++){
+                for(int z = 0; z < total_layers; z++){
                 
                     //iterate the sorted tile_stack and send to render
                     LevelGridTileV3 tile = tile_matrix[x][y][z];
@@ -268,7 +269,7 @@ public class LevelGridComponent extends LevelComponent {
                         continue;
                     }
                     
-                    for(int z = 0; z < 3; z++){
+                    for(int z = 0; z < total_layers; z++){
                         LevelGridTileV3 tile = tile_matrix[x][y][z];
                         if(tile != null){
                             draw_calls++;
@@ -295,13 +296,6 @@ public class LevelGridComponent extends LevelComponent {
         Vector3 pos = tile.getWindowLocation();
         BufferedImage atlas = this.atlases.get(tile.atlas_id); //atlases.get(tile.atlas_id-1);
         
-        // Fallback to drawing a colored rectangle if atlas is missing
-        if (atlas == null) {
-            g.setColor(java.awt.Color.RED);
-            g.fillRect((int) pos.getX(), (int) pos.getY(), tile_size, tile_size);
-            return;
-        }
-        
         // Source coordinates in the atlas
         int srcX = (int) tile.atlas_pos.getX();
         int srcY = (int) tile.atlas_pos.getY();
@@ -309,7 +303,7 @@ public class LevelGridComponent extends LevelComponent {
         // Destination coordinates on the screen
         int destX = (int) pos.getX();
         int destY = (int) pos.getY();
-        
+
         // Destination coordinates on the screen (based on camera)
         
         //exception approach
@@ -331,18 +325,33 @@ public class LevelGridComponent extends LevelComponent {
             destY -= cam_offsets.getY();
         }
         
-       
+        // Fallback to drawing a colored rectangle if atlas is missing
+        if (atlas == null) {
+            g.setColor(java.awt.Color.magenta);
+            g.fillRect(destX, destY, tile_size, tile_size);
+        }
+        else{
         // Draw the specific region of the atlas
         g.drawImage(atlas, 
             destX, destY, destX+tile_size, destY+tile_size, // Destination rectangle
             srcX, srcY, srcX + 32, srcY + 32,     // Source rectangle
             null);
+        }
         
+               
         //debug grid outline
         if(DebugFlags.getInstance().getShow_level_grids()){
-            if(tile.collision.equals(LevelGridTileV3.COLISION_TYPE.BLOCK) ||
-               tile.collision.equals(LevelGridTileV3.COLISION_TYPE.SURF)) g.setColor(Color.red);
-            else g.setColor(Color.blue);
+            
+            LevelGridTileV3.COLISION_TYPE c = LevelGridTileV3.COLISION_TYPE.NONE;
+            try{c = this.getColisionForTile(tile.tile_pos);}
+            catch(NoSuchGridTileException e){System.out.println(e.getMessage());}
+            
+            if(c.equals(LevelGridTileV3.COLISION_TYPE.BLOCK) || c.equals(LevelGridTileV3.COLISION_TYPE.SURF)){
+                g.setColor(Color.red);
+            }
+            else{
+                g.setColor(Color.blue);
+            }
             g.drawRect(destX, destY, tile_size, tile_size);
             
         }

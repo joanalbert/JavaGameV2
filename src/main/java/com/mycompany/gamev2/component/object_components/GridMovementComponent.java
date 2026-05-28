@@ -209,7 +209,7 @@ public class GridMovementComponent extends MovementComponent {
     
     private boolean target_check_is_blocked(Vector3 target_grid_coords){
         LevelGridTileV3.COLISION_TYPE colision_type = this.grid_provider.colision_at_tile(target_grid_coords);
-        
+        System.out.println("X:"+target_grid_coords.getX()+" Y:"+target_grid_coords.getY()+" -> "+colision_type.getLabel());
         if (colision_type.equals(LevelGridTileV3.COLISION_TYPE.BLOCK) ||
             colision_type.equals(LevelGridTileV3.COLISION_TYPE.SURF)) {
             return true;

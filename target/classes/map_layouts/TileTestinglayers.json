@@ -1,0 +1,298 @@
+{
+  "name": "Untitled Map",
+  "size": {
+    "x": 4,
+    "y": 4
+  },
+  "tileSize": 32,
+  "layers": [
+    {
+      "index": 0,
+      "name": "Layer 1",
+      "visible": true,
+      "tiles": [
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 1,
+            "y": 2
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 2,
+            "y": 2
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 0,
+            "y": 2
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 1,
+            "y": 3
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 1,
+            "y": 1
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 3,
+            "y": 2
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 2,
+            "y": 3
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 2,
+            "y": 1
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 0,
+            "y": 3
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 0,
+            "y": 1
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 1,
+            "y": 0
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 3,
+            "y": 3
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 3,
+            "y": 1
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 2,
+            "y": 0
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 0,
+            "y": 0
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        },
+        {
+          "layer_index": 0,
+          "tile_pos": {
+            "x": 3,
+            "y": 0
+          },
+          "atlas_id": "plants.grass.grasses",
+          "atlas_pos": {
+            "x": 32,
+            "y": 0
+          },
+          "collision": "NONE"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "name": "Layer 2",
+      "visible": true,
+      "tiles": [
+        {
+          "layer_index": 1,
+          "tile_pos": {
+            "x": 3,
+            "y": 2
+          },
+          "atlas_id": "props.town_props",
+          "atlas_pos": {
+            "x": 0,
+            "y": 192
+          },
+          "collision": "BLOCK"
+        },
+        {
+          "layer_index": 1,
+          "tile_pos": {
+            "x": 3,
+            "y": 3
+          },
+          "atlas_id": "props.town_props",
+          "atlas_pos": {
+            "x": 0,
+            "y": 224
+          },
+          "collision": "BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Layer 3",
+      "visible": true,
+      "tiles": [
+        {
+          "layer_index": 2,
+          "tile_pos": {
+            "x": 2,
+            "y": 3
+          },
+          "atlas_id": "props.town_props",
+          "atlas_pos": {
+            "x": 192,
+            "y": 96
+          },
+          "collision": "BLOCK"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Layer 4",
+      "visible": true,
+      "tiles": [
+        {
+          "layer_index": 3,
+          "tile_pos": {
+            "x": 1,
+            "y": 3
+          },
+          "atlas_id": "mountain.rocks.geo_01",
+          "atlas_pos": {
+            "x": 224,
+            "y": 128
+          },
+          "collision": "BLOCK"
+        }
+      ]
+    }
+  ]
+}
