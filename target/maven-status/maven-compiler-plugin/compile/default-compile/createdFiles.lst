@@ -34,6 +34,7 @@ com\mycompany\gamev2\component\level_components\grid_component\LevelGridTile.cla
 com\mycompany\gamev2\gameobjects\characters\PlayerCharacter.class
 com\mycompany\gamev2\input_system\InputManager$2.class
 com\mycompany\gamev2\event_system\gameplay_events\CharacterStepEvent$ECharacterStepSide.class
+com\mycompany\gamev2\interfaces\Util\IGridMovementTarget.class
 com\mycompany\gamev2\levels\grid\GridLevelBase.class
 com\mycompany\gamev2\interfaces\providers\ICameraProvider.class
 com\mycompany\gamev2\levels\grid\GridLevel_02.class
@@ -61,6 +62,7 @@ com\mycompany\gamev2\Utils\GridMoveTimer.class
 com\mycompany\gamev2\input_system\BindKey$Axis.class
 com\mycompany\gamev2\gameobjects\GameObject.class
 com\mycompany\gamev2\component\ComponentEventListener.class
+com\mycompany\gamev2\interfaces\Util\ICameraTarget.class
 com\mycompany\gamev2\input_system\InputContexts\InputContext.class
 com\mycompany\gamev2\input_system\InputActions\InputAction.class
 com\mycompany\gamev2\io\gson_deserializers\ColisionTypeDeserializer.class

@@ -124,43 +124,62 @@ public class JsonReader {
         }
     }
     
-    public LevelGridTileV2[][] getTileMatrixFromJSON(String json_path, int w, int h, int size){
+    public GridAndDimensionsWrapper getTileMatrixFromJSON(String json_path, int w, int h, int size){
         
         //we use GsonBuilder in order to register our deserializers for LevelGridTileV2.COLISION_TYPE and Vector3
         Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(LevelGridTileV2.COLISION_TYPE.class, new ColisionTypeDeserializer())
+                        .registerTypeAdapter(LevelGridTileV3.COLISION_TYPE.class, new ColisionTypeDeserializer())
                         .registerTypeAdapter(Vector3.class, new Vector3TypeDeserializer())
                         .create();
         
-        LevelGridTileV2[][] grid = new LevelGridTileV2[w][h];
-        
+        //define the grid srtucture and it's dimensions before the try-catch block
+        LevelGridTileV3[][][] grid = null;
+        int layer_count = 0;
+
         try {
+            //file
             String full_path = ClassLoader.getSystemResource(json_path).getPath();
             FileReader reader = new FileReader(full_path);
           
+            //get main json elements (map and layers)
             JsonObject map = JsonParser.parseReader(reader).getAsJsonObject();
             JsonArray layers = map.getAsJsonArray("layers");
-            JsonArray tiles = map.getAsJsonArray("tiles");
+            
+            //read the total amount of layers
+            layer_count = layers.size();
+            
+            
+            //instead of using the dimensions in the JSON we instead set the user defined dimensions
+            grid = new LevelGridTileV3[w][h][layer_count];
+            
+            //iterate layers and deserialize individual tiles for each layer
+            Iterator<JsonElement> iterator = layers.iterator();
+            while (iterator.hasNext()) {
                 
-            int length = tiles.size();
-            for(int i = 0; i < length; i++){
-                JsonObject obj = tiles.get(i).getAsJsonObject();
-                LevelGridTileV2 tile = gson.fromJson(obj, LevelGridTileV2.class);
-                
-                //here we need to check manually that the colision type was loaded correctly
-                //just in case it wasn't defined in the json.
-                //to handle sthis case there are security checks both in "LevelGridTileV2.COLISION_TYPE.fromLabel" and in "ColisionTypeDeserializer.deserialize"
-                //but since these methods dont even run if a json propery/objet doesn't exists, we have to do the following here:
-                //fallback to COLISION_TYPE.BLOCK
-                if(tile.colision == null) tile.colision = LevelGridTileV2.COLISION_TYPE.BLOCK;
-                
-                Vector3 grid_pos   = tile.getGridPosition();
-                Vector3 window_loc = grid_pos.getScaled(size);
-                
-                tile.setWindowLocation(window_loc);
-                
-                grid[(int)grid_pos.getX()][(int)grid_pos.getY()] = tile;
+                //get the current layer and all its tiles
+                JsonObject layer = iterator.next().getAsJsonObject();
+                JsonArray tiles = layer.getAsJsonArray("tiles");
+                    
+                //iterate through this layer's tiles and deserialize them
+                for(JsonElement json_tile : tiles){
+                    //get the tile from json
+                    LevelGridTileV3 tile = gson.fromJson(json_tile.getAsJsonObject(), LevelGridTileV3.class);
+                    
+                    //compute what this tile's window render location should be
+                    Vector3 tile_pos = tile.tile_pos;
+                    tile.wndw_loc = tile.tile_pos.getScaled(size);
+                    
+                    int grid_x = (int)tile_pos.getX();
+                    int grid_y = (int)tile_pos.getY();
+                    
+                    if(grid_x < 0 || grid_x >= w) continue;
+                    if(grid_y < 0 || grid_y >= h) continue;
+                                        
+                    //FINALLY: add the tile to the grid
+                    grid[grid_x][grid_y][tile.layer_index] = tile;
+                }
             }
+  
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
@@ -169,7 +188,7 @@ public class JsonReader {
             e.printStackTrace();
         }
         finally{
-            return grid;
+            return new GridAndDimensionsWrapper(grid, new Vector3(w,h,layer_count), layer_count);
         }
     }
 }

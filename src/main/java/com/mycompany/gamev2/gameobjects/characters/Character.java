@@ -5,14 +5,18 @@
 package com.mycompany.gamev2.gameobjects.characters;
 
 
+import com.mycompany.gamev2.component.object_components.TransformComponent;
+import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.GameObject;
 import com.mycompany.gamev2.input_system.InputContexts.InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
+import com.mycompany.gamev2.interfaces.Util.ICameraTarget;
+import java.util.Optional;
 /**
  *
  * @author J.A
  */
-public abstract class Character extends GameObject{
+public abstract class Character extends GameObject implements ICameraTarget{
    
     protected InputContext input_context;
     
@@ -33,4 +37,15 @@ public abstract class Character extends GameObject{
     
     protected abstract void input_setup();
       
+    @Override
+    public Vector3 getCameraTargetPosition() {
+        
+        Optional<TransformComponent> optional = this.tryGetComponent(TransformComponent.class);
+        if(optional.isPresent()){
+            Vector3 position = optional.get().getLocation();
+            return position;
+        }
+        
+        return Vector3.ZERO;
+    }
 }

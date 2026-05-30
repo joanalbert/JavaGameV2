@@ -4,7 +4,6 @@
  */
 package com.mycompany.gamev2.gameobjects;
 
-import com.mycompany.gamev2.component.level_components.LevelComponent;
 import com.mycompany.gamev2.component.object_components.ObjectComponent;
 import com.mycompany.gamev2.component.object_components.TransformComponent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;

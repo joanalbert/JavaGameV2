@@ -48,7 +48,7 @@ public class InputBinding {
         
         for(BindKey k : modifiers){
             int modifier = k.getKeyCode();
-            if(keyStates.containsKey(modifier)) state = true;
+            if(keyStates.containsKey(modifier)) state2 = true;
         }
         
         return state && state2;

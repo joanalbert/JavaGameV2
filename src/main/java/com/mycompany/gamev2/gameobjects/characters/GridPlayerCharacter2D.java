@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.gameobjects.characters;
 
 import com.mycompany.gamev2.GameLoopV2;
+import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.SpriteComponent.GridCharacterSpriteComponent;
 import com.mycompany.gamev2.debug.DebugFlags;
@@ -20,6 +21,7 @@ import com.mycompany.gamev2.input_system.InputActions.IA_Walk;
 import com.mycompany.gamev2.input_system.InputBinding;
 import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_InputContext;
 import com.mycompany.gamev2.input_system.InputManager;
+import com.mycompany.gamev2.interfaces.Util.IGridMovementTarget;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
 import com.mycompany.gamev2.providers.CameraProvider;
 import com.mycompany.gamev2.providers.LevelGridProvider;
@@ -30,7 +32,7 @@ import java.awt.Graphics2D;
  *
  * @author J.A
  */
-public class GridPlayerCharacter2D extends PlayerCharacter {
+public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovementTarget {
  
     private IA_Walk ia_walk;
     private IA_May2Brendan ia_switch_sprite;
@@ -202,5 +204,66 @@ public class GridPlayerCharacter2D extends PlayerCharacter {
         
         this.sprite.render(event);
     }
+
+    
+    ///////////////////////////////////////////////////////// INTERFACE IGridMovementTarget
+    @Override
+    public boolean getStopped_moving() {
+        if(this.movement != null){
+            return this.movement.getStopped_moving();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean getIsMoving() {
+        if(this.movement != null){
+            return this.movement.getIsMoving();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean is_move_completed() {
+        if(this.movement != null){
+            return this.movement.is_move_completed();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean getStarted_moving() {
+        if(this.movement != null){
+            return this.movement.getStarted_moving();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public GridMoveTimer getMove_timer() {
+        if(this.movement != null){
+            return this.movement.getMove_timer();
+        }
+        
+        return null;
+    }
+    
+    
+    @Override
+    public Vector3 getTargetPos() {
+        return this.movement.getTargetPos();
+    }
+
+    @Override
+    public Vector3 getStartPos() {
+        return this.movement.getStartPos();
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////
     
 }

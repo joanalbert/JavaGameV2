@@ -17,7 +17,6 @@ import com.mycompany.gamev2.gamemath.Vector3;
 import com.mycompany.gamev2.gameobjects.characters.GridPlayerCharacter2D;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
 import com.mycompany.gamev2.interfaces.event_listeners.IGameplayListener;
-import com.mycompany.gamev2.io.image.ImageMaker;
 import com.mycompany.gamev2.providers.CameraProvider;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -129,8 +128,7 @@ public class GridCharacterSpriteComponent<T extends GridPlayerCharacter2D> exten
       
       //get the graphics object and the buffered image to draw to the screen  
       Graphics2D g = e.getGraphics();
-      String src = this.active_image.getPath();
-      BufferedImage img = ImageMaker.BufferedImageFromSource(src);
+      BufferedImage img = this.active_image.getImage();
       
            
       //get the location to draw to, taking into account camera offsets

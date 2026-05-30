@@ -17,7 +17,7 @@ public class GridLevel_01 extends GridLevelBase{
         
     public GridLevel_01(){
         //super("GridLevel_01_docks", "map_layouts/map_fail.json");
-        super("GridLevel_01_docks", "map_layouts/TileTesting_Working.json");
+        super("GridLevel_01_docks", "map_layouts/NewMap.json");
         ComponentSetup();
     }
 
@@ -27,8 +27,8 @@ public class GridLevel_01 extends GridLevelBase{
             LevelGridComponent grid = getComponent(LevelGridComponent.class);
             if(grid == null) return;
 
-            grid.config_height(20)
-                .config_width(50)
+            grid.config_height(10)
+                .config_width(10)
                 .config_tile_size(32)
                 .config_viewport_culling(true)
                 .config_override_json_dimensions(false)

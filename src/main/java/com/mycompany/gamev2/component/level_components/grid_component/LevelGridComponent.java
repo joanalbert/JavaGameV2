@@ -92,26 +92,28 @@ public class LevelGridComponent extends LevelComponent {
     
     public LevelGridComponent construct_fromJSON(String json_path){
         JsonReader reader = JsonReader.getInstance();
+        GridAndDimensionsWrapper wrapper;
         
         if(this.override_json_grid_dimensions){
             //pass in user defined width and height
-            //tile_matrix = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size);
-            System.out.println("NOT SUPPORTED YET");
+            wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_width, this.tile_height, this.tile_size);
         }
         else{
             // ignore user defined width and height, the ones in the json will be used
-            GridAndDimensionsWrapper wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); 
-            tile_matrix = wrapper.getGrid();
-            
-            this.total_layers = wrapper.getLayerCount();
-
-            //update width & height based on what was read in the JSON
-            this.tile_width  = (int) wrapper.getDimensions().getX();
-            this.tile_height = (int) wrapper.getDimensions().getY();
-            
-            preload_atlasses();
-            
+            wrapper = reader.getTileMatrixFromJSON(json_path, this.tile_size); 
         }
+        
+                
+        this.tile_matrix = wrapper.getGrid();
+        this.total_layers = wrapper.getLayerCount();
+
+        //update width & height based on what was read in the JSON or what width and height got passed to getTileMatrixFromJSON
+        this.tile_width  = (int) wrapper.getDimensions().getX();
+        this.tile_height = (int) wrapper.getDimensions().getY();
+
+        //important, we do this here for performance
+        preload_atlasses();
+            
         return this;
     }
     ///////////////////

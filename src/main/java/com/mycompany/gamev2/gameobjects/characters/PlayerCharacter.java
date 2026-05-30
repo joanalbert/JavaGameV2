@@ -5,8 +5,6 @@
 package com.mycompany.gamev2.gameobjects.characters;
 
 import com.mycompany.gamev2.component.object_components.MovementComponent;
-import com.mycompany.gamev2.component.object_components.TransformComponent;
-import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;

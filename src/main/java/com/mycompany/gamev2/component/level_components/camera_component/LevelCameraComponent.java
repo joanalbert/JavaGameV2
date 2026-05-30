@@ -14,7 +14,7 @@ import com.mycompany.gamev2.exceptions.CameraNoTargetException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.gamemath.BoxBounds;
 import com.mycompany.gamev2.gamemath.Vector3;
-import com.mycompany.gamev2.gameobjects.GameObject;
+import com.mycompany.gamev2.interfaces.Util.ICameraTarget;
 import com.mycompany.gamev2.levels.BaseLevel;
 import com.mycompany.gamev2.levels.LevelManager;
 import com.mycompany.gamev2.window.MyWindow;
@@ -29,7 +29,7 @@ public class LevelCameraComponent extends LevelComponent {
     
     protected Vector3 cam_offset = Vector3.ZERO;
     protected Vector3 position   = Vector3.ZERO;
-    protected GameObject target  = null; 
+    protected ICameraTarget target  = null; 
     protected BoxBounds bounds   = null;
     protected double delta;
     
@@ -45,7 +45,7 @@ public class LevelCameraComponent extends LevelComponent {
         this.owning_level = level;
     }
     
-    public void setTarget(GameObject target){
+    public void setTarget(ICameraTarget target){
         if(target != null) this.target = target;
     }
    
@@ -53,14 +53,14 @@ public class LevelCameraComponent extends LevelComponent {
     
     protected void track(){
         if(target == null) return;
-        this.position = this.target.getObjectLocation();
+        this.position = this.target.getCameraTargetPosition();
     }
         
-    protected void smooth_track(GameObject target) {
+    protected void smooth_track(ICameraTarget target) {
         if (target == null) return;
         
                
-        Vector3 targetPos = target.getObjectLocation();
+        Vector3 targetPos = target.getCameraTargetPosition();
         double lerpFactor = 0.2; // Adjust for smoothness
         this.position = this.position.plus(targetPos.minus(this.position).getScaled(lerpFactor));
     }
