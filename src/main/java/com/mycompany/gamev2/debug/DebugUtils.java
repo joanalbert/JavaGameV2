@@ -15,22 +15,20 @@ import java.awt.Graphics2D;
  */
 public class DebugUtils {
     
-    private static DebugUtils instance;
-    
+     
+    private static final class Holder{
+        static final DebugUtils INSTANCE = new DebugUtils();
+    }
    
-    //string
-   
+    public static DebugUtils getInstance(){
+        return Holder.INSTANCE;
+    }
     
     private DebugUtils(){
     
     }
     
-    public static DebugUtils getInstance(){
-        if(instance == null) instance = new DebugUtils();
-        return instance;
-    }
-    
-    
+        
     public void draw_string(String msg){
         Graphics2D g = GameLoopV2.getInstance().requestGraphics();
                 

@@ -32,6 +32,15 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
     private BaseLevel current_level;
     
     public static LevelManager instance;
+    
+    
+    private static final class Holder{
+        static final LevelManager INSTANCE = new LevelManager();
+    }
+    
+    public static LevelManager getInstance(){
+        return Holder.INSTANCE;
+    }
         
     private LevelManager(){
         EventManager.getInstance().subscribe(this, IInputListener.class);
@@ -42,14 +51,7 @@ public class LevelManager implements IInputListener, IGameUpdateListener{
         //levels.add(new TestLevel_02());
         levels.add(new GridLevel_02());
     }
-    
-    
-    
-    public static LevelManager getInstance(){
-        if(instance == null) instance = new LevelManager();
-        return instance;
-    }
-    
+        
     public void switchLevel(BaseLevel level){
         if(level == null) throw new IllegalArgumentException("level can't be null");
         

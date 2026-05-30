@@ -32,7 +32,7 @@ import java.util.Optional;
  */
 public class LevelGridComponent extends LevelComponent {
     
-    private LevelGridTileV3[][][] tile_matrix;
+    private LevelGridTile[][][] tile_matrix;
     private GridLevelBase owning_level;
     private HashMap<String, BufferedImage> atlases = new HashMap<String, BufferedImage>();
     
@@ -133,19 +133,19 @@ public class LevelGridComponent extends LevelComponent {
            for(int y = 0; y < tile_height; y++){
                for(int z = 0; z < total_layers; z++){
 
-                   LevelGridTileV3 tile = tile_matrix[x][y][z];
-                   if(tile == null || known_ids.contains(tile.atlas_id) || failed_ids.contains(tile.atlas_id) ) continue;
+                   LevelGridTile tile = tile_matrix[x][y][z];
+                   if(tile == null || known_ids.contains(tile.getAtlasID()) || failed_ids.contains(tile.getAtlasID()) ) continue;
 
                    try{
 
                        //attempt to load whichever atlas this tile draws from
-                       boolean result = this.load_atlases_v2(tile.atlas_id);
+                       boolean result = this.load_atlases_v2(tile.getAtlasID());
                        if(!result) fail_counter++;
                        
-                       known_ids.add(tile.atlas_id);
+                       known_ids.add(tile.getAtlasID());
                    } catch(AtlasNotFoundException e){
                        System.out.println(e.getMessage());
-                       failed_ids.add(tile.atlas_id);
+                       failed_ids.add(tile.getAtlasID());
                        fail_counter++;
                    }
 
@@ -222,7 +222,7 @@ public class LevelGridComponent extends LevelComponent {
                 for(int z = 0; z < total_layers; z++){
                 
                     //iterate the sorted tile_stack and send to render
-                    LevelGridTileV3 tile = tile_matrix[x][y][z];
+                    LevelGridTile tile = tile_matrix[x][y][z];
                     if(tile != null) render_tile(g, tile);
                     else{
                         //g.setColor(Color.pink); 
@@ -272,7 +272,7 @@ public class LevelGridComponent extends LevelComponent {
                     }
                     
                     for(int z = 0; z < total_layers; z++){
-                        LevelGridTileV3 tile = tile_matrix[x][y][z];
+                        LevelGridTile tile = tile_matrix[x][y][z];
                         if(tile != null){
                             draw_calls++;
                             render_tile(g, tile);
@@ -293,14 +293,14 @@ public class LevelGridComponent extends LevelComponent {
         //System.out.println(draw_calls+" DRAW CALLS");
     }
     
-    private void render_tile(Graphics2D g, LevelGridTileV3 tile){
+    private void render_tile(Graphics2D g, LevelGridTile tile){
         
         Vector3 pos = tile.getWindowLocation();
-        BufferedImage atlas = this.atlases.get(tile.atlas_id); //atlases.get(tile.atlas_id-1);
+        BufferedImage atlas = this.atlases.get(tile.getAtlasID()); //atlases.get(tile.atlas_id-1);
         
         // Source coordinates in the atlas
-        int srcX = (int) tile.atlas_pos.getX();
-        int srcY = (int) tile.atlas_pos.getY();
+        int srcX = (int) tile.getAtlasPos().getX();
+        int srcY = (int) tile.getAtlasPos().getY();
         
         // Destination coordinates on the screen
         int destX = (int) pos.getX();
@@ -344,11 +344,11 @@ public class LevelGridComponent extends LevelComponent {
         //debug grid outline
         if(DebugFlags.getInstance().getShow_level_grids()){
             
-            LevelGridTileV3.COLISION_TYPE c = LevelGridTileV3.COLISION_TYPE.NONE;
-            try{c = this.getColisionForTile(tile.tile_pos);}
+            LevelGridTile.COLISION_TYPE c = LevelGridTile.COLISION_TYPE.NONE;
+            try{c = this.getColisionForTile(tile.getGridPosition());}
             catch(NoSuchGridTileException e){System.out.println(e.getMessage());}
             
-            if(c.equals(LevelGridTileV3.COLISION_TYPE.BLOCK) || c.equals(LevelGridTileV3.COLISION_TYPE.SURF)){
+            if(c.equals(LevelGridTile.COLISION_TYPE.BLOCK) || c.equals(LevelGridTile.COLISION_TYPE.SURF)){
                 g.setColor(Color.red);
             }
             else{
@@ -382,7 +382,7 @@ public class LevelGridComponent extends LevelComponent {
     
     
     //query all collision types in the tile stack at the given x,y and return the most restrictive type
-    public LevelGridTileV3.COLISION_TYPE getColisionForTile(Vector3 tile_coords) throws NoSuchGridTileException{
+    public LevelGridTile.COLISION_TYPE getColisionForTile(Vector3 tile_coords) throws NoSuchGridTileException{
         
         
         int x = ((int) tile_coords.getX());
@@ -390,33 +390,33 @@ public class LevelGridComponent extends LevelComponent {
         
         // Out of bounds = blocked
         if (x < 0 || x >= tile_width || y < 0 || y >= tile_height) {
-            return LevelGridTileV3.COLISION_TYPE.BLOCK;
+            return LevelGridTile.COLISION_TYPE.BLOCK;
         }
         
         
         //init variables
-        LevelGridTileV3.COLISION_TYPE most_restrictive = LevelGridTileV3.COLISION_TYPE.WALK;
+        LevelGridTile.COLISION_TYPE most_restrictive = LevelGridTile.COLISION_TYPE.WALK;
         int highest_priority = -1;
 
         //get the stack at this x,y
-        LevelGridTileV3[] stack = tile_matrix[x][y];
+        LevelGridTile[] stack = tile_matrix[x][y];
 
         //early return and default to BLOCK
         if (stack == null || stack.length == 0) {
-            return LevelGridTileV3.COLISION_TYPE.BLOCK;
+            return LevelGridTile.COLISION_TYPE.BLOCK;
         }
         
         //loop the stack
         for (int z = 0; z < stack.length; z++) {        
-            LevelGridTileV3 tile = stack[z];
+            LevelGridTile tile = stack[z];
             
-            if (tile == null || tile.collision == null) continue; 
+            if (tile == null || tile.getColision() == null) continue; 
 
-            int priority = tile.collision.getPriority();
+            int priority = tile.getColision().getPriority();
 
             if (priority > highest_priority) {
                 highest_priority = priority;
-                most_restrictive = tile.collision;
+                most_restrictive = tile.getColision();
             }
             
         }

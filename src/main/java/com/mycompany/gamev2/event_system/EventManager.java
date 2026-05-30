@@ -20,9 +20,15 @@ public class EventManager {
     
     private HashMap<Class<? extends IEventListener>, EventBus<?>> EVENT_BUSSES = new HashMap<>();
     
+        
+    private static final class Holder{
+        static final EventManager INSTANCE = new EventManager();
+    }
     
+    public static EventManager getInstance(){
+        return Holder.INSTANCE;
+    }
     
-    private static EventManager instance;
     
     private EventManager(){
        EVENT_BUSSES.put(IGameUpdateListener.class, new EventBus<IGameUpdateListener>("GAME_BUS"));
@@ -31,12 +37,7 @@ public class EventManager {
        EVENT_BUSSES.put(IWorldListener.class, new EventBus<IWorldListener>("LEVEL_BUS"));
        
     }
-    
-    public static EventManager getInstance(){
-        if(instance == null) instance = new EventManager();
-        return instance;
-    }
-        
+      
     @SuppressWarnings("unchecked")
     public <T extends IEventListener> void post(BaseEvent event, Class<T> listenerType) {
         EventBus<T> bus = (EventBus<T>) EVENT_BUSSES.get(listenerType);

@@ -15,21 +15,23 @@ import java.awt.event.KeyEvent;
  * @author J.A
  */
 public class DebugFlags implements IInputListener{
-
-    private static DebugFlags instance;
     
     private boolean show_debug_FPS = false;
     private boolean show_level_grids = false;
+    
+    private static final class Holder{
+        static final DebugFlags INSTANCE = new DebugFlags();
+    }
+    
+    public static DebugFlags getInstance(){
+        return Holder.INSTANCE;
+    }
     
     
     private DebugFlags(){
         EventManager.getInstance().subscribe(this, IInputListener.class);
     }
     
-    public static DebugFlags getInstance(){
-        if(instance == null) instance = new DebugFlags();
-        return instance;
-    }
     
     @Override
     public void onEventReceived(BaseEvent event) {

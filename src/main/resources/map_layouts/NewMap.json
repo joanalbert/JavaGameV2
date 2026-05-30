@@ -43,7 +43,7 @@
             "x": 9,
             "y": 4
           },
-          "atlas_id": "plants.grass.grasses",
+          "atlas_id": "plants.grass.grasses_wrong",
           "atlas_pos": {
             "x": 32,
             "y": 0

@@ -5,7 +5,7 @@
 package com.mycompany.gamev2.io;
 
 
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
 import com.mycompany.gamev2.gamemath.Vector3;
 
 
@@ -14,17 +14,17 @@ import com.mycompany.gamev2.gamemath.Vector3;
  * @author J.A
  */
 public class GridAndDimensionsWrapper {
-    private LevelGridTileV3[][][] grid;
+    private LevelGridTile[][][] grid;
     private Vector3 dimensions;
     private int layer_count;
     
-    public GridAndDimensionsWrapper(LevelGridTileV3[][][] grid, Vector3 dimensions, int layer_count){
+    public GridAndDimensionsWrapper(LevelGridTile[][][] grid, Vector3 dimensions, int layer_count){
         this.grid = grid;
         this.dimensions = dimensions;
         this.layer_count = layer_count;
     }
     
-    public LevelGridTileV3[][][] getGrid(){return this.grid;}
+    public LevelGridTile[][][] getGrid(){return this.grid;}
     public Vector3 getDimensions(){return this.dimensions;}
     public int getLayerCount(){return this.layer_count;}
 }

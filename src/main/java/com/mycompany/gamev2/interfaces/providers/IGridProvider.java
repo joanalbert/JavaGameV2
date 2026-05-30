@@ -4,7 +4,7 @@
  */
 package com.mycompany.gamev2.interfaces.providers;
 
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
 import com.mycompany.gamev2.gamemath.Vector3;
 
 /**
@@ -16,5 +16,5 @@ public interface IGridProvider {
     public Vector3 screen_to_grid(Vector3 grid_coords);
     public int height_in_tiles();
     public int width_in_tiles();
-    public LevelGridTileV3.COLISION_TYPE colision_at_tile(Vector3 grid_coords);
+    public LevelGridTile.COLISION_TYPE colision_at_tile(Vector3 grid_coords);
 }

@@ -6,18 +6,18 @@ package com.mycompany.gamev2.io.gson_deserializers;
 
 
 import com.google.gson.*;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
 import java.lang.reflect.Type;
 
 /**
  *
  * @author J.A
  */
-public class ColisionTypeDeserializer implements JsonDeserializer<LevelGridTileV3.COLISION_TYPE> {
+public class ColisionTypeDeserializer implements JsonDeserializer<LevelGridTile.COLISION_TYPE> {
     @Override
-    public LevelGridTileV3.COLISION_TYPE deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public LevelGridTile.COLISION_TYPE deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String label = json.getAsString();
         if(label == null || label.isEmpty() || label.equals("")) label = "B";
-        return LevelGridTileV3.COLISION_TYPE.fromLabel(label);
+        return LevelGridTile.COLISION_TYPE.fromLabel(label);
     }
 }

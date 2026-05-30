@@ -5,7 +5,7 @@
 package com.mycompany.gamev2.providers;
 
 import com.mycompany.gamev2.component.level_components.grid_component.LevelGridComponent;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
 import com.mycompany.gamev2.exceptions.NoSuchGridTileException;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
 import com.mycompany.gamev2.exceptions.NonGridLevelException;
@@ -33,7 +33,7 @@ public class LevelGridProvider extends BaseProvider implements IGridProvider{
     }
 
     @Override
-    public LevelGridTileV3.COLISION_TYPE colision_at_tile(Vector3 grid_coords) {
+    public LevelGridTile.COLISION_TYPE colision_at_tile(Vector3 grid_coords) {
         try{return this.grid.getColisionForTile(grid_coords);}
         catch(NoSuchGridTileException e){
             System.out.println(e.getMessage());

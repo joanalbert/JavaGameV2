@@ -36,18 +36,22 @@ public class InputManager implements IGameUpdateListener {
     private static HashMap<Integer, Boolean> keyStates_prev = new HashMap<>();
     private Vector3 mousePosition      = Vector3.ZERO;
     private Vector3 mousePosition_prev = Vector3.ZERO;
-    private static InputManager instance;
     private List<InputContext> activeContexts;
+    
+    private static final class Holder{
+        static final InputManager INSTANCE = new InputManager();
+    }
+    
+    public static InputManager getInstance(){
+        return Holder.INSTANCE;
+    }
     
     private InputManager(){
         this.activeContexts = new ArrayList<>();
         EventManager.getInstance().subscribe(this, IGameUpdateListener.class);
     }
     
-    public static InputManager getInstance(){
-        if(instance == null) instance = new InputManager();
-        return instance;
-    }
+    
     
     public boolean addContext(InputContext context){
         try{this.activeContexts.add(context);}

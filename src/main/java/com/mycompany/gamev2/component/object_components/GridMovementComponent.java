@@ -6,7 +6,7 @@ package com.mycompany.gamev2.component.object_components;
 
 
 import com.mycompany.gamev2.Utils.GridMoveTimer;
-import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTileV3;
+import com.mycompany.gamev2.component.level_components.grid_component.LevelGridTile;
 import com.mycompany.gamev2.debug.DebugUtils;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -208,10 +208,10 @@ public class GridMovementComponent extends MovementComponent {
     }
     
     private boolean target_check_is_blocked(Vector3 target_grid_coords){
-        LevelGridTileV3.COLISION_TYPE colision_type = this.grid_provider.colision_at_tile(target_grid_coords);
+        LevelGridTile.COLISION_TYPE colision_type = this.grid_provider.colision_at_tile(target_grid_coords);
         System.out.println("X:"+target_grid_coords.getX()+" Y:"+target_grid_coords.getY()+" -> "+colision_type.getLabel());
-        if (colision_type.equals(LevelGridTileV3.COLISION_TYPE.BLOCK) ||
-            colision_type.equals(LevelGridTileV3.COLISION_TYPE.SURF)) {
+        if (colision_type.equals(LevelGridTile.COLISION_TYPE.BLOCK) ||
+            colision_type.equals(LevelGridTile.COLISION_TYPE.SURF)) {
             return true;
         } 
         return false;
