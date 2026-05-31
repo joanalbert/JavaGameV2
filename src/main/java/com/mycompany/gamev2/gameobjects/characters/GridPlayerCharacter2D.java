@@ -9,6 +9,7 @@ import com.mycompany.gamev2.Utils.GridMoveTimer;
 import com.mycompany.gamev2.component.object_components.GridMovementComponent;
 import com.mycompany.gamev2.component.object_components.SpriteComponent.GridCharacterSpriteComponent;
 import com.mycompany.gamev2.debug.DebugFlags;
+import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
 import com.mycompany.gamev2.exceptions.NoSuchLevelComponentException;
@@ -23,6 +24,7 @@ import com.mycompany.gamev2.input_system.InputContexts.GridPlayerCharacter_Input
 import com.mycompany.gamev2.input_system.InputManager;
 import com.mycompany.gamev2.interfaces.Util.IGridMovementTarget;
 import com.mycompany.gamev2.interfaces.characters.ECharacter;
+import com.mycompany.gamev2.interfaces.event_listeners.IInputListener;
 import com.mycompany.gamev2.providers.CameraProvider;
 import com.mycompany.gamev2.providers.LevelGridProvider;
 import java.awt.Color;
@@ -32,7 +34,7 @@ import java.awt.Graphics2D;
  *
  * @author J.A
  */
-public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovementTarget {
+public class GridPlayerCharacter2D extends Character implements IGridMovementTarget, IInputListener {
  
     private IA_Walk ia_walk;
     private IA_May2Brendan ia_switch_sprite;
@@ -41,7 +43,11 @@ public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovem
     private GridCharacterSpriteComponent sprite;
     
     public GridPlayerCharacter2D(){
-        this.color = Color.YELLOW;
+        super();
+        
+        setObjectLocation(new Vector3(50,50,0));
+        
+        input_setup();
     }
     
     @Override
@@ -166,6 +172,11 @@ public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovem
         try{this.movement.try_ensure_grid_alignment();}
         catch(NullOwnerTransformException e){System.out.println(e.getMessage());}
     }
+
+    @Override
+    public void onEventReceived(BaseEvent event) {
+       
+    }
     
     
 
@@ -177,6 +188,8 @@ public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovem
         
         
     }
+    
+    
 
     
     
@@ -196,7 +209,7 @@ public class GridPlayerCharacter2D extends PlayerCharacter implements IGridMovem
             Vector3 location = getObjectLocation().minus(cam_offsets);
 
             //g.setColor(this.color);
-            if(movement.getIsMoving()) g.setColor(this.color);
+            if(movement.getIsMoving()) g.setColor(Color.red);
             else g.setColor(Color.BLUE);
 
             g.fillRect((int)location.getX(), (int)location.getY(), 32, 32);

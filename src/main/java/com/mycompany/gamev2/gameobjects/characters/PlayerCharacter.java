@@ -59,12 +59,11 @@ public class PlayerCharacter extends Character implements IInputListener {
         
         //initialize character specific components
         
-        //add a MovementComponent only if this is not a grid based character
-        if (!(this instanceof GridPlayerCharacter2D)){
-            this.movement = new MovementComponent<PlayerCharacter>(this);
-            this.addComponent(MovementComponent.class, this.movement);
-            this.movement.setWalkSpeed(80);
-        }
+                
+        this.movement = new MovementComponent<PlayerCharacter>(this);
+        this.addComponent(MovementComponent.class, this.movement);
+        this.movement.setWalkSpeed(80);
+        
     }
     
     

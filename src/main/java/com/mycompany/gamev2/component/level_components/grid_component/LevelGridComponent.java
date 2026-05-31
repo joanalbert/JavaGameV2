@@ -354,7 +354,7 @@ public class LevelGridComponent extends LevelComponent {
             else{
                 g.setColor(Color.blue);
             }
-            g.drawRect(destX, destY, tile_size, tile_size);
+            g.drawRect(destX, destY, tile_size-2, tile_size-2);
             
         }
     }
