@@ -183,7 +183,7 @@ public class GridPlayerCharacter2D extends Character implements IGridMovementTar
     @Override
     public void tick(TickEvent event) {
         super.tick(event);
-        //we do nothing here (we override super behavior)
+        //we do nothing here 
         
         
         

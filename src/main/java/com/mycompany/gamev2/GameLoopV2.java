@@ -188,7 +188,8 @@ public class GameLoopV2 implements Runnable {
         {
             double fps = 1/delta;
             DecimalFormat df = new DecimalFormat("#.##");
-            g.drawString("FPS: "+df.format(fps)  , 10, 30); 
+            //g.drawString("FPS: "+df.format(fps)  , 10, 30); 
+            g.drawString("FPS: "+fps, 10, 30); 
             g.drawString("FRAME Nº: "+getFrames(), 10, 60);
         }
         

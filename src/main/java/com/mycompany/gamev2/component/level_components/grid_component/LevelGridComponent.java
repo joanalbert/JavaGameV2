@@ -216,14 +216,24 @@ public class LevelGridComponent extends LevelComponent {
     
     
     private void render_naive(Graphics2D g){
+        
+        Vector3 cam_offsets = Vector3.ZERO;
         int draw_calls = 0;
+        
+ 
+        if(this.camera_follow){
+            Optional<GridLevelCameraComponent> opt_cam = owning_level.tryGetComponent(GridLevelCameraComponent.class);
+            if(opt_cam.isPresent()) cam_offsets = opt_cam.get().getCamOffsets();
+        }
+        
+        
         for(int x = 0; x < tile_width; x++){
             for(int y = 0; y < tile_height; y++){
                 for(int z = 0; z < total_layers; z++){
                 
                     //iterate the sorted tile_stack and send to render
                     LevelGridTile tile = tile_matrix[x][y][z];
-                    if(tile != null) render_tile(g, tile);
+                    if(tile != null) render_tile(g, tile, cam_offsets);
                     else{
                         //g.setColor(Color.pink); 
                         //Vector3 pos = tile.getWindowLocation();
@@ -240,60 +250,56 @@ public class LevelGridComponent extends LevelComponent {
     
     private void render_viewport_culling(Graphics2D g){
         
-        try{
-            
-            GridLevelCameraComponent cam = owning_level.getComponent(GridLevelCameraComponent.class);
-            
-            if(cam == null) {
-                System.out.println("Viewport culling requires a LevelCameraComponent to be present. We won't render.");
-                return;
-            }
-
-            //just so we can compare how much more optimal this method is vs naive rendering
-            int draw_calls = 0;
-            
-            //compute te bounds that contain visible tiles depending on cameralocation (from camera bounds)
-            BoxBounds bounds = cam.getBounds(); 
-            int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
-            int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
-
-            int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
-            int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
-            
-            
-
-            for (int x = startX; x < endX; x++) {
-                for (int y = startY; y < endY; y++) {
-                    
-                    //this check is necessary for when the camera goes outside the grid
-                    if(x >= this.tile_width || y >= this.tile_height){
-                        System.out.println("CAM OUTSIDE");
-                        continue;
-                    }
-                    
-                    for(int z = 0; z < total_layers; z++){
-                        LevelGridTile tile = tile_matrix[x][y][z];
-                        if(tile != null){
-                            draw_calls++;
-                            render_tile(g, tile);
-                        }
-                    }
-
-                }
-            }
-            
-           //System.out.println(draw_calls);
-            
-        } catch (NoSuchLevelComponentException ex){
-            System.out.println(ex.getMessage());
-            //GameLoopV2.getInstance().stop();
+           
+        GridLevelCameraComponent cam; //owning_level.getComponent(GridLevelCameraComponent.class);
+        Optional<GridLevelCameraComponent> opt_cam = owning_level.tryGetComponent(GridLevelCameraComponent.class);
+        
+        if(!opt_cam.isPresent()){
+            System.out.println("Viewport culling requires a LevelCameraComponent to be present. We won't render.");
+            return;
         }
-        
-        
+
+        //we compute camera offsets early, then we pass it down to each individual tile when it's time to render them
+        cam = opt_cam.get();
+        Vector3 cam_offsets = (this.camera_follow) ? cam.getCamOffsets() : Vector3.ZERO;
+
+        //just so we can compare how much more optimal this method is vs naive rendering
+        int draw_calls = 0;
+
+        //compute te bounds that contain visible tiles depending on cameralocation (from camera bounds)
+        BoxBounds bounds = cam.getBounds(); 
+        int startX = Math.max(0, (int) (bounds.getLeft() / tile_size));
+        int endX   = Math.min(tile_width, (int) Math.ceil(bounds.getRight() / tile_size));
+
+        int startY = Math.max(0, (int) (bounds.getTop() / tile_size));
+        int endY   = Math.min(tile_height, (int) Math.ceil(bounds.getBottom() / tile_size));
+
+
+
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
+
+                //this check is necessary for when the camera goes outside the grid
+                if(x >= this.tile_width || y >= this.tile_height){
+                    System.out.println("CAM OUTSIDE");
+                    continue;
+                }
+
+                for(int z = 0; z < total_layers; z++){
+                    LevelGridTile tile = tile_matrix[x][y][z];
+                    if(tile != null){
+                        draw_calls++;
+                        render_tile(g, tile, cam_offsets);
+                    }
+                }
+
+            }
+        }
+            
         //System.out.println(draw_calls+" DRAW CALLS");
     }
     
-    private void render_tile(Graphics2D g, LevelGridTile tile){
+    private void render_tile(Graphics2D g, LevelGridTile tile, Vector3 cam_offsets){
         
         Vector3 pos = tile.getWindowLocation();
         BufferedImage atlas = this.atlases.get(tile.getAtlasID()); //atlases.get(tile.atlas_id-1);
@@ -318,11 +324,8 @@ public class LevelGridComponent extends LevelComponent {
             }
         } catch (NoSuchLevelComponentException ex){System.out.println(ex.getMessage());}*/
         
-        //optional approach
-        Optional<GridLevelCameraComponent> opt_cam = owning_level.tryGetComponent(GridLevelCameraComponent.class);
-        if(opt_cam.isPresent() && this.camera_follow){
-            GridLevelCameraComponent cam = opt_cam.get();
-            Vector3 cam_offsets = cam.getCamOffsets();
+        
+        if(this.camera_follow){
             destX -= cam_offsets.getX();
             destY -= cam_offsets.getY();
         }
