@@ -5,6 +5,7 @@ com\mycompany\gamev2\event_system\input_events\KeyReleaseEvent.class
 com\mycompany\gamev2\interfaces\event_listeners\IInputListener.class
 com\mycompany\gamev2\gamemath\Vector3.class
 com\mycompany\gamev2\input_system\InputManager$Holder.class
+com\mycompany\gamev2\Utils\ScreenDrawingUtils.class
 com\mycompany\gamev2\input_system\BindKey.class
 com\mycompany\gamev2\gameobjects\TestSphere.class
 com\mycompany\gamev2\io\gson_deserializers\Vector3TypeDeserializer.class
@@ -19,8 +20,10 @@ com\mycompany\gamev2\input_system\InputActions\IA_Walk.class
 com\mycompany\gamev2\gameobjects\characters\GridPlayerCharacter2D.class
 com\mycompany\gamev2\gamemath\BoxBounds.class
 com\mycompany\gamev2\GameLoopV2.class
+com\mycompany\gamev2\providers\EventProvider.class
 com\mycompany\gamev2\exceptions\CameraNoTargetException.class
 com\mycompany\gamev2\component\object_components\ObjectComponent.class
+com\mycompany\gamev2\debug\menu\DebugMenuItem.class
 com\mycompany\gamev2\component\BaseComponent.class
 com\mycompany\gamev2\component\level_components\LevelComponent.class
 com\mycompany\gamev2\exceptions\NonGridLevelException.class
@@ -38,14 +41,17 @@ com\mycompany\gamev2\event_system\gameplay_events\CharacterStepEvent$ECharacterS
 com\mycompany\gamev2\interfaces\Util\IGridMovementTarget.class
 com\mycompany\gamev2\levels\grid\GridLevelBase.class
 com\mycompany\gamev2\interfaces\providers\ICameraProvider.class
+com\mycompany\gamev2\debug\menu\DebugPage.class
 com\mycompany\gamev2\levels\grid\GridLevel_02.class
 com\mycompany\gamev2\debug\DebugFlags$Holder.class
+com\mycompany\gamev2\debug\DebugManager.class
 com\mycompany\gamev2\component\level_components\camera_component\GridLevelCameraComponent.class
 com\mycompany\gamev2\event_system\gameplay_events\CharacterStepEvent.class
 com\mycompany\gamev2\gameobjects\characters\Character.class
 com\mycompany\gamev2\component\object_components\TransformComponent.class
 com\mycompany\gamev2\io\image\ImageMaker.class
 com\mycompany\gamev2\io\JsonReader$Holder.class
+com\mycompany\gamev2\debug\menu\DebugMenu.class
 com\mycompany\gamev2\input_system\KeyInput.class
 com\mycompany\gamev2\GameV2.class
 com\mycompany\gamev2\component\level_components\camera_component\LevelCameraComponent.class
@@ -60,6 +66,7 @@ com\mycompany\gamev2\input_system\InputManager$3.class
 com\mycompany\gamev2\input_system\InputContexts\PlayerCharacter_InputContext.class
 com\mycompany\gamev2\exceptions\AtlasNotFoundException.class
 com\mycompany\gamev2\providers\LevelGridProvider.class
+com\mycompany\gamev2\debug\DebugManager$Holder.class
 com\mycompany\gamev2\input_system\InputContexts\GridPlayerCharacter_InputContext.class
 com\mycompany\gamev2\exceptions\ExceptionUtils.class
 com\mycompany\gamev2\Utils\GridMoveTimer.class
@@ -75,6 +82,7 @@ com\mycompany\gamev2\interfaces\ILevel.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameplayListener.class
 com\mycompany\gamev2\levels\BaseLevel.class
 com\mycompany\gamev2\io\GridAndDimensionsWrapper.class
+com\mycompany\gamev2\interfaces\providers\IEventProvider.class
 com\mycompany\gamev2\event_system\level_events\LevelWindownEvent.class
 com\mycompany\gamev2\input_system\InputBinding.class
 com\mycompany\gamev2\Utils\BasicTimer.class

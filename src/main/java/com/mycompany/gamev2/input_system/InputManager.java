@@ -5,6 +5,7 @@
 package com.mycompany.gamev2.input_system;
 
 import com.mycompany.gamev2.GameLoopV2;
+import com.mycompany.gamev2.debug.DebugFlags;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -186,8 +187,27 @@ public class InputManager implements IGameUpdateListener {
         CNV.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-                UpdateStates(new KeyInput(keyCode, true));
+                
+                
+                //RAW INPUT BYPASSES THE GAMEPLAY INPUT SYSTEM AND GOES STRAIGHT TO THE DEBUG SYSTEM
+                
+                //RAW INPUT TO TOGGLE DEBUG MODE
+                int code = e.getKeyCode();
+                if(code == KeyEvent.VK_P || code == KeyEvent.VK_I){
+                    EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
+                }
+                
+                //if in debug mode we send RAW INPUT the debug menu will use, othwerwise the trat it as gameplay input
+                if(DebugFlags.getInstance().isDebug_mode()){
+                    
+                    if(code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT)
+                        EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
+                }
+                else {
+                    int keyCode = e.getKeyCode();
+                    UpdateStates(new KeyInput(keyCode, true));
+                }
+                
                 
                 
                 //HARDCODED EXIT
@@ -204,12 +224,7 @@ public class InputManager implements IGameUpdateListener {
                     EventManager.getInstance().post(new KeyPressEvent(KeyEvent.VK_L, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                     System.out.println("telling the level manager to switch level");
                 }
-                
-                //TOGGLE DEBUG TEXT
-                int code = e.getKeyCode();
-                if(code == KeyEvent.VK_P || code == KeyEvent.VK_I){
-                    EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
-                }
+ 
             }
             
              @Override

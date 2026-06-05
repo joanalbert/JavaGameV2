@@ -59,7 +59,7 @@ public abstract class BaseLevel implements IWorldListener, IGameUpdateListener, 
         }
         
         if(event instanceof TickEvent t_event){
-            tick_level_components(t_event);    
+            tick_level_components(t_event);  
             tick_game_objects(t_event);            
         }
         

@@ -57,7 +57,7 @@ public class BasicTimer implements IGameUpdateListener {
     
     @Override
     public void onEventReceived(BaseEvent event) {
-        if(event instanceof TickEvent tick_event) this.update(tick_event.getDeltaSeconds());
+        if(this.running && event instanceof TickEvent tick_event) this.update(tick_event.getDeltaSeconds());
     }
     
     public void dispose(){

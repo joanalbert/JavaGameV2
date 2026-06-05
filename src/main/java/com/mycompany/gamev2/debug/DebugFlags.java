@@ -18,6 +18,7 @@ public class DebugFlags implements IInputListener{
     
     private boolean show_debug_FPS = false;
     private boolean show_level_grids = false;
+    private boolean debug_mode = false;
     
     private static final class Holder{
         static final DebugFlags INSTANCE = new DebugFlags();
@@ -45,6 +46,7 @@ public class DebugFlags implements IInputListener{
                 case KeyEvent.VK_P:
                         show_debug_FPS = !show_debug_FPS;
                         show_level_grids = !show_level_grids;
+                        debug_mode = !debug_mode;
                     break;
             }
             
@@ -55,6 +57,12 @@ public class DebugFlags implements IInputListener{
    
     public boolean getShow_debug_FPS(){return show_debug_FPS;}
     public boolean getShow_level_grids(){return show_level_grids;}
+
+    public boolean isDebug_mode() {
+        return debug_mode;
+    }
+
+    
     
    
 }

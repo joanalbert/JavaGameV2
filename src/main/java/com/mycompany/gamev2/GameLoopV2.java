@@ -5,6 +5,7 @@
 package com.mycompany.gamev2;
 
 import com.mycompany.gamev2.debug.DebugFlags;
+import com.mycompany.gamev2.debug.DebugManager;
 import com.mycompany.gamev2.event_system.EventManager;
 import com.mycompany.gamev2.event_system.game_events.GameFinishedEvent;
 import com.mycompany.gamev2.event_system.game_events.GameStartEvent;
@@ -70,6 +71,7 @@ public class GameLoopV2 implements Runnable {
         final double TARGET_TIME_SECONDS = 1.0 / FPS; // 1/60 ≈ 0.01667 seconds
 
         EventManager.getInstance().post(new GameStartEvent(), IGameUpdateListener.class);
+        DebugManager debug = DebugManager.getInstance();
 
         while (this.running) {
             long now = System.nanoTime();
@@ -90,7 +92,7 @@ public class GameLoopV2 implements Runnable {
 
                 RenderEvent r_event = new RenderEvent(g);
                 EventManager.getInstance().post(r_event, IGameUpdateListener.class);
-                render_debug_info(t_event, r_event);
+                //render_debug_info(t_event, r_event);
 
                 g.dispose();
                 MyWindow.BUFFER_STRATEGY.show();
