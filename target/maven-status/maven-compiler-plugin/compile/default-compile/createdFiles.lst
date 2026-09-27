@@ -40,8 +40,8 @@ com\mycompany\gamev2\input_system\InputManager$2.class
 com\mycompany\gamev2\event_system\gameplay_events\CharacterStepEvent$ECharacterStepSide.class
 com\mycompany\gamev2\interfaces\Util\IGridMovementTarget.class
 com\mycompany\gamev2\levels\grid\GridLevelBase.class
+com\mycompany\gamev2\debug\pages\LevelPage.class
 com\mycompany\gamev2\interfaces\providers\ICameraProvider.class
-com\mycompany\gamev2\debug\menu\DebugPage.class
 com\mycompany\gamev2\levels\grid\GridLevel_02.class
 com\mycompany\gamev2\debug\DebugFlags$Holder.class
 com\mycompany\gamev2\debug\DebugManager.class
@@ -69,6 +69,7 @@ com\mycompany\gamev2\providers\LevelGridProvider.class
 com\mycompany\gamev2\debug\DebugManager$Holder.class
 com\mycompany\gamev2\input_system\InputContexts\GridPlayerCharacter_InputContext.class
 com\mycompany\gamev2\exceptions\ExceptionUtils.class
+com\mycompany\gamev2\debug\pages\DebugPage.class
 com\mycompany\gamev2\Utils\GridMoveTimer.class
 com\mycompany\gamev2\input_system\BindKey$Axis.class
 com\mycompany\gamev2\gameobjects\GameObject.class
@@ -102,6 +103,7 @@ com\mycompany\gamev2\interfaces\characters\ECharacter.class
 com\mycompany\gamev2\event_system\EventManager.class
 com\mycompany\gamev2\interfaces\event_listeners\IGameUpdateListener.class
 com\mycompany\gamev2\io\JsonReader.class
+com\mycompany\gamev2\debug\menu\VerticalDebugMenu.class
 com\mycompany\gamev2\event_system\game_events\RenderEvent.class
 com\mycompany\gamev2\input_system\InputManager.class
 com\mycompany\gamev2\event_system\game_events\BaseEvent.class

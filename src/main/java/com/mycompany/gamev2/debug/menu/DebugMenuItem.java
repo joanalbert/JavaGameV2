@@ -21,6 +21,7 @@ public class DebugMenuItem {
     private Font font;
     private Color color;
     private int width_pixels;
+    private int height_pixels;
     
     public DebugMenuItem(String text, Color color, Font font, boolean selected) { //Font(this.font_family, this.font_style, this.font_size)
         
@@ -30,7 +31,8 @@ public class DebugMenuItem {
         this.color = color;
         this.font = font;
         
-        this.width_pixels = ScreenDrawingUtils.get_text_width_pixels(this.text, this.getFont());;
+        this.width_pixels  = ScreenDrawingUtils.get_text_width_pixels(this.text, this.getFont());
+        this.height_pixels = ScreenDrawingUtils.get_text_height_pixels(this.getFont());
     }
 
    
@@ -79,6 +81,10 @@ public class DebugMenuItem {
     
     public int get_width(){
         return this.width_pixels;
+    }
+    
+    public int get_height(){
+        return this.height_pixels;
     }
 
     public boolean isSelected() {

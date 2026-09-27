@@ -187,12 +187,9 @@ public class InputManager implements IGameUpdateListener {
         CNV.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
-                
-                
-                //RAW INPUT BYPASSES THE GAMEPLAY INPUT SYSTEM AND GOES STRAIGHT TO THE DEBUG SYSTEM
-                
-                //RAW INPUT TO TOGGLE DEBUG MODE
                 int code = e.getKeyCode();
+                
+                
                 if(code == KeyEvent.VK_P || code == KeyEvent.VK_I){
                     EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                 }
@@ -200,18 +197,21 @@ public class InputManager implements IGameUpdateListener {
                 //if in debug mode we send RAW INPUT the debug menu will use, othwerwise the trat it as gameplay input
                 if(DebugFlags.getInstance().isDebug_mode()){
                     
-                    if(code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT)
+                    
+                    //
+                    if(code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT ||
+                       code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN)
                         EventManager.getInstance().post(new KeyPressEvent(code, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                 }
                 else {
-                    int keyCode = e.getKeyCode();
-                    UpdateStates(new KeyInput(keyCode, true));
+                    
+                    UpdateStates(new KeyInput(code, true));
                 }
                 
                 
                 
                 //HARDCODED EXIT
-                if(e.getKeyCode() == 27){
+                if(code == KeyEvent.VK_ESCAPE){
                     GameLoopV2.getInstance().stop();
                     MyWindow.FRAME.remove(CNV);
                     MyWindow.FRAME.dispose();
@@ -220,7 +220,7 @@ public class InputManager implements IGameUpdateListener {
                 }
                 
                 //HARDCODED LEVEL SWITCH
-                if(e.getKeyCode() == KeyEvent.VK_L){
+                if(code == KeyEvent.VK_L){
                     EventManager.getInstance().post(new KeyPressEvent(KeyEvent.VK_L, new HashMap<Integer, Boolean>(keyStates)), IInputListener.class);
                     System.out.println("telling the level manager to switch level");
                 }

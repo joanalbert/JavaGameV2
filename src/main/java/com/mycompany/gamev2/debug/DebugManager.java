@@ -5,7 +5,8 @@
 package com.mycompany.gamev2.debug;
 
 import com.mycompany.gamev2.debug.menu.DebugMenu;
-import com.mycompany.gamev2.debug.menu.DebugPage;
+import com.mycompany.gamev2.debug.menu.VerticalDebugMenu;
+import com.mycompany.gamev2.debug.pages.DebugPage;
 import com.mycompany.gamev2.event_system.game_events.BaseEvent;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.event_system.game_events.TickEvent;
@@ -49,13 +50,13 @@ public class DebugManager implements IGameUpdateListener, IInputListener {
     }
     
     private void menu_setup(){
+        DebugPage level_page = new DebugPage("[Current_Level]");
         DebugPage events_page = new DebugPage("[Event_System]");
         DebugPage input_page = new DebugPage("[Input_System]");
-        DebugPage level_page = new DebugPage("[Current_Level]");
         
+        this.menu.add_page(level_page);
         this.menu.add_page(events_page);
         this.menu.add_page(input_page);
-        this.menu.add_page(level_page);
     }
 
     @Override
@@ -94,11 +95,17 @@ public class DebugManager implements IGameUpdateListener, IInputListener {
         //navigating the menu
         switch(keycode){
             case KeyEvent.VK_LEFT:
-                this.menu.left();
+                this.menu.left(keycode);
                 break;               
             case KeyEvent.VK_RIGHT:
-                this.menu.right();
+                this.menu.right(keycode);
                 break;
+            case KeyEvent.VK_UP:
+                this.menu.left(keycode);
+            break;               
+            case KeyEvent.VK_DOWN:
+                this.menu.right(keycode);
+            break;               
         }
         
     }

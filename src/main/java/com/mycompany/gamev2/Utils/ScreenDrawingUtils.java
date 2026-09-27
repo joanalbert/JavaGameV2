@@ -38,7 +38,14 @@ public class ScreenDrawingUtils {
     public static int get_text_width_pixels(String text, Font font) {
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = img.createGraphics();
-        FontMetrics fm = g2d.getFontMetrics(font);
+        FontMetrics fm = g2d.getFontMetrics(font); 
         return fm.stringWidth(text);
+    }
+    
+    public static int get_text_height_pixels(Font font){
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = img.createGraphics();
+        FontMetrics fm = g2d.getFontMetrics(font);
+        return fm.getHeight();   // Recommended line height
     }
 }

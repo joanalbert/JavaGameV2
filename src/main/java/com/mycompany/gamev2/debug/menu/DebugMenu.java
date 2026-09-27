@@ -4,12 +4,14 @@
  */
 package com.mycompany.gamev2.debug.menu;
 
+import com.mycompany.gamev2.debug.pages.DebugPage;
 import com.mycompany.gamev2.Utils.ScreenDrawingUtils;
 import com.mycompany.gamev2.event_system.game_events.RenderEvent;
 import com.mycompany.gamev2.gamemath.Vector3;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +21,14 @@ import java.util.List;
  */
 public class DebugMenu {
     
-    private Vector3 menu_position;
-    private List<DebugPage> pages;
-    private List<DebugMenuItem> menu_items;
-    private int selection_index;
-    private int items_margin_px;
+    protected Vector3 menu_position;
+    protected List<DebugPage> pages;
+    protected List<DebugMenuItem> menu_items;
+    protected int selection_index;
+    protected int items_margin_px;
+    
+    private int left  = KeyEvent.VK_LEFT;
+    private int right = KeyEvent.VK_RIGHT;
     
     public DebugMenu(){
         
@@ -51,7 +56,7 @@ public class DebugMenu {
     }
     
        
-    private void refresh_menu(){
+    protected void refresh_menu(){
         
         this.menu_items.clear();
         
@@ -88,14 +93,19 @@ public class DebugMenu {
        
     }
     
-    public void left(){
+    public void left(int key){
+        if(key != this.left) return;
+        
         if(this.selection_index - 1 >= 0) this.selection_index--;
         else this.selection_index = this.menu_items.size()-1;
         
         this.update_selected();
     }
     
-    public void right(){
+    public void right(int key){
+        
+        if(key != this.right) return;
+        
         int max = this.menu_items.size();
         if(this.selection_index + 1 < max) this.selection_index++;
         else this.selection_index = 0;
@@ -103,12 +113,12 @@ public class DebugMenu {
         this.update_selected();
     }
     
-    private void update_selected(){
+    protected void update_selected(){
         this.deselect_all();
         this.menu_items.get(this.selection_index).setSelected(true);
     }
     
-    private void deselect_all(){
+    protected void deselect_all(){
         for(DebugMenuItem item : this.menu_items) item.setSelected(false);
     }
 }
